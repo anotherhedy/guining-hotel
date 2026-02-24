@@ -1,0 +1,469 @@
+{
+  "publicClues": [
+    {
+      "clueId": "XS001",
+      "clueName": "死神 - 大火",
+      "isCollect": true,
+      "isHidden": false,
+      "relatedContent": ["赵青真相1", "赵青真相2"],
+      "clueDesc": "昨夜归宁旅馆起了一场大火，所有人都死在房间内。",
+      "getWay": "点击死神对话中蓝色【可收集】文字收集",
+      "detail": "死神提供的基础线索，确认旅馆发生大火且所有人员遇难，是还原赵青死亡真相的核心线索之一。"
+    },
+    {
+      "clueId": "XS002",
+      "clueName": "死神 - 亡者复仇",
+      "isCollect": true,
+      "isHidden": false,
+      "relatedContent": ["沈江河真相1"],
+      "clueDesc": "亡者复仇的故事确实存在，但那个死去的灵魂仇恨必须很深才能影响到现实。",
+      "getWay": "触发5具尸体剧情后，在死神对话中收集",
+      "detail": "死神提供的关键线索，指向存在一周前死亡的灵魂，是还原沈江河死亡真相1的核心线索。"
+    }
+  ],
+  "room101": {
+    "collectable": [
+      {
+        "clueId": "10102",
+        "clueName": "101账本",
+        "isCollect": true,
+        "isHidden": false,
+        "relatedContent": ["蒋晓丽真相1", "蒋晓丽真相2"],
+        "clueDesc": "101房间的账本，上面有一个一年前的记录，写着“邹良生 10万”。",
+        "position": "书桌右侧收纳盒内",
+        "unlockCondition": "",
+        "detail": "蒋晓丽的账本，记录有一年前向邹良生支付10万的流水，是蒋晓丽两套真相的共同线索，可解读为封口费或借款。"
+      },
+      {
+        "clueId": "10103",
+        "clueName": "101日记一",
+        "isCollect": true,
+        "isHidden": false,
+        "relatedContent": ["蒋晓丽真相1"],
+        "clueDesc": "101房间的日记残页，上面写着“他又来了，一年前……（字迹不清）杂物间或许还有遗留的旧物。”",
+        "position": "床头枕头下",
+        "unlockCondition": "",
+        "detail": "蒋晓丽的日记残页，透露出邹良生再次出现，且蒋晓丽担心203杂物间留有一年前的遗留证据，指向蒋晓丽真相1的核心矛盾。"
+      },
+      {
+        "clueId": "10106",
+        "clueName": "101诊疗单",
+        "isCollect": true,
+        "isHidden": false,
+        "relatedContent": ["蒋一一真相1", "蒋一一真相2"],
+        "clueDesc": "101房间的诊疗单，上面写着患者蒋一一心智停留在8岁，容易被他人误导和欺骗，害怕强光和巨响，建议不要去人员过多的地方。",
+        "position": "书桌抽屉第二层",
+        "unlockCondition": "",
+        "detail": "蒋一一的专业诊疗单，明确其心智障碍的核心特征，是蒋一一两套真相的共同线索，解释其行为的合理性。"
+      },
+      {
+        "clueId": "10107",
+        "clueName": "101监控片段",
+        "isCollect": true,
+        "isHidden": false,
+        "relatedContent": ["蒋一一真相1", "邹良生真相2"],
+        "clueDesc": "101房间的监控片段，显示一个男人依次出现在202、201、101、102的门口，103和203不在监控范围内。",
+        "position": "书桌电脑内（点击电脑解谜解锁）",
+        "unlockCondition": "点击电脑解谜后解锁",
+        "detail": "旅馆的监控片段，记录邹良生在火灾时的救人轨迹，为蒋一一真相1和邹良生真相2提供关键线索。"
+      },
+      {
+        "clueId": "10108",
+        "clueName": "101日记二",
+        "isCollect": true,
+        "isHidden": true,
+        "relatedContent": ["蒋一一真相2"],
+        "clueDesc": "101房间的日记残片，上面写着“今天打雷，一一躲在房间里说什么都不肯出来，后来听医生说，一一听到巨响会习惯性得躲起来。是我的错……我当时那么大声地敲门肯定更加吓到他了……”",
+        "position": "床头枕头下（解锁后出现）",
+        "unlockCondition": "触发蒋一一真相1后解锁",
+        "detail": "蒋晓丽的日记残片，透露蒋一一听到巨响会习惯性躲藏的特征，是蒋一一真相2的隐藏线索，解释其躲在床铺窒息的原因。"
+      }
+    ],
+    "uncollectable": [
+      {
+        "clueId": "10109",
+        "clueName": "101户口本",
+        "relatedContent": ["蒋晓丽人物背景", "蒋一一人物背景"],
+        "clueDesc": "101房间抽屉内的户口本，户口本上仅有两个人：蒋晓丽（女，39岁）、蒋一一（男，18岁），关系是母子。",
+        "position": "书桌抽屉最底层（无交互）"
+      },
+      {
+        "clueId": "10110",
+        "clueName": "101营业执照",
+        "relatedContent": ["蒋晓丽人物背景"],
+        "clueDesc": "101房间内墙上泛黄的营业执照，旁边写着“旅馆钥匙保管处”的地方现在空无一物。",
+        "position": "墙面（无交互）"
+      },
+      {
+        "clueId": "10111",
+        "clueName": "101住户记录",
+        "relatedContent": ["蒋晓丽人物背景", "邹良生人物背景"],
+        "clueDesc": "101抽屉内的住户记录册，事发当晚的记录丢失，但可以看到一年前的住户姓名，其中有“邹良生”的名字。",
+        "position": "书桌抽屉第三层（无交互）"
+      }
+    ]
+  },
+  "room102": {
+    "collectable": [
+      {
+        "clueId": "10201",
+        "clueName": "102钥匙串",
+        "isCollect": true,
+        "isHidden": false,
+        "relatedContent": ["蒋一一真相1"],
+        "clueDesc": "102房间的一串钥匙，这些钥匙能打开旅馆每一间房。",
+        "position": "床边床头柜上",
+        "unlockCondition": "",
+        "detail": "能打开旅馆所有房间的钥匙串，证明蒋一一有能力锁住所有房间，是蒋一一真相1的核心线索。"
+      },
+      {
+        "clueId": "10202",
+        "clueName": "102床铺",
+        "isCollect": true,
+        "isHidden": false,
+        "relatedContent": ["蒋一一真相2"],
+        "clueDesc": "102房间的床铺，被子凌乱，上面有蒋一一的指纹和毛发。",
+        "position": "床铺（点击床铺解谜解锁）",
+        "unlockCondition": "点击床铺解谜后解锁",
+        "detail": "蒋一一的床铺，留有其指纹和毛发且被子凌乱，证明蒋一一火灾时躲在床铺，是蒋一一真相2的核心线索。"
+      },
+      {
+        "clueId": "10203",
+        "clueName": "102奇怪的蜡笔画",
+        "isCollect": true,
+        "isHidden": false,
+        "relatedContent": ["沈江河真相1", "沈江河真相2"],
+        "clueDesc": "102房间的蜡笔画，上面画着一扇门“201”，旁边有两个小人，似乎都是男性，其中一个小人在哭泣。",
+        "position": "书桌桌面上",
+        "unlockCondition": "",
+        "detail": "蒋一一绘制的蜡笔画，能看见沈江河的灵魂，是沈江河两套真相的共同线索，指向201房间存在两个“人”。"
+      }
+    ],
+    "uncollectable": [
+      {
+        "clueId": "10204",
+        "clueName": "102积木",
+        "relatedContent": ["蒋一一人物背景"],
+        "clueDesc": "102房间到处都是散落的积木和蜡笔，房间主人似乎是个小孩子。",
+        "position": "地面（无交互）"
+      },
+      {
+        "clueId": "10205",
+        "clueName": "102糖果",
+        "relatedContent": ["赵青人物背景", "蒋一一人物关联"],
+        "clueDesc": "102房间桌子上的几颗糖果，包装纸上有颜料的痕迹。",
+        "position": "书桌角落（无交互）"
+      },
+      {
+        "clueId": "10206",
+        "clueName": "102可爱的蜡笔画",
+        "relatedContent": ["蒋晓丽人物背景", "蒋一一人物关联"],
+        "clueDesc": "102房间一张可爱的蜡笔画，上面画着两个小人，一个写着蒋一一，一个写着蒋晓丽。",
+        "position": "墙面（无交互）"
+      }
+    ]
+  },
+  "room103": {
+    "collectable": [
+      {
+        "clueId": "10301",
+        "clueName": "103窗户与房门",
+        "isCollect": true,
+        "isHidden": false,
+        "relatedContent": ["赵青真相1", "赵青真相2"],
+        "clueDesc": "103房间装着围栏的窗户以及上锁的房门。",
+        "position": "窗户 + 房门区域（点击交互查看）",
+        "unlockCondition": "点击交互后查看",
+        "detail": "赵青房间的窗户装有围栏、房门上锁，证明其火灾时无法逃生，是赵青两套真相的共同线索。"
+      },
+      {
+        "clueId": "10302",
+        "clueName": "103旅馆油画",
+        "isCollect": true,
+        "isHidden": false,
+        "relatedContent": ["赵青真相1"],
+        "clueDesc": "103房间内的几幅油画，上面画着归宁旅馆的每一个房间，油画落款“青”，其中一幅背后写着“这家山上的旅馆跟我的作品主题很契合，特别是那种神秘的故事感，要是能去203一探究竟，我的作品就更完美了。”",
+        "position": "墙面油画区（点击其中一幅解谜解锁）",
+        "unlockCondition": "点击其中一幅油画解谜后解锁",
+        "detail": "赵青绘制的旅馆油画，背后的文字透露其想要探索203房间的想法，是赵青真相1的核心线索。"
+      },
+      {
+        "clueId": "10303",
+        "clueName": "103松节油",
+        "isCollect": true,
+        "isHidden": true,
+        "relatedContent": ["赵青真相2"],
+        "clueDesc": "103房间内的松节油残留（松节油可以稀释油画颜料、清洁画笔，具有挥发性和可燃性）。",
+        "position": "书桌颜料区（解锁后出现）",
+        "unlockCondition": "触发赵青真相1后解锁",
+        "detail": "赵青绘画用的松节油残留，具有挥发性和可燃性，是赵青真相2的隐藏线索，证明其意外引发火灾的事实。"
+      }
+    ],
+    "uncollectable": [
+      {
+        "clueId": "10304",
+        "clueName": "103与父母的聊天记录",
+        "relatedContent": ["赵青人物背景"],
+        "clueDesc": "103房间赵青手机内与父母的聊天记录，记录中显示赵青想要追求自己的美术梦想放弃读研，与父母意见不合离家出走。",
+        "position": "书桌手机内（无交互）"
+      },
+      {
+        "clueId": "10305",
+        "clueName": "103说说",
+        "relatedContent": ["赵青人物背景"],
+        "clueDesc": "103房间赵青手机内的说说记录，其中一条是：“为了完成作品，我可以不惜一切代价！”",
+        "position": "书桌手机内（无交互）"
+      }
+    ]
+  },
+  "room201": {
+    "collectable": [
+      {
+        "clueId": "20101",
+        "clueName": "201“对不起”",
+        "isCollect": true,
+        "isHidden": false,
+        "relatedContent": ["许鹤真相1", "沈江河真相2"],
+        "clueDesc": "201房间洗手间镜子上用鲜血书写的“对不起”。",
+        "position": "洗手间镜子上",
+        "unlockCondition": "",
+        "detail": "201房间镜子上的血字“对不起”，是许鹤真相1和沈江河真相2的共同线索，可解读为许鹤的忏悔或沈江河的遗憾。"
+      },
+      {
+        "clueId": "20102",
+        "clueName": "201安眠药",
+        "isCollect": true,
+        "isHidden": false,
+        "relatedContent": ["许鹤真相1", "许鹤真相2"],
+        "clueDesc": "201房间内打翻的安眠药瓶，里面的药物剩余不多。",
+        "position": "床边床头柜上",
+        "unlockCondition": "",
+        "detail": "许鹤的安眠药瓶，药物剩余不多，是许鹤两套真相的共同线索，证明其长期服用安眠药且内心极度焦虑。"
+      },
+      {
+        "clueId": "20103",
+        "clueName": "201行车记录",
+        "isCollect": true,
+        "isHidden": false,
+        "relatedContent": ["许鹤真相1", "许鹤真相2"],
+        "clueDesc": "201房间许鹤手机中的行车轨迹，显示一周前的晚上出现在海湾路。",
+        "position": "书桌手机内（点击手机解谜解锁）",
+        "unlockCondition": "点击手机解谜后解锁",
+        "detail": "许鹤的手机行车记录，证明其一周前晚上出现在海湾路，是许鹤两套真相的共同线索，指向其与沈江河车祸有关。"
+      },
+      {
+        "clueId": "20104",
+        "clueName": "201合照",
+        "isCollect": true,
+        "isHidden": true,
+        "relatedContent": ["许鹤真相2"],
+        "clueDesc": "201房间许鹤手机相册中的图片，是许鹤与沈江河的合照，两人穿着学士服，照片上写着“要做一辈子的好朋友”。",
+        "position": "书桌相框内（解锁后出现）",
+        "unlockCondition": "触发许鹤真相1后解锁",
+        "detail": "许鹤与沈江河的学士服合照，证明两人是多年好友，是许鹤真相2的隐藏线索，推翻许鹤故意谋杀的说法。"
+      },
+      {
+        "clueId": "20105",
+        "clueName": "201海湾路车祸",
+        "isCollect": true,
+        "isHidden": false,
+        "relatedContent": ["沈江河真相1"],
+        "clueDesc": "201房间许鹤手机中收藏的一条新闻，时间是一周前，“昨夜海湾路发生一起车祸，受害人沈某当场死亡，目前警方还在寻找肇事车辆”。",
+        "position": "书桌手机内（点击新闻栏解锁）",
+        "unlockCondition": "点击新闻栏后解锁",
+        "detail": "海湾路车祸的初始新闻，未找到肇事车辆，是沈江河真相1的核心线索，指向许鹤为肇事凶手。"
+      },
+      {
+        "clueId": "20106",
+        "clueName": "201海湾路车祸二",
+        "isCollect": true,
+        "isHidden": true,
+        "relatedContent": ["沈江河真相2"],
+        "clueDesc": "201房间许鹤手机中收藏的一条新闻，时间是一周前，“昨夜海湾路发生一起车祸，受害人沈某当场死亡，目前警方还在寻找肇事车辆”，下面紧跟着有一个三天前的更新“警方已找到肇事车辆，嫌疑人王某声称自己当晚喝多才导致悲剧的发生……小编这里呼吁大家，开车不喝酒，喝酒不开车，行车不规范，亲人两行泪啊。”",
+        "position": "书桌手机内（新闻栏解锁后更新）",
+        "unlockCondition": "触发沈江河真相1后更新解锁",
+        "detail": "海湾路车祸的更新新闻，找到真正肇事司机王某，是沈江河真相2的隐藏线索，证明沈江河的死是意外。"
+      }
+    ],
+    "uncollectable": [
+      {
+        "clueId": "20107",
+        "clueName": "201与周主管的聊天记录",
+        "relatedContent": ["许鹤人物背景", "沈江河人物背景"],
+        "clueDesc": "201房间许鹤手机内与周主管的聊天记录，周主管说最近新组长的人选就在你和沈江河之中，虽然沈江河业绩更好，但我认为你也是个不错的苗子，要好好努力啊。",
+        "position": "书桌手机内（无交互）"
+      },
+      {
+        "clueId": "20108",
+        "clueName": "201身份证",
+        "relatedContent": ["许鹤人物背景"],
+        "clueDesc": "201房间放在桌上的身份证，上面写着，姓名：许鹤，性别：男，出生日期：1998年6月7日。",
+        "position": "书桌桌面上（无交互）"
+      },
+      {
+        "clueId": "20109",
+        "clueName": "201晋升申请表",
+        "relatedContent": ["许鹤人物背景", "沈江河人物背景"],
+        "clueDesc": "201房间桌上的一张被揉皱的晋升申请表，申请人是许鹤，下面有公司盖章的“已批准”。",
+        "position": "书桌文件夹内（无交互）"
+      }
+    ]
+  },
+  "room202": {
+    "collectable": [
+      {
+        "clueId": "20201",
+        "clueName": "202大额现金",
+        "isCollect": true,
+        "isHidden": false,
+        "relatedContent": ["邹良生真相1"],
+        "clueDesc": "202房间的一个老旧手提包，里面放着10万现金。",
+        "position": "床边手提包内（点击手提包解锁）",
+        "unlockCondition": "点击手提包后解锁",
+        "detail": "邹良生房间的10万现金，是邹良生真相1的核心线索，指向其向蒋晓丽索要封口费的事实。"
+      },
+      {
+        "clueId": "20202",
+        "clueName": "202与老谢的聊天记录",
+        "isCollect": true,
+        "isHidden": false,
+        "relatedContent": ["邹良生真相1", "邹良生真相2"],
+        "clueDesc": "202房间邹良生手机中的聊天记录，日期是昨天，和一个备注“老谢”的人说：“明天这一趟我去跑。”",
+        "position": "书桌手机内（点击手机解锁）",
+        "unlockCondition": "点击手机后解锁",
+        "detail": "邹良生与老谢的聊天记录，证明其特意调班来到旅馆，是邹良生两套真相的共同线索。"
+      },
+      {
+        "clueId": "20203",
+        "clueName": "202烟蒂与打火机",
+        "isCollect": true,
+        "isHidden": false,
+        "relatedContent": ["邹良生真相1"],
+        "clueDesc": "202房间中的未熄灭的烟蒂与打火机。",
+        "position": "书桌烟灰缸内",
+        "unlockCondition": "",
+        "detail": "邹良生房间的未熄灭烟蒂与打火机，是邹良生真相1的核心线索，指向其抽烟引发火灾的事实。"
+      },
+      {
+        "clueId": "20204",
+        "clueName": "202大额现金二",
+        "isCollect": true,
+        "isHidden": true,
+        "relatedContent": ["邹良生真相2"],
+        "clueDesc": "202房间的一个老旧手提包，里面放着10万现金，里面还有一张未写完的感谢卡，是写给蒋晓丽的，内容似乎是感谢其一年前借钱缓解燃眉之急。",
+        "position": "床边手提包内（解锁后出现感谢卡）",
+        "unlockCondition": "触发邹良生真相1后解锁",
+        "detail": "邹良生房间的10万现金+未写完的感谢卡，是邹良生真相2的隐藏线索，证明其是来归还蒋晓丽的借款而非索要封口费。"
+      }
+    ],
+    "uncollectable": [
+      {
+        "clueId": "20205",
+        "clueName": "202钱包",
+        "relatedContent": ["邹良生人物背景"],
+        "clueDesc": "202房间床上的钱包，打开后，除了身份证、女儿照片、父母病历，还有一张皱巴巴的医院缴费单，金额不小。身份证上写，姓名：邹良生，性别：男，出生日期：1979年10月8日。",
+        "position": "床头枕头下（无交互）"
+      },
+      {
+        "clueId": "20206",
+        "clueName": "202货物运输单",
+        "relatedContent": ["邹良生人物背景", "蒋晓丽人物关联"],
+        "clueDesc": "202房间桌子上的货物运输单，目的地是深山附近，运输单上有蒋晓丽的名字和旅馆地址。",
+        "position": "书桌桌面上（无交互）"
+      }
+    ]
+  },
+  "room203": {
+    "collectable": [
+      {
+        "clueId": "10101",
+        "clueName": "203旧报纸",
+        "isCollect": true,
+        "isHidden": false,
+        "relatedContent": ["蒋晓丽真相1"],
+        "clueDesc": "203房间的旧报纸，上面写着一年前“归宁”旅馆发生死亡案件，旅馆老板蒋女士的前夫李某意外身亡，据传，李某生前沉迷赌博，这次来到旅馆也是为了要钱，没想到死在203房间，真相究竟是意外还是人为，警方还在调查当中。蒋女士声称此房间后续将改为杂物间，不对旅客开放。",
+        "position": "墙角储物柜第一层",
+        "unlockCondition": "",
+        "detail": "报道蒋晓丽前夫李某在203房间意外身亡的旧报纸，为蒋晓丽真相1提供直接线索，指向李某死亡存在疑点。"
+      },
+      {
+        "clueId": "10104",
+        "clueName": "203灭火器",
+        "isCollect": true,
+        "isHidden": false,
+        "relatedContent": ["蒋晓丽真相2"],
+        "clueDesc": "203房间的灭火器，无使用痕迹。",
+        "position": "墙角储物柜第二层",
+        "unlockCondition": "",
+        "detail": "203杂物间的灭火器，无使用痕迹，证明蒋晓丽在火灾时未来得及使用灭火器，为蒋晓丽真相2提供直接线索。"
+      },
+      {
+        "clueId": "10105",
+        "clueName": "203房梁碎片",
+        "isCollect": true,
+        "isHidden": true,
+        "relatedContent": ["蒋晓丽真相2"],
+        "clueDesc": "203房间内的房梁碎片。",
+        "position": "墙角储物柜第三层",
+        "unlockCondition": "触发蒋晓丽真相1后解锁",
+        "detail": "203杂物间火灾中掉落的房梁碎片，是蒋晓丽真相2的隐藏线索，证明蒋晓丽被房梁砸死的事实。"
+      }
+    ],
+    "uncollectable": [
+      {
+        "clueId": "20301",
+        "clueName": "203画笔",
+        "relatedContent": ["赵青人物背景", "203背景关联"],
+        "clueDesc": "203房间内一支沾着颜料的画笔，笔身写着“青”。",
+        "position": "地面杂物堆中（无交互）"
+      },
+      {
+        "clueId": "20302",
+        "clueName": "203住户记录碎片",
+        "relatedContent": ["赵青人物背景"],
+        "clueDesc": "203房间内的一张写着2月22日住户记录的纸，破损严重，只能勉强看出103的住户是“赵青”。",
+        "position": "墙面角落（无交互）"
+      }
+    ]
+  },
+  "truthClueMap": {
+    "蒋晓丽": {
+      "truth1": ["10101", "10102", "10103"],
+      "truth2": ["10102", "10104", "10105"],
+      "hiddenClue": "10105"
+    },
+    "蒋一一": {
+      "truth1": ["10201", "10106", "10107"],
+      "truth2": ["10202", "10106", "10108"],
+      "hiddenClue": "10108"
+    },
+    "赵青": {
+      "truth1": ["10301", "XS001", "10302"],
+      "truth2": ["10301", "XS001", "10303"],
+      "hiddenClue": "10303"
+    },
+    "许鹤": {
+      "truth1": ["20101", "20102", "20103"],
+      "truth2": ["20102", "20103", "20104"],
+      "hiddenClue": "20104"
+    },
+    "邹良生": {
+      "truth1": ["20201", "20202", "20203"],
+      "truth2": ["20204", "10107", "20202"],
+      "hiddenClue": "20204"
+    },
+    "沈江河": {
+      "truth1": ["20105", "10203", "XS002"],
+      "truth2": ["20106", "10203", "20101"],
+      "hiddenClue": "20106"
+    }
+  },
+  "roomUserMap": {
+    "101": "蒋晓丽",
+    "102": "蒋一一",
+    "103": "赵青",
+    "201": "许鹤",
+    "202": "邹良生",
+    "203": "无"
+  }
+}

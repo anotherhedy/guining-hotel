@@ -1,0 +1,1795 @@
+/* Global Container to handle centering and background */
+.app-container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+  color: #ddd;
+}
+
+/* ---------------- Start Screen Styles ---------------- */
+.start-screen {
+  /* Dark grey + Dark red gradient background with low opacity texture */
+  background: 
+    radial-gradient(circle at center, rgba(60, 20, 20, 0.9) 0%, rgba(20, 20, 20, 1) 100%),
+    repeating-linear-gradient(45deg, rgba(0,0,0,0.1) 0, rgba(0,0,0,0.1) 10px, rgba(0,0,0,0.2) 10px, rgba(0,0,0,0.2) 20px);
+  
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.story-text {
+  max-width: 800px;
+  font-size: 1.2rem;
+  line-height: 1.8;
+  margin-bottom: 3rem;
+  color: #c0c0c0;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  font-weight: 500;
+  text-align: justify; /* Justify text for better reading block */
+  text-align-last: center;
+}
+
+.start-btn {
+  /* Dark red gradient */
+  background: linear-gradient(180deg, #8b0000 0%, #500000 100%);
+  color: white;
+  font-weight: bold;
+  font-size: 1.5rem;
+  padding: 1rem 4rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.6);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.start-btn:hover {
+  transform: scale(1.05);
+  background: linear-gradient(180deg, #a00000 0%, #600000 100%);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.8);
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+}
+
+/* ---------------- Hotel Screen Layout ---------------- */
+.hotel-screen {
+  /* Slightly lighter dark background with simple texture */
+  background-color: #1e1e1e;
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 40px 40px;
+  
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row; /* Layout: Sidebar - Main - Sidebar */
+  align-items: stretch;
+  justify-content: space-between;
+  overflow: hidden;
+  position: relative;
+}
+
+/* ---------------- Sidebars Common Styles ---------------- */
+.sidebar {
+  background-color: rgba(10, 10, 10, 0.85);
+  border: 1px solid #8b0000;
+  height: 100%;
+  transition: width 0.3s ease, min-width 0.3s ease, flex-basis 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 60;
+  box-sizing: border-box;
+}
+
+.sidebar-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  overflow: hidden; /* Hide content when collapsed */
+  opacity: 1;
+  transition: opacity 0.2s ease;
+}
+
+.sidebar.closed .sidebar-content {
+  opacity: 0;
+  pointer-events: none;
+  padding: 0;
+}
+
+.sidebar-title {
+  color: #fff;
+  font-weight: bold;
+  font-size: 1.5rem;
+  text-align: center;
+  margin: 0 0 1.5rem 0;
+  border-bottom: 2px solid #500000;
+  padding-bottom: 0.5rem;
+  white-space: nowrap;
+}
+
+/* Sidebar Toggle Button */
+.sidebar-toggle {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 60px;
+  background-color: #8b0000;
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.2rem;
+  z-index: 60;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+}
+
+.sidebar-toggle:hover {
+  transform: translateY(-50%) scale(1.1);
+  background-color: #a00000;
+}
+
+/* Left Sidebar Specifics */
+.left-sidebar {
+  border-left: none; /* Attach to screen edge */
+}
+
+.left-sidebar.open {
+  width: 250px;
+  min-width: 250px;
+}
+
+.left-sidebar.closed {
+  width: 0;
+  min-width: 0;
+  border-right: none;
+}
+
+.left-toggle {
+  right: -24px; /* Position outside the sidebar */
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+/* Right Sidebar Specifics */
+.right-sidebar {
+  border-right: none; /* Attach to screen edge */
+}
+
+.right-sidebar.open {
+  width: 300px;
+  min-width: 300px;
+}
+
+.right-sidebar.closed {
+  width: 0;
+  min-width: 0;
+  border-left: none;
+}
+
+.right-toggle {
+  left: -24px; /* Position outside the sidebar */
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+}
+
+/* ---------------- Inventory Content ---------------- */
+.inventory-list {
+  flex: 1;
+  overflow-y: auto;
+  border: 1px dashed #333;
+  border-radius: 4px;
+  padding: 0.5rem;
+  background: rgba(0,0,0,0.3);
+}
+
+.empty-tip {
+  color: #666;
+  text-align: center;
+  margin-top: 2rem;
+  font-style: italic;
+  font-size: 0.9rem;
+}
+
+/* ---------------- Synthesis Content ---------------- */
+.synthesis-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.name-input {
+  background-color: #000;
+  border: 1px solid #8b0000;
+  color: white;
+  padding: 0.8rem;
+  border-radius: 4px;
+  font-size: 1rem;
+  outline: none;
+  transition: box-shadow 0.3s;
+}
+
+.name-input:focus, .name-input:hover {
+  box-shadow: 0 0 8px rgba(139, 0, 0, 0.5);
+  border-color: #a00000;
+}
+
+.section-subtitle {
+  color: white;
+  font-size: 0.9rem;
+  margin: 0 0 0.5rem 0;
+  font-weight: normal;
+}
+
+.clue-drop-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.clue-drop-box {
+  width: 30%;
+  aspect-ratio: 1;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px dashed #8b0000;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  font-size: 0.8rem;
+  text-align: center;
+  padding: 2px;
+  box-sizing: border-box;
+}
+
+.synthesize-btn {
+  background: linear-gradient(90deg, #8b0000, #500000);
+  color: white;
+  border: none;
+  padding: 1rem;
+  font-weight: bold;
+  font-size: 1.1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 1rem;
+  transition: all 0.2s;
+}
+
+.synthesize-btn:hover {
+  transform: scale(1.02);
+  background: linear-gradient(90deg, #a00000, #600000);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+}
+
+/* ---------------- Main Content (Doors) ---------------- */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  min-width: 0; /* Important for flex child to shrink */
+  transition: all 0.3s ease;
+}
+
+.hotel-title {
+  font-size: 4rem;
+  color: #8b0000;
+  margin-top: 0;
+  margin-bottom: 2rem;
+  font-family: 'Times New Roman', serif;
+  text-shadow: 3px 3px 6px rgba(0,0,0,0.9);
+  letter-spacing: 0.5rem;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.room-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 2rem;
+  justify-items: center;
+  align-items: center;
+  max-width: 100%;
+}
+
+/* Door Styles - Keeping mostly same, adjusting size if needed */
+.door {
+  width: 120px;
+  height: 200px;
+  background: #4e342e;
+  border: 6px solid #3e2723;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 5px 5px 15px rgba(0,0,0,0.6);
+  transition: all 0.3s ease;
+  background-image: repeating-linear-gradient(90deg, 
+    rgba(255,255,255,0.03) 0px, 
+    rgba(255,255,255,0.03) 2px, 
+    transparent 2px, 
+    transparent 10px
+  );
+}
+
+.door:hover {
+  background-color: #5d4037;
+  box-shadow: 8px 8px 20px rgba(0,0,0,0.8);
+  transform: scale(1.05);
+}
+
+.door::before {
+  content: '';
+  position: absolute;
+  top: 15px; bottom: 15px; left: 15px; right: 15px;
+  border: 2px inset rgba(0,0,0,0.3);
+  pointer-events: none;
+}
+
+.door-knob {
+  position: absolute;
+  right: 12px;
+  top: 55%;
+  width: 12px;
+  height: 12px;
+  background: radial-gradient(circle at 30% 30%, #ffd700, #b8860b);
+  border-radius: 50%;
+  box-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+}
+
+.room-number {
+  margin-top: -60%;
+  color: #fff;
+  font-weight: bold;
+  font-size: 1.5rem;
+  font-family: 'Courier New', monospace;
+  text-shadow: 1px 1px 2px black;
+  z-index: 2;
+  background-color: rgba(62, 39, 35, 0.8);
+  padding: 2px 6px;
+  border-radius: 2px;
+  border: 1px solid #5d4037;
+}
+
+/* ---------------- Floating Death Icon & Dialog ---------------- */
+.death-icon-container {
+  position: absolute;
+  left: 20px;
+  bottom: 20px;
+  z-index: 100;
+}
+
+.death-icon {
+  width: 60px;
+  height: 60px;
+  background-color: #8b0000;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.6);
+  transition: transform 0.3s, box-shadow 0.3s;
+  border: 2px solid #500000;
+  position: relative; /* For red dot positioning */
+}
+
+.death-icon:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.8);
+}
+
+/* Notification Dot */
+.notification-dot {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 12px;
+  height: 12px;
+  background-color: #ff0000;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  z-index: 10;
+  box-shadow: 0 0 5px rgba(255, 0, 0, 0.8);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7); }
+  70% { transform: scale(1.2); box-shadow: 0 0 0 6px rgba(255, 0, 0, 0); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); }
+}
+
+/* CSS Skull */
+.skull-shape {
+  width: 30px;
+  height: 34px;
+  background-color: #eee;
+  border-radius: 12px 12px 10px 10px;
+  position: relative;
+}
+
+.skull-eyes {
+  position: absolute;
+  top: 10px;
+  left: 4px;
+  width: 8px;
+  height: 8px;
+  background: #000;
+  border-radius: 50%;
+  box-shadow: 14px 0 0 #000; /* Right eye */
+}
+
+.skull-nose {
+  position: absolute;
+  top: 20px;
+  left: 13px;
+  width: 4px;
+  height: 5px;
+  background: #000;
+  border-radius: 40%;
+}
+
+.skull-teeth {
+  position: absolute;
+  bottom: 2px;
+  left: 6px;
+  width: 18px;
+  height: 3px;
+  background: repeating-linear-gradient(90deg, #000 0, #000 2px, transparent 2px, transparent 6px);
+}
+
+/* Death Dialog */
+.death-dialog {
+  position: absolute;
+  bottom: 80px;
+  left: 0;
+  width: 380px;
+  height: 400px; /* Increased height for chat */
+  background-color: rgba(10, 10, 10, 0.95);
+  border: 1px solid #8b0000;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 0 20px rgba(0,0,0,0.8);
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.dialog-header {
+  padding: 0.8rem;
+  border-bottom: 1px solid #500000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.dialog-title {
+  color: white;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.close-btn {
+  color: #888;
+  cursor: pointer;
+  font-size: 1.5rem;
+  line-height: 1;
+  transition: color 0.2s;
+}
+
+.close-btn:hover {
+  color: #fff;
+}
+
+.dialog-content {
+  flex: 1;
+  padding: 1rem;
+  color: #ccc;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Chat Message Styles */
+.chat-message {
+  display: flex;
+  flex-direction: column;
+  max-width: 85%;
+  animation: popIn 0.3s ease forwards;
+}
+
+.chat-message.death {
+  align-self: flex-start;
+}
+
+.chat-message.user {
+  align-self: flex-end;
+  align-items: flex-end;
+}
+
+.message-sender {
+  font-size: 0.75rem;
+  margin-bottom: 0.2rem;
+  color: #888;
+}
+
+.chat-message.death .message-sender {
+  color: #8b0000;
+}
+
+.chat-message.user .message-sender {
+  color: #aaa;
+}
+
+.message-bubble {
+  padding: 0.8rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  position: relative;
+  word-wrap: break-word;
+}
+
+.chat-message.death .message-bubble {
+  background-color: #2a2a2a;
+  border: 1px solid #500000;
+  color: #ddd;
+  border-top-left-radius: 0;
+}
+
+.chat-message.user .message-bubble {
+  background-color: #444;
+  color: #fff;
+  border-top-right-radius: 0;
+}
+
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Chat Input Area */
+.chat-input-area {
+  padding: 0.8rem;
+  border-top: 1px solid #500000;
+  display: flex;
+  gap: 0.5rem;
+  background-color: rgba(0, 0, 0, 0.5);
+  flex-shrink: 0;
+}
+
+.chat-input {
+  flex: 1;
+  background-color: #1a1a1a;
+  border: 1px solid #555;
+  color: white;
+  padding: 0.5rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  outline: none;
+}
+
+.chat-input:focus {
+  border-color: #8b0000;
+}
+
+.send-btn {
+  background-color: #8b0000;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 0.9rem;
+  transition: background 0.2s;
+}
+
+.send-btn:hover {
+  background-color: #a00000;
+}
+
+/* ---------------- Responsive Tweaks ---------------- */
+@media (max-width: 1200px) {
+  .hotel-title { font-size: 3rem; }
+  .room-grid { gap: 1rem; }
+  .door { width: 100px; height: 160px; }
+  .room-number { font-size: 1.2rem; }
+}
+
+@media (max-width: 768px) {
+  /* On small screens, sidebars might need to be absolute or different handling, 
+     but requirement says "PC end screen", so we prioritize desktop */
+  .hotel-screen {
+    flex-direction: column;
+  }
+  .sidebar.left-sidebar, .sidebar.right-sidebar {
+    position: absolute;
+    height: 100%;
+    top: 0;
+  }
+  .left-sidebar { left: 0; }
+  .right-sidebar { right: 0; }
+}
+
+/* ---------------- New Interactive Elements ---------------- */
+
+/* Collectible Text in Dialog */
+.collectible-text {
+  color: #007bff !important; /* Force pure blue */
+  cursor: pointer;
+  font-weight: bold;
+  text-decoration: underline;
+  margin-left: 5px;
+}
+
+.collectible-text:hover {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><path fill="%23fff" d="M10 2l-2 2h-4v12h12v-12h-4l-2-2z"/></svg>'), pointer; /* Custom cursor fallback */
+  text-shadow: 0 0 5px #007bff;
+}
+
+.collected-text {
+  color: #888 !important;
+  cursor: default;
+  font-weight: normal;
+  margin-left: 5px;
+}
+
+/* Clue Card in Inventory */
+.clue-card {
+  background-color: #0a0a0a;
+  border: 1px solid #8b0000;
+  color: #ccc;
+  padding: 0.8rem;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  animation: fadeIn 0.5s ease;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.clue-card:hover {
+  background-color: #1a1a1a;
+  border-color: #a00000;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.6);
+  /* Custom cursor for pointer/hand */
+  cursor: pointer;
+}
+
+/* Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0, 0, 0, 0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000; /* Highest z-index */
+  animation: fadeIn 0.2s ease;
+}
+
+/* Modal Content Base */
+.modal-content {
+  background-color: rgba(20, 20, 20, 0.95);
+  border: 2px solid #8b0000;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 0 30px rgba(139, 0, 0, 0.3);
+  color: #ddd;
+  min-width: 300px;
+  max-width: 500px;
+  position: relative;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #500000;
+  padding-bottom: 0.5rem;
+}
+
+.modal-title {
+  margin: 0;
+  color: #fff;
+  font-size: 1.2rem;
+}
+
+.modal-body {
+  margin-top: 1rem;
+  line-height: 1.6;
+}
+
+/* Specific Modal Styles */
+.clue-detail-modal {
+  text-align: left;
+}
+
+.detail-item {
+  margin-bottom: 0.8rem;
+  font-size: 1rem;
+}
+
+.verification-modal {
+  text-align: center;
+}
+
+.modal-input {
+  width: 100%;
+  padding: 0.8rem;
+  margin: 1rem 0;
+  background-color: #000;
+  border: 1px solid #555;
+  color: white;
+  border-radius: 4px;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.modal-btn {
+  padding: 0.6rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  flex: 1;
+  transition: all 0.2s;
+}
+
+.modal-btn.confirm {
+  background-color: #8b0000;
+  color: white;
+}
+
+.modal-btn.confirm:hover {
+  background-color: #a00000;
+}
+
+.modal-btn.cancel {
+  background-color: #333;
+  color: #ccc;
+}
+
+.modal-btn.cancel:hover {
+  background-color: #444;
+}
+
+/* Notification Toast */
+.notification-toast {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.9);
+  border: 1px solid #007bff;
+  color: #007bff;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  z-index: 3000;
+  box-shadow: 0 0 20px rgba(0, 123, 255, 0.3);
+  animation: fadeInOut 2s ease forwards;
+  pointer-events: none;
+  font-weight: bold;
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; transform: translate(-50%, -40%); }
+  10% { opacity: 1; transform: translate(-50%, -50%); }
+  90% { opacity: 1; transform: translate(-50%, -50%); }
+  100% { opacity: 0; transform: translate(-50%, -60%); }
+}
+
+/* Locked Door Tooltip */
+.door.locked {
+  /* Cursor implies interaction but maybe locked icon? */
+  cursor: pointer; 
+}
+
+.door.locked:hover::after {
+  content: '该房间已上锁';
+  position: absolute;
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.9);
+  color: #aaa;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  pointer-events: none;
+  border: 1px solid #555;
+  z-index: 200;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+}
+
+/* ---------------- 203 杂物间样式 ---------------- */
+.room-203-container {
+  flex: 1;
+  height: 100%;
+  position: relative;
+  background-color: #0a0a0a;
+  /* 场景背景：掉皮墙面、生锈金属、积灰家具 */
+  background-image: 
+    radial-gradient(circle at 70% 30%, rgba(20, 20, 20, 0.8), rgba(0, 0, 0, 0.95)),
+    url("data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.1'/%3E%3C/svg%3E");
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: fadeIn 1s ease;
+  z-index: 50;
+}
+
+/* 返回按钮 */
+.return-btn {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 100;
+  background: linear-gradient(90deg, #500000, #200000);
+  color: white;
+  border: 1px solid #8b0000;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.5);
+}
+
+.return-btn:hover {
+  transform: scale(1.05);
+  background: linear-gradient(90deg, #8b0000, #300000);
+  box-shadow: 0 0 15px rgba(139, 0, 0, 0.5);
+}
+
+/* 核心区域容器 */
+.room-203-content {
+  flex: 1;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  /* 预留纵向滚动 (如果屏幕太小) */
+  overflow-y: auto;
+}
+
+/* 区域通用样式 */
+.zone {
+  position: relative;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+/* 左侧：储物柜 (30%) */
+.left-zone {
+  width: 30%;
+  border-right: 2px solid rgba(0, 0, 0, 0.5);
+  background: linear-gradient(to right, #1a1510, #2a2018);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* 3 layers */
+  padding: 2rem 1rem;
+  /* 柜门半开效果 */
+  box-shadow: inset -10px 0 20px rgba(0,0,0,0.8);
+}
+
+/* 储物柜层板 */
+.cabinet-layer {
+  flex: 1;
+  border-bottom: 8px solid #3e2723; /* Dark wood */
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end; /* Items sit on bottom */
+  padding-bottom: 10px;
+  box-shadow: 0 5px 10px rgba(0,0,0,0.7);
+}
+
+.cabinet-layer::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.4), transparent);
+  pointer-events: none;
+}
+
+/* 中间：杂物堆 (40%) */
+.middle-zone {
+  width: 40%;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 50px;
+}
+
+/* 杂物装饰 */
+.debris-decoration {
+  position: absolute;
+  bottom: 0;
+  background-color: #222;
+  border: 1px solid #333;
+  opacity: 0.6;
+  filter: blur(1px);
+}
+
+.debris-decoration.box {
+  width: 120px;
+  height: 100px;
+  left: 20%;
+  bottom: 20px;
+  transform: rotate(-5deg);
+  background: #3e2723;
+}
+
+.debris-decoration.rag {
+  width: 80px;
+  height: 60px;
+  right: 30%;
+  bottom: 10px;
+  background: #5d4037;
+  border-radius: 40% 60% 30% 70% / 60% 30% 70% 40%;
+}
+
+.debris-decoration.wood {
+  width: 200px;
+  height: 20px;
+  left: 10%;
+  bottom: 5px;
+  transform: rotate(5deg);
+  background: #4e342e;
+}
+
+/* ---------------- Drag and Drop Styles ---------------- */
+.clue-card[draggable="true"] {
+  cursor: grab;
+}
+
+.clue-card[draggable="true"]:active {
+  cursor: grabbing;
+}
+
+.clue-drop-box {
+  transition: all 0.2s;
+}
+
+.clue-drop-box:hover {
+  border-color: #a00000;
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.clue-drop-box.filled {
+  border-style: solid;
+  background-color: rgba(139, 0, 0, 0.2);
+  cursor: pointer;
+  position: relative;
+}
+
+.clue-drop-box.filled:hover::after {
+  content: '点击移除';
+  position: absolute;
+  top: -25px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.8);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.dropped-clue {
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: #ddd;
+  text-shadow: 1px 1px 2px black;
+  word-break: break-all;
+  padding: 2px;
+}
+
+/* ---------------- 203 杂物间样式 ---------------- */
+.room-203-container {
+  flex: 1;
+  height: 100%;
+  position: relative;
+  background-color: #0a0a0a;
+  /* 场景背景：掉皮墙面、生锈金属、积灰家具 */
+  background-image: 
+    radial-gradient(circle at 70% 30%, rgba(20, 20, 20, 0.8), rgba(0, 0, 0, 0.95)),
+    url("data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.1'/%3E%3C/svg%3E");
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: fadeIn 1s ease;
+  z-index: 50;
+}
+
+/* 返回按钮 */
+.return-btn {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 100;
+  background: linear-gradient(90deg, #500000, #200000);
+  color: white;
+  border: 1px solid #8b0000;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.5);
+}
+
+.return-btn:hover {
+  transform: scale(1.05);
+  background: linear-gradient(90deg, #8b0000, #300000);
+  box-shadow: 0 0 15px rgba(139, 0, 0, 0.5);
+}
+
+/* 核心区域容器 */
+.room-203-content {
+  flex: 1;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  /* 预留纵向滚动 (如果屏幕太小) */
+  overflow-y: auto;
+}
+
+/* 区域通用样式 */
+.zone {
+  position: relative;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+/* 左侧：储物柜 (30%) */
+.left-zone {
+  width: 30%;
+  border-right: 2px solid rgba(0, 0, 0, 0.5);
+  background: linear-gradient(to right, #1a1510, #2a2018);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* 3 layers */
+  padding: 2rem 1rem;
+  /* 柜门半开效果 */
+  box-shadow: inset -10px 0 20px rgba(0,0,0,0.8);
+}
+
+/* 储物柜层板 */
+.cabinet-layer {
+  flex: 1;
+  border-bottom: 8px solid #3e2723; /* Dark wood */
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end; /* Items sit on bottom */
+  padding-bottom: 10px;
+  box-shadow: 0 5px 10px rgba(0,0,0,0.7);
+}
+
+.cabinet-layer::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.4), transparent);
+  pointer-events: none;
+}
+
+/* 中间：杂物堆 (40%) */
+.middle-zone {
+  width: 40%;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 50px;
+}
+
+/* 杂物装饰 */
+.debris-decoration {
+  position: absolute;
+  bottom: 0;
+  background-color: #222;
+  border: 1px solid #333;
+  opacity: 0.6;
+  filter: blur(1px);
+}
+
+.debris-decoration.box {
+  width: 120px;
+  height: 100px;
+  left: 20%;
+  bottom: 20px;
+  transform: rotate(-5deg);
+  background: #3e2723;
+}
+
+.debris-decoration.rag {
+  width: 80px;
+  height: 60px;
+  right: 30%;
+  bottom: 10px;
+  background: #5d4037;
+  border-radius: 40% 60% 30% 70% / 60% 30% 70% 40%;
+}
+
+.debris-decoration.wood {
+  width: 200px;
+  height: 20px;
+  left: 10%;
+  bottom: 80px;
+  transform: rotate(15deg);
+  background: #1a1a1a;
+}
+
+/* 右侧：墙面+暖气片 (30%) */
+.right-zone {
+  width: 30%;
+  background: linear-gradient(to left, #1a1a1a, #222);
+  border-left: 1px solid rgba(0,0,0,0.5);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  padding-bottom: 40px;
+}
+
+.radiator {
+  width: 60%;
+  height: 200px;
+  background: repeating-linear-gradient(90deg, #444 0, #444 10px, #222 10px, #222 20px);
+  border: 2px solid #333;
+  position: relative;
+  opacity: 0.7;
+}
+
+.radiator::before {
+  content: '';
+  position: absolute;
+  top: -10px; left: -10px; right: -10px; bottom: -10px;
+  border: 1px solid rgba(139, 69, 19, 0.3); /* Rust hint */
+  pointer-events: none;
+}
+
+/* ---------------- 线索物品样式 ---------------- */
+.clue-item {
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.2s;
+  z-index: 10;
+}
+
+.clue-item:active {
+  transform: scale(0.95);
+}
+
+/* 已收集状态：置灰 */
+.clue-item.collected {
+  filter: grayscale(100%) brightness(50%);
+  cursor: default;
+}
+
+.clue-item.collected:active {
+  transform: none;
+}
+
+/* 10101 旧报纸 */
+.clue-newspaper {
+  width: 100px;
+  height: 60px;
+  background: #d7ccc8;
+  border: 1px solid #a1887f;
+  transform: rotate(5deg);
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+  /* Fold lines */
+  background-image: repeating-linear-gradient(180deg, transparent 0, transparent 4px, #3e2723 5px, transparent 6px);
+}
+
+/* 10104 灭火器 */
+.clue-extinguisher {
+  width: 40px;
+  height: 100px;
+  background: #b71c1c;
+  border-radius: 10px 10px 5px 5px;
+  position: relative;
+  box-shadow: inset -5px 0 10px rgba(0,0,0,0.5);
+}
+
+.clue-extinguisher::before { /* Nozzle */
+  content: '';
+  position: absolute;
+  top: -10px; left: 10px;
+  width: 20px; height: 10px;
+  background: #212121;
+}
+
+.clue-extinguisher::after { /* Rust */
+  content: '';
+  position: absolute;
+  bottom: 10px; left: 5px;
+  width: 10px; height: 20px;
+  background: #5d4037;
+  opacity: 0.6;
+  filter: blur(2px);
+}
+
+/* 10105 房梁碎片 */
+.clue-beam {
+  width: 120px;
+  height: 40px;
+  background: #3e2723;
+  clip-path: polygon(0% 20%, 90% 0%, 100% 80%, 10% 100%);
+  position: relative;
+}
+
+.clue-beam::after { /* Burn marks */
+  content: '';
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: radial-gradient(circle at 30% 50%, #000, transparent 50%);
+  opacity: 0.8;
+}
+
+/* 20301 画笔 */
+.clue-brush {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  width: 8px;
+  height: 120px;
+  background: #8d6e63;
+  transform: rotate(45deg);
+  z-index: 15;
+}
+
+.clue-brush::before { /* Tip */
+  content: '';
+  position: absolute;
+  top: -15px; left: -2px;
+  width: 12px; height: 20px;
+  background: #5d4037; /* Bristles */
+  border-radius: 50% 50% 0 0;
+}
+
+.clue-brush::after { /* Paint stain */
+  content: '';
+  position: absolute;
+  top: -10px; left: 0;
+  width: 100%; height: 10px;
+  background: #ef5350; /* Red paint */
+  opacity: 0.8;
+}
+
+/* 20302 住户记录 */
+.clue-record {
+  position: absolute;
+  bottom: 150px;
+  right: 20px;
+  width: 60px;
+  height: 80px;
+  background: #fff9c4;
+  clip-path: polygon(0 0, 100% 0, 100% 85%, 85% 100%, 0 100%); /* Torn corner */
+  transform: rotate(-10deg);
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+}
+
+.clue-record::before {
+  content: '';
+  position: absolute;
+  top: 10px; left: 10px; right: 10px; bottom: 10px;
+  border: 1px dashed #999;
+}
+
+.clue-bed {
+  width: 180px;
+  height: 90px;
+  background: #424242;
+  border-radius: 6px;
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.7);
+}
+
+.clue-bed::before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  bottom: 15px;
+  background: linear-gradient(135deg, #616161, #757575);
+  border-radius: 4px;
+}
+
+.clue-toys {
+  width: 120px;
+  height: 60px;
+  position: absolute;
+  bottom: 10px;
+  left: 15%;
+}
+
+.clue-toys::before,
+.clue-toys::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  width: 40px;
+  height: 20px;
+  border-radius: 4px;
+}
+
+.clue-toys::before {
+  left: 0;
+  background: #ff7043;
+}
+
+.clue-toys::after {
+  left: 30px;
+  background: #29b6f6;
+}
+
+.clue-keys {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 2px solid #bdbdbd;
+  position: absolute;
+  bottom: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.7);
+}
+
+.clue-keys::before,
+.clue-keys::after {
+  content: '';
+  position: absolute;
+  bottom: -18px;
+  width: 14px;
+  height: 30px;
+  background: #bdbdbd;
+  border-radius: 3px;
+}
+
+.clue-keys::before {
+  left: 8px;
+}
+
+.clue-keys::after {
+  right: 8px;
+}
+
+.clue-candy {
+  width: 60px;
+  height: 30px;
+  position: absolute;
+  bottom: 20px;
+  left: 30%;
+}
+
+.clue-candy::before,
+.clue-candy::after {
+  content: '';
+  position: absolute;
+  top: 5px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #ffeb3b 0%, #f44336 80%);
+}
+
+.clue-candy::before {
+  left: 0;
+}
+
+.clue-candy::after {
+  left: 22px;
+}
+
+.clue-crayon {
+  width: 120px;
+  height: 80px;
+  background: #fafafa;
+  border-radius: 6px;
+  position: absolute;
+  bottom: 80px;
+  right: 40px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.7);
+}
+
+.clue-crayon::before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+  border: 1px dashed #9e9e9e;
+}
+
+.clue-family-drawing {
+  width: 100px;
+  height: 70px;
+  background: #fffde7;
+  position: absolute;
+  top: 60px;
+  right: 20px;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+}
+
+.clue-family-drawing::before {
+  content: '';
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  right: 8px;
+  bottom: 8px;
+  border: 1px dashed #bdbdbd;
+}
+
+.clue-bathroom {
+  width: 140px;
+  height: 160px;
+  background: #263238;
+  position: absolute;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.8);
+  border-radius: 4px;
+}
+
+.clue-bathroom::before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  bottom: 40px;
+  background: linear-gradient(135deg, #455a64, #37474f);
+  border-radius: 3px;
+}
+
+.clue-pills {
+  width: 60px;
+  height: 90px;
+  background: #ffcc80;
+  border-radius: 8px 8px 4px 4px;
+  position: absolute;
+  bottom: 50px;
+  left: 40%;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.8);
+}
+
+.clue-pills::before {
+  content: '';
+  position: absolute;
+  top: -15px;
+  left: 10px;
+  right: 10px;
+  height: 15px;
+  background: #ef6c00;
+  border-radius: 4px 4px 0 0;
+}
+
+.clue-idcard {
+  width: 80px;
+  height: 50px;
+  background: #e0f7fa;
+  border-radius: 4px;
+  position: absolute;
+  bottom: 20px;
+  right: 15%;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.7);
+}
+
+.clue-phone {
+  width: 60px;
+  height: 110px;
+  background: #212121;
+  border-radius: 10px;
+  position: absolute;
+  top: 80px;
+  right: 25%;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.8);
+}
+
+.clue-phone::before {
+  content: '';
+  position: absolute;
+  top: 8px;
+  left: 6px;
+  right: 6px;
+  bottom: 8px;
+  background: #111;
+  border-radius: 6px;
+}
+
+.clue-news {
+  width: 120px;
+  height: 70px;
+  background: #fafafa;
+  border-radius: 4px;
+  position: absolute;
+  bottom: 80px;
+  right: 40px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.7);
+}
+
+.clue-news-updated {
+  width: 110px;
+  height: 60px;
+  background: #e3f2fd;
+  border-radius: 4px;
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.7);
+}
+
+.clue-photo {
+  width: 90px;
+  height: 70px;
+  background: #3e2723;
+  border-radius: 4px;
+  position: absolute;
+  top: 40px;
+  right: 15px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.8);
+}
+
+.clue-photo::before {
+  content: '';
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  right: 8px;
+  bottom: 8px;
+  background: #fafafa;
+  border-radius: 2px;
+}
+
+.clue-chat {
+  width: 70px;
+  height: 50px;
+  background: #e0f2f1;
+  position: absolute;
+  top: 150px;
+  right: 60px;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.7);
+}
+
+.clue-form {
+  width: 90px;
+  height: 60px;
+  background: #fff3e0;
+  position: absolute;
+  top: 210px;
+  right: 30px;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.7);
+}
+
+.clue-bag {
+  width: 120px;
+  height: 80px;
+  background: #5d4037;
+  border-radius: 8px;
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.8);
+}
+
+.clue-bag-note {
+  width: 80px;
+  height: 50px;
+  background: #fff9c4;
+  position: absolute;
+  bottom: 90px;
+  left: 55%;
+  transform: rotate(-8deg);
+  box-shadow: 0 3px 8px rgba(0,0,0,0.7);
+}
+
+.clue-wallet {
+  width: 80px;
+  height: 50px;
+  background: #4e342e;
+  border-radius: 4px;
+  position: absolute;
+  bottom: 10px;
+  left: 20%;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.8);
+}
+
+.clue-phone-trucker {
+  width: 60px;
+  height: 110px;
+  background: #212121;
+  border-radius: 10px;
+  position: absolute;
+  bottom: 60px;
+  left: 45%;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.8);
+}
+
+.clue-phone-trucker::before {
+  content: '';
+  position: absolute;
+  top: 8px;
+  left: 6px;
+  right: 6px;
+  bottom: 8px;
+  background: #111;
+  border-radius: 6px;
+}
+
+.clue-transport {
+  width: 110px;
+  height: 60px;
+  background: #eceff1;
+  border-radius: 4px;
+  position: absolute;
+  bottom: 10px;
+  right: 15%;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.7);
+}
+
+.clue-ashtray {
+  width: 70px;
+  height: 25px;
+  background: #424242;
+  border-radius: 50%;
+  position: absolute;
+  bottom: 40px;
+  right: 20%;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.8);
+}
+
+
+/* ---------------- 动画与交互 ---------------- */
+
+/* 灰色闪烁点动画 */
+.flicker-dots {
+  position: absolute;
+  top: -10px; left: -10px; right: -10px; bottom: -10px;
+  pointer-events: none;
+  z-index: 20;
+}
+
+.dot {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: #888;
+  border-radius: 50%;
+  opacity: 0.7;
+  box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+  animation: orbit 3s linear infinite;
+}
+
+.dot:nth-child(1) { top: 0; left: 50%; animation-delay: 0s; }
+.dot:nth-child(2) { top: 100%; right: 0; animation-delay: 1s; }
+.dot:nth-child(3) { bottom: 0; left: 0; animation-delay: 2s; }
+
+@keyframes orbit {
+  0% { transform: translate(0, 0) scale(1); opacity: 0; }
+  50% { opacity: 0.7; }
+  100% { transform: translate(10px, -10px) scale(0); opacity: 0; }
+}
+
+/* 【可收集】标签 */
+.collect-label {
+  position: absolute;
+  top: 50%;
+  left: 110%; /* Show to the right */
+  transform: translateY(-50%);
+  width: 80px;
+  height: 30px;
+  background-color: #0099ff;
+  color: white;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+  font-size: 0.8rem;
+  white-space: nowrap;
+  animation: popLabel 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  z-index: 100;
+}
+
+.collect-label::before { /* Triangle arrow */
+  content: '';
+  position: absolute;
+  left: -6px;
+  top: 50%;
+  transform: translateY(-50%);
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-right: 6px solid #0099ff;
+}
+
+.collect-label:active {
+  transform: translateY(-50%) scale(0.95);
+}
+
+@keyframes popLabel {
+  from { transform: translateY(-50%) scale(0); opacity: 0; }
+  to { transform: translateY(-50%) scale(1); opacity: 1; }
+}
+
+/* 全局装饰 */
+.global-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.cobwebs {
+  background-image: 
+    radial-gradient(circle at 0 0, transparent 0%, transparent 90%, rgba(255,255,255,0.05) 91%, transparent 92%),
+    radial-gradient(circle at 100% 0, transparent 0%, transparent 80%, rgba(255,255,255,0.05) 81%, transparent 82%);
+  opacity: 0.3;
+}
+
+.dust {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.1'/%3E%3C/svg%3E");
+  opacity: 0.2;
+  mix-blend-mode: overlay;
+}

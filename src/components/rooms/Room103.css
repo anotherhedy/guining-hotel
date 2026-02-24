@@ -1,0 +1,556 @@
+/* Room 103 Styles - Zhao Qing's Room */
+.room103-container {
+  width: 100vw;
+  height: 100vh;
+  background-color: #111111; /* Ink Black base */
+  background: radial-gradient(circle at center, #222222 0%, #111111 80%, #000000 100%);
+  display: flex;
+  position: relative;
+  overflow: hidden;
+  font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+  color: #ddd;
+}
+
+/* Back Button */
+.room103-back {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  padding: 8px 16px;
+  background: linear-gradient(90deg, #8b0000, #500000);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  z-index: 100;
+  transition: all 0.3s ease;
+  font-weight: bold;
+}
+
+.room103-back:hover {
+  transform: scale(1.1);
+  background: linear-gradient(90deg, #600000, #300000);
+}
+
+.room103-back:active {
+  transform: scale(0.95);
+}
+
+/* Layout Zones */
+.room103-content {
+  flex: 1;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.room103-zone-left {
+  width: 30%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(to right, #1a1a1a, #222);
+  border-right: 2px solid #000;
+}
+
+.room103-zone-middle {
+  width: 40%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding-bottom: 50px;
+}
+
+.room103-zone-right {
+  width: 30%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  background: linear-gradient(to left, #1a1a1a, #222);
+  border-left: 2px solid #000;
+}
+
+/* Window & Door Area (Left) */
+.room103-doorwin {
+  width: 80%;
+  height: 60%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.room103-doorwin:hover {
+  transform: scale(1.02);
+}
+
+.room103-window {
+  width: 100%;
+  height: 70%;
+  background-color: #333333; /* Dark Grey Frame */
+  border: 10px solid #333333;
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+}
+
+.room103-window::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent 0,
+    transparent 20px,
+    rgba(255, 255, 255, 0.8) 20px, /* White bars */
+    rgba(255, 255, 255, 0.8) 22px
+  );
+  opacity: 0.7;
+}
+
+.room103-window-dust {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background-color: #999999;
+  opacity: 0.3;
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* Desk Area (Middle) */
+.room103-desk {
+  width: 80%;
+  height: 40%;
+  background-color: #775533; /* Deep Brown Wood */
+  position: relative;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.8);
+  border-top: 5px solid #5d4037;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  z-index: 10;
+}
+
+/* Palette */
+.room103-palette {
+  width: 100px;
+  height: 80px;
+  background-color: #d4b886;
+  border-radius: 50%;
+  position: absolute;
+  top: -40px;
+  left: 20%;
+  transform: rotate(15deg);
+  box-shadow: 2px 5px 10px rgba(0,0,0,0.5);
+  cursor: pointer;
+  z-index: 15;
+}
+
+.room103-palette::before { /* Thumb hole */
+  content: '';
+  position: absolute;
+  top: 20px; left: 20px;
+  width: 15px; height: 15px;
+  background-color: #775533; /* See through to desk */
+  border-radius: 50%;
+  box-shadow: inset 1px 1px 3px rgba(0,0,0,0.5);
+}
+
+.room103-paint-blob {
+  position: absolute;
+  width: 15px; height: 15px;
+  border-radius: 50%;
+  opacity: 0.9;
+  box-shadow: inset -2px -2px 5px rgba(0,0,0,0.3);
+}
+
+.room103-paint-red { background: #ff0000; top: 10px; right: 20px; }
+.room103-paint-green { background: #00ff00; top: 30px; right: 10px; }
+.room103-paint-blue { background: #0000ff; bottom: 20px; right: 20px; }
+.room103-paint-yellow { background: #ffff00; bottom: 10px; left: 40px; }
+
+/* Brushes */
+.room103-brushes {
+  position: absolute;
+  top: -30px;
+  right: 20%;
+  display: flex;
+  gap: 5px;
+}
+
+.room103-brush {
+  width: 6px;
+  height: 80px;
+  background-color: #e6d5b8; /* Light wood */
+  position: relative;
+  transform: rotate(-10deg);
+}
+
+.room103-brush::after { /* Bristles */
+  content: '';
+  position: absolute;
+  top: -10px; left: 0;
+  width: 6px; height: 10px;
+  background-color: #333;
+  border-radius: 2px 2px 0 0;
+}
+
+/* Turpentine (Hidden) */
+.room103-turpentine {
+  width: 30px;
+  height: 50px;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  position: absolute;
+  top: -60px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 5px 5px 2px 2px;
+  cursor: pointer;
+  overflow: hidden;
+  display: none; /* Hidden by default */
+  z-index: 12;
+}
+
+.room103-turpentine.visible {
+  display: block;
+  animation: fadeIn 1s ease;
+}
+
+.room103-turpentine::after { /* Liquid */
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; width: 100%; height: 70%;
+  background-color: rgba(255, 255, 0, 0.4); /* Light yellow liquid */
+}
+
+/* Easel */
+.room103-easel {
+  position: absolute;
+  bottom: 20px;
+  left: -150px; /* To the left of the desk in middle zone, or absolute in middle zone */
+  width: 120px;
+  height: 200px;
+  z-index: 5;
+}
+
+.room103-easel-stand {
+  width: 10px;
+  height: 100%;
+  background-color: #e6d5b8;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%) rotate(-5deg);
+}
+
+.room103-easel-stand::before { /* Leg 2 */
+  content: '';
+  position: absolute;
+  top: 0; left: -30px;
+  width: 10px; height: 100%;
+  background-color: #e6d5b8;
+  transform: rotate(10deg);
+}
+
+.room103-easel-stand::after { /* Leg 3 */
+  content: '';
+  position: absolute;
+  top: 0; left: 30px;
+  width: 10px; height: 100%;
+  background-color: #e6d5b8;
+  transform: rotate(-10deg);
+}
+
+.room103-canvas {
+  width: 140px;
+  height: 100px;
+  background-color: #ddd;
+  position: absolute;
+  top: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 4px solid #886644;
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+  background-image: linear-gradient(to bottom, #222, #445544); /* Mountain landscape hint */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.room103-canvas::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background-color: #999999;
+  opacity: 0.4; /* Dust */
+  pointer-events: none;
+}
+
+/* Wall Paintings */
+.room103-wall {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px;
+  height: 200px;
+  background-color: #2a2a2a;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px;
+}
+
+.room103-wall-texture {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background-color: #d4b886; /* Yellowish */
+  opacity: 0.1;
+  pointer-events: none;
+}
+
+.room103-painting {
+  width: 60px;
+  height: 80px;
+  background-color: #111;
+  border: 4px solid #886644;
+  position: relative;
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+  cursor: pointer;
+}
+
+.room103-painting:nth-child(odd) { transform: rotate(2deg); }
+.room103-painting:nth-child(even) { transform: rotate(-3deg); }
+
+.room103-painting-flippable {
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
+
+.room103-painting-flippable.flipped {
+  transform: rotateY(180deg);
+}
+
+.room103-painting-front, .room103-painting-back {
+  position: absolute;
+  width: 100%; height: 100%;
+  backface-visibility: hidden;
+}
+
+.room103-painting-front { background: #333; }
+.room103-painting-back {
+  background: #f0f0f0;
+  color: #333;
+  transform: rotateY(180deg);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 8px;
+  padding: 2px;
+  text-align: center;
+}
+
+/* Phone */
+.room103-phone {
+  width: 40px;
+  height: 70px;
+  background-color: #000000;
+  position: absolute;
+  bottom: 20px; /* On desk */
+  left: 10px;
+  border-radius: 4px;
+  border: 1px solid #333;
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.6);
+  cursor: pointer;
+  z-index: 20;
+}
+
+.room103-phone-screen {
+  position: absolute;
+  top: 5px; left: 2px; right: 2px; bottom: 8px;
+  background-color: #111;
+}
+
+/* Bed (Right) */
+.room103-bed {
+  width: 250px;
+  height: 150px;
+  background-color: #333333;
+  position: relative;
+  margin-bottom: 20px;
+  border-radius: 5px;
+}
+
+.room103-bed-mattress {
+  position: absolute;
+  top: 10px; left: 10px; right: 10px; bottom: 10px;
+  background-color: #444;
+}
+
+/* Box (Corner) */
+.room103-box {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  width: 80px;
+  height: 60px;
+  background-color: #666666; /* Metal */
+  border: 1px solid #444;
+  transform: rotate(-10deg);
+}
+
+.room103-box-lid {
+  position: absolute;
+  top: -20px; left: 0;
+  width: 100%; height: 20px;
+  background-color: #555;
+  transform-origin: bottom;
+  transform: rotateX(45deg);
+}
+
+/* Animations */
+@keyframes room103-blink {
+  0% { opacity: 0; transform: scale(0.5); }
+  50% { opacity: 0.8; transform: scale(1.2); }
+  100% { opacity: 0; transform: scale(0.5); }
+}
+
+.room103-clue {
+  position: relative;
+}
+
+.room103-clue.collectable::after {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 20px; height: 20px;
+  background: radial-gradient(circle, rgba(150,150,150,0.8) 0%, transparent 70%);
+  border-radius: 50%;
+  animation: room103-blink 2s infinite;
+  pointer-events: none;
+  z-index: 50;
+}
+
+.room103-clue.collected {
+  filter: grayscale(100%) brightness(50%);
+  cursor: default;
+}
+
+.room103-clue.collected::after {
+  display: none;
+}
+
+.room103-clue:hover {
+  cursor: pointer;
+}
+
+.room103-clue:active {
+  transform: scale(0.95);
+}
+
+/* Collect Tag */
+.room103-collect-tag {
+  position: absolute;
+  left: 100%;
+  margin-left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: #0099ff;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: bold;
+  pointer-events: auto;
+  z-index: 100;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.room103-collect-tag::before {
+  content: '';
+  position: absolute;
+  left: -6px;
+  top: 50%;
+  transform: translateY(-50%);
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-right: 6px solid #0099ff;
+}
+
+/* Phone UI Overlay */
+.room103-phone-ui {
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  height: 500px;
+  background-color: #000;
+  border: 10px solid #333;
+  border-radius: 20px;
+  z-index: 200;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  box-shadow: 0 0 50px rgba(0,0,0,0.9);
+}
+
+.room103-phone-close {
+  position: absolute;
+  top: 10px; right: 10px;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.room103-app-icon {
+  width: 60px; height: 60px;
+  border-radius: 12px;
+  margin: 10px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+  flex-direction: column;
+}
+
+.room103-app-chat { background-color: #07c160; }
+.room103-app-moments { background-color: #fff; color: #000; }
+
+.room103-phone-content {
+  flex: 1;
+  overflow-y: auto;
+  margin-top: 20px;
+  background-color: #111;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+/* Blink Animation for specific clue areas */
+.room103-blink-spot {
+  position: absolute;
+  width: 10px; height: 10px;
+  background-color: #ccc;
+  border-radius: 50%;
+  box-shadow: 0 0 10px #fff;
+  animation: room103-blink 2s infinite;
+  pointer-events: none;
+}
