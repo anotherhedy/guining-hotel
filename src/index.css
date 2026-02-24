@@ -5,6 +5,10 @@ html, body {
   width: 100vw;
   height: 100vh;
   overflow: hidden; /* 禁止全局滚动 */
+  user-select: none; /* 全局禁用鼠标选中 */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 }
 
 .app-container {
@@ -17,6 +21,7 @@ html, body {
   color: #ddd;
   overflow: hidden; /* 确保容器不滚动 */
   position: relative;
+  user-select: none;
 }
 
 /* ---------------- Loading Overlay ---------------- */
@@ -228,6 +233,7 @@ html, body {
   letter-spacing: 6px;
   position: relative;
   overflow: hidden;
+  user-select: none; /* 按钮不可选中文字 */
 }
 
 /* 按钮 Hover 火光效果 */
@@ -273,6 +279,11 @@ html, body {
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
+}
+
+@keyframes fadeInDialog {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes fadeInDown {
@@ -395,6 +406,7 @@ html, body {
   z-index: 60;
   transition: all 0.2s ease;
   box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+  user-select: none;
 }
 
 .sidebar-toggle:hover {
@@ -551,6 +563,7 @@ html, body {
   font-size: 1rem;
   outline: none;
   transition: box-shadow 0.3s;
+  user-select: text; /* 允许输入框选中文字 */
 }
 
 .name-input:focus, .name-input:hover {
@@ -655,6 +668,7 @@ html, body {
   cursor: pointer;
   box-shadow: 5px 5px 15px rgba(0,0,0,0.6);
   transition: all 0.3s ease;
+  user-select: none;
   background-image: repeating-linear-gradient(90deg, 
     rgba(255,255,255,0.03) 0px, 
     rgba(255,255,255,0.03) 2px, 
@@ -704,10 +718,15 @@ html, body {
 
 /* ---------------- Floating Death Icon & Dialog ---------------- */
 .death-icon-container {
-  position: absolute;
-  left: 20px;
-  bottom: 20px;
   z-index: 100;
+  cursor: grab;
+  transition: transform 0.2s;
+  user-select: none;
+}
+
+.death-icon-container.dragging {
+  cursor: grabbing;
+  transform: scale(1.05);
 }
 
 .death-icon {
@@ -718,11 +737,10 @@ html, body {
   display: flex;
   justify-content: center;
   align-items: center;
-  cursor: pointer;
   box-shadow: 0 4px 10px rgba(0,0,0,0.6);
-  transition: transform 0.3s, box-shadow 0.3s;
   border: 2px solid #500000;
-  position: relative; /* For red dot positioning */
+  position: relative;
+  transition: box-shadow 0.3s;
 }
 
 .death-icon:hover {
@@ -792,23 +810,21 @@ html, body {
 
 /* Death Dialog */
 .death-dialog {
-  position: absolute;
-  bottom: 80px;
-  left: 0;
   width: 380px;
-  height: 400px; /* Increased height for chat */
+  height: 450px;
   background-color: rgba(10, 10, 10, 0.95);
   border: 1px solid #8b0000;
   border-radius: 8px;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 0 20px rgba(0,0,0,0.8);
-  animation: fadeIn 0.3s ease;
+  box-shadow: 0 0 25px rgba(0,0,0,0.9);
+  animation: fadeInDialog 0.3s ease;
+  z-index: 1000;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+.death-dialog.dragging {
+  opacity: 0.9;
+  cursor: grabbing;
 }
 
 .dialog-header {
@@ -818,6 +834,8 @@ html, body {
   justify-content: space-between;
   align-items: center;
   flex-shrink: 0;
+  background: rgba(139, 0, 0, 0.1);
+  border-radius: 8px 8px 0 0;
 }
 
 .dialog-title {
@@ -925,6 +943,7 @@ html, body {
   border-radius: 4px;
   font-size: 0.9rem;
   outline: none;
+  user-select: text;
 }
 
 .chat-input:focus {
@@ -1084,6 +1103,7 @@ html, body {
   border-radius: 4px;
   font-size: 1rem;
   box-sizing: border-box;
+  user-select: text;
 }
 
 .modal-actions {

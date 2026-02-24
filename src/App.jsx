@@ -105,6 +105,51 @@ function App() {
   const [hasUnread, setHasUnread] = useState(true)
   const [inputValue, setInputValue] = useState('')
   const messagesEndRef = useRef(null)
+
+  // Dragging State for Death Icon and Dialog
+  const [iconPos, setIconPos] = useState({ x: 20, y: window.innerHeight - 80 })
+  const [isDragging, setIsDragging] = useState(false)
+  const dragOffset = useRef({ x: 0, y: 0 })
+  const hasMoved = useRef(false)
+
+  const handleMouseDown = (e) => {
+    // Start dragging from the icon container
+    if (e.target.closest('.death-icon')) {
+      setIsDragging(true)
+      hasMoved.current = false
+      const rect = e.currentTarget.getBoundingClientRect()
+      dragOffset.current = {
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top
+      }
+    }
+  }
+
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      if (isDragging) {
+        hasMoved.current = true
+        setIconPos({
+          x: e.clientX - dragOffset.current.x,
+          y: e.clientY - dragOffset.current.y
+        })
+      }
+    }
+
+    const handleMouseUp = () => {
+      setIsDragging(false)
+    }
+
+    if (isDragging) {
+      window.addEventListener('mousemove', handleMouseMove)
+      window.addEventListener('mouseup', handleMouseUp)
+    }
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove)
+      window.removeEventListener('mouseup', handleMouseUp)
+    }
+  }, [isDragging])
   
   // Handle message revealing effect
   useEffect(() => {
@@ -691,10 +736,23 @@ function App() {
           </div>
           
           {/* Floating Death Icon */}
-          <div className="death-icon-container">
+          <div 
+            className={`death-icon-container ${isDragging ? 'dragging' : ''}`}
+            onMouseDown={handleMouseDown}
+            style={{
+              left: `${iconPos.x}px`,
+              top: `${iconPos.y}px`,
+              position: 'fixed'
+            }}
+          >
             <div
               className="death-icon"
-              onClick={() => setIsDeathDialogOpen(!isDeathDialogOpen)}
+              onClick={() => {
+                // Only toggle if we haven't been dragging
+                if (!hasMoved.current) {
+                  setIsDeathDialogOpen(!isDeathDialogOpen)
+                }
+              }}
             >
               {hasUnread && !isDeathDialogOpen && <div className="notification-dot"></div>}
               
@@ -704,63 +762,78 @@ function App() {
                 <div className="skull-teeth"></div>
               </div>
             </div>
-            
-            {/* Death Dialog */}
-            {isDeathDialogOpen && (
-              <div className="death-dialog">
-                <div className="dialog-header">
-                  <span className="dialog-title">与死神的对话</span>
-                  <span
-                    className="close-btn"
-                    onClick={() => setIsDeathDialogOpen(false)}
-                  >×</span>
-                </div>
-                <div className="dialog-content chat-content">
-                  {displayedMessages.map((msg) => (
-                    <div key={msg.id} className={`chat-message ${msg.sender}`}>
-                      <div className="message-sender">{msg.sender === 'death' ? '死神' : '你'}</div>
-                      <div className="message-bubble">
-                        {msg.type === 'clue' ? (
-                          <>
-                            {msg.text}
-                            <span
-                              className={isDeathClueCollected(msg.clueId) ? "collected-text" : "collectible-text"}
-                              onClick={() => handleCollectClue(msg.clueId)}
-                              title={isDeathClueCollected(msg.clueId) ? "已收集" : "点击收集线索"}
-                            >
-                              {isDeathClueCollected(msg.clueId) ? '【已收集】' : '【可收集】'}
-                            </span>
-                          </>
-                        ) : (
-                          msg.text
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                  {displayedMessages.length < chatHistory.length && chatHistory[displayedMessages.length].sender === 'death' && (
-                    <div className="chat-message death thinking">
-                      <div className="message-sender">死神</div>
-                      <div className="message-bubble">
-                        ...
-                      </div>
-                    </div>
-                  )}
-                  <div ref={messagesEndRef} />
-                </div>
-                <div className="chat-input-area">
-                  <input
-                    type="text"
-                    className="chat-input"
-                    placeholder="输入对话..."
-                    value={inputValue}
-                    onChange={(e) => setInputValue(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                  />
-                  <button className="send-btn" onClick={handleSendMessage}>发送</button>
-                </div>
-              </div>
-            )}
           </div>
+            
+          {/* Death Dialog */}
+          {isDeathDialogOpen && (
+            <div 
+              className="death-dialog"
+              style={{
+                left: `${iconPos.x}px`,
+                top: `${iconPos.y - 460}px`, // Fixed offset above the icon
+                position: 'fixed'
+              }}
+            >
+              <div className="dialog-header">
+                <span className="dialog-title">与死神的对话</span>
+                <span
+                  className="close-btn"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    setIsDeathDialogOpen(false)
+                  }}
+                >×</span>
+              </div>
+              <div className="dialog-content chat-content">
+                {displayedMessages.map((msg) => (
+                  <div key={msg.id} className={`chat-message ${msg.sender}`}>
+                    <div className="message-sender">{msg.sender === 'death' ? '死神' : '你'}</div>
+                    <div className="message-bubble">
+                      {msg.type === 'clue' ? (
+                        <>
+                          {msg.text}
+                          <span
+                            className={isDeathClueCollected(msg.clueId) ? "collected-text" : "collectible-text"}
+                            onClick={() => handleCollectClue(msg.clueId)}
+                            title={isDeathClueCollected(msg.clueId) ? "已收集" : "点击收集线索"}
+                          >
+                            {isDeathClueCollected(msg.clueId) ? '【已收集】' : '【可收集】'}
+                          </span>
+                        </>
+                      ) : (
+                        msg.text
+                      )}
+                    </div>
+                  </div>
+                ))}
+                {displayedMessages.length < chatHistory.length && chatHistory[displayedMessages.length].sender === 'death' && (
+                  <div className="chat-message death thinking">
+                    <div className="message-sender">死神</div>
+                    <div className="message-bubble">
+                      ...
+                    </div>
+                  </div>
+                )}
+                <div ref={messagesEndRef} />
+              </div>
+              <div className="chat-input-area">
+                <input
+                  type="text"
+                  className="chat-input"
+                  placeholder="输入对话..."
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                  onMouseDown={(e) => e.stopPropagation()} // Prevent dragging when clicking input
+                />
+                <button 
+                  className="send-btn" 
+                  onClick={handleSendMessage}
+                  onMouseDown={(e) => e.stopPropagation()} // Prevent dragging when clicking button
+                >发送</button>
+              </div>
+            </div>
+          )}
           
           {/* Verification Modal */}
           {selectedRoom && (
