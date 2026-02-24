@@ -26,6 +26,7 @@ const RoomManager = ({ roomId, onReturn, onCollect, onShowDetail, inventory, isT
           onShowDetail={onShowDetail}
           inventory={inventory}
           isTruth1Unlocked={isTruth1Unlocked}
+          unlockedHiddenIds={unlockedHiddenIds}
         />
       )
     default:

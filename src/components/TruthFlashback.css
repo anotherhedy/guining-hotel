@@ -1,0 +1,102 @@
+/* TruthFlashback.css */
+.truth-flashback-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0, 0, 0, 0.95);
+  z-index: 5000; /* Highest z-index */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: fadeIn 0.5s ease;
+}
+
+.truth-flashback-container {
+  width: 80%;
+  max-width: 800px;
+  height: 80%;
+  background: radial-gradient(circle, #1a0505 0%, #000000 100%);
+  border: 2px solid #8b0000;
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 0 50px rgba(139, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.truth-title {
+  color: #8b0000;
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 2rem;
+  font-family: 'Times New Roman', serif;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+  border-bottom: 1px solid #500000;
+  padding-bottom: 1rem;
+}
+
+.truth-content {
+  flex: 1;
+  color: #ddd;
+  font-size: 1.2rem;
+  line-height: 1.8;
+  white-space: pre-wrap; /* Preserve line breaks */
+  overflow-y: auto;
+  padding-right: 1rem;
+  font-family: 'Courier New', monospace; /* Typewriter style */
+  text-align: justify;
+}
+
+.cursor {
+  display: inline-block;
+  width: 10px;
+  background-color: #8b0000;
+  animation: blink 1s step-end infinite;
+  margin-left: 2px;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.truth-footer {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+.truth-action-btn {
+  background: transparent;
+  border: 1px solid #8b0000;
+  color: #8b0000;
+  padding: 0.8rem 2rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 4px;
+}
+
+.truth-action-btn:hover {
+  background-color: #8b0000;
+  color: white;
+  box-shadow: 0 0 10px rgba(139, 0, 0, 0.5);
+}
+
+/* Custom Scrollbar */
+.truth-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.truth-content::-webkit-scrollbar-track {
+  background: #111; 
+}
+
+.truth-content::-webkit-scrollbar-thumb {
+  background: #500000; 
+  border-radius: 4px;
+}
+
+.truth-content::-webkit-scrollbar-thumb:hover {
+  background: #8b0000; 
+}

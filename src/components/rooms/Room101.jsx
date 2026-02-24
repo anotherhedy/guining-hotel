@@ -12,6 +12,7 @@ const Room101 = ({ onReturn, onCollect, onShowDetail, inventory, unlockedHiddenI
   const findClue = (id) => {
     let clue = cluesData.room101.collectable.find(c => c.clueId === id);
     if (!clue) clue = cluesData.room101.uncollectable.find(c => c.clueId === id);
+    if (!clue) clue = cluesData.room203.collectable.find(c => c.clueId === id);
     return clue;
   };
 
@@ -87,7 +88,7 @@ const Room101 = ({ onReturn, onCollect, onShowDetail, inventory, unlockedHiddenI
   };
 
   // Clue Definitions (Mapped to visual elements)
-  // Drawer 1: 10101 (203 Newspaper) - Special
+  // Drawer 1: 20301 (203 Newspaper) - Special
   // Drawer 2: 10106 (Medical)
   // Drawer 3: 10109 (Hukou) - Uncollectable
   // Drawer 4: 10111 (Record) - Uncollectable
@@ -111,14 +112,14 @@ const Room101 = ({ onReturn, onCollect, onShowDetail, inventory, unlockedHiddenI
                 {/* Drawer 1: Newspaper */}
                 <div className={`room101-drawer ${drawersOpen[1] ? 'open' : ''}`} onClick={(e) => toggleDrawer(e, 1)}>
                     <div className="room101-drawer-content">
-                         {/* 203 Newspaper (10101) */}
+                         {/* 203 Newspaper (20301) */}
                          <div 
-                            className={`room101-clue room101-newspaper ${isCollected('10101') ? 'collected' : 'collectable'}`}
-                            onClick={(e) => handleClueClick(e, '10101', true)}
+                            className={`room101-clue room101-newspaper ${isCollected('20301') ? 'collected' : 'collectable'}`}
+                            onClick={(e) => handleClueClick(e, '20301', true)}
                             title="203旧报纸"
                          >
-                            {activeClueId === '10101' && (
-                                <div className="room101-collect-tag" onClick={(e) => handleCollect(e, '10101')}>
+                            {activeClueId === '20301' && (
+                                <div className="room101-collect-tag" onClick={(e) => handleCollect(e, '20301')}>
                                     【可收集】
                                 </div>
                             )}

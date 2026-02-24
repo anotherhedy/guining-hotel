@@ -209,19 +209,25 @@
 
 /* Turpentine (Hidden) */
 .room103-turpentine {
-  width: 30px;
-  height: 50px;
+  width: 40px; /* Increased size */
+  height: 60px; /* Increased size */
   background: rgba(255, 255, 255, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.6);
   position: absolute;
-  top: -60px;
-  left: 50%;
+  top: -70px; /* Adjusted top */
+  left: 60%; /* Adjusted left to separate from palette */
   transform: translateX(-50%);
   border-radius: 5px 5px 2px 2px;
   cursor: pointer;
-  overflow: hidden;
+  overflow: visible; /* Allow tag to be seen if outside */
   display: none; /* Hidden by default */
-  z-index: 12;
+  z-index: 100; /* High z-index */
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+}
+
+.room103-turpentine:hover {
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+  border-color: #fff;
 }
 
 .room103-turpentine.visible {
@@ -234,6 +240,7 @@
   position: absolute;
   bottom: 0; left: 0; width: 100%; height: 70%;
   background-color: rgba(255, 255, 0, 0.4); /* Light yellow liquid */
+  pointer-events: none;
 }
 
 /* Easel */
@@ -462,13 +469,13 @@
   transform: scale(0.95);
 }
 
-/* Collect Tag */
+/* Collect Tag - Optimized Position */
 .room103-collect-tag {
   position: absolute;
-  left: 100%;
-  margin-left: 10px;
-  top: 50%;
-  transform: translateY(-50%);
+  left: 50%;
+  top: -30px; /* Above the item */
+  transform: translateX(-50%);
+  margin-left: 0;
   background-color: #0099ff;
   color: white;
   padding: 4px 8px;
@@ -476,20 +483,23 @@
   font-size: 12px;
   font-weight: bold;
   pointer-events: auto;
-  z-index: 100;
+  z-index: 200; /* Higher than item */
   cursor: pointer;
   white-space: nowrap;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.5);
 }
 
 .room103-collect-tag::before {
   content: '';
   position: absolute;
-  left: -6px;
-  top: 50%;
-  transform: translateY(-50%);
-  border-top: 6px solid transparent;
-  border-bottom: 6px solid transparent;
-  border-right: 6px solid #0099ff;
+  left: 50%;
+  bottom: -6px; /* Arrow pointing down */
+  top: auto;
+  transform: translateX(-50%);
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid #0099ff;
+  border-bottom: none;
 }
 
 /* Phone UI Overlay */

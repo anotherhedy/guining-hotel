@@ -77,7 +77,8 @@
   flex-direction: row; /* Layout: Sidebar - Main - Sidebar */
   align-items: stretch;
   justify-content: space-between;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   position: relative;
 }
 
@@ -99,7 +100,7 @@
   display: flex;
   flex-direction: column;
   padding: 1rem;
-  overflow: hidden; /* Hide content when collapsed */
+  overflow-y: auto;
   opacity: 1;
   transition: opacity 0.2s ease;
 }
@@ -201,6 +202,18 @@
   background: rgba(0,0,0,0.3);
 }
 
+.inventory-group {
+  margin-bottom: 1rem;
+}
+
+.inventory-group-title {
+  color: #8b0000;
+  font-size: 0.9rem;
+  margin: 0.5rem 0;
+  border-bottom: 1px solid #333;
+  padding-bottom: 0.2rem;
+}
+
 .empty-tip {
   color: #666;
   text-align: center;
@@ -209,7 +222,66 @@
   font-size: 0.9rem;
 }
 
-/* ---------------- Synthesis Content ---------------- */
+/* Clue Card in Inventory */
+.clue-card {
+  background-color: #0a0a0a;
+  border: 1px solid #333;
+  border-left: 3px solid #8b0000;
+  color: #ccc;
+  padding: 0.6rem;
+  border-radius: 2px;
+  margin-bottom: 0.4rem;
+  font-size: 0.85rem;
+  text-align: left;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  animation: fadeIn 0.5s ease;
+  cursor: grab;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+}
+
+.clue-card:hover {
+  background-color: #1a1a1a;
+  border-color: #8b0000;
+  transform: translateX(2px);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.6);
+}
+
+.clue-card:active {
+  cursor: grabbing;
+}
+
+/* ---------------- Truth Review ---------------- */
+.truth-review-section {
+  margin-top: 1rem;
+  border-top: 1px solid #333;
+  padding-top: 1rem;
+}
+
+.truth-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.truth-review-btn {
+  background: transparent;
+  border: 1px solid #500000;
+  color: #aaa;
+  padding: 0.6rem;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+
+.truth-review-btn:hover {
+  background-color: rgba(139, 0, 0, 0.1);
+  color: #fff;
+  border-color: #8b0000;
+}
 .synthesis-form {
   display: flex;
   flex-direction: column;
@@ -653,6 +725,26 @@
   margin-left: 5px;
 }
 
+.sidebar-content::-webkit-scrollbar,
+.inventory-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.sidebar-content::-webkit-scrollbar-track,
+.inventory-list::-webkit-scrollbar-track {
+  background: #111;
+}
+
+.sidebar-content::-webkit-scrollbar-thumb,
+.inventory-list::-webkit-scrollbar-thumb {
+  background: #500000;
+  border-radius: 4px;
+}
+
+.sidebar-content::-webkit-scrollbar-thumb:hover,
+.inventory-list::-webkit-scrollbar-thumb:hover {
+  background: #8b0000;
+}
 .collectible-text:hover {
   cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><path fill="%23fff" d="M10 2l-2 2h-4v12h12v-12h-4l-2-2z"/></svg>'), pointer; /* Custom cursor fallback */
   text-shadow: 0 0 5px #007bff;
@@ -665,30 +757,7 @@
   margin-left: 5px;
 }
 
-/* Clue Card in Inventory */
-.clue-card {
-  background-color: #0a0a0a;
-  border: 1px solid #8b0000;
-  color: #ccc;
-  padding: 0.8rem;
-  border-radius: 4px;
-  margin-bottom: 0.5rem;
-  font-size: 0.9rem;
-  text-align: center;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.5);
-  animation: fadeIn 0.5s ease;
-  cursor: pointer;
-  transition: all 0.2s;
-}
 
-.clue-card:hover {
-  background-color: #1a1a1a;
-  border-color: #a00000;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.6);
-  /* Custom cursor for pointer/hand */
-  cursor: pointer;
-}
 
 /* Modal Overlay */
 .modal-overlay {
@@ -1219,7 +1288,7 @@
   transform: none;
 }
 
-/* 10101 旧报纸 */
+/* 20301 旧报纸 */
 .clue-newspaper {
   width: 100px;
   height: 60px;
@@ -1231,7 +1300,7 @@
   background-image: repeating-linear-gradient(180deg, transparent 0, transparent 4px, #3e2723 5px, transparent 6px);
 }
 
-/* 10104 灭火器 */
+/* 20302 灭火器 */
 .clue-extinguisher {
   width: 40px;
   height: 100px;
@@ -1259,13 +1328,20 @@
   filter: blur(2px);
 }
 
-/* 10105 房梁碎片 */
+/* 20303 房梁碎片 */
 .clue-beam {
   width: 120px;
   height: 40px;
   background: #3e2723;
   clip-path: polygon(0% 20%, 90% 0%, 100% 80%, 10% 100%);
   position: relative;
+  z-index: 20; /* Ensure clickable */
+  cursor: pointer;
+}
+
+.clue-beam:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
 }
 
 .clue-beam::after { /* Burn marks */
@@ -1276,7 +1352,7 @@
   opacity: 0.8;
 }
 
-/* 20301 画笔 */
+/* 20304 画笔 */
 .clue-brush {
   position: absolute;
   bottom: 40px;
@@ -1306,7 +1382,7 @@
   opacity: 0.8;
 }
 
-/* 20302 住户记录 */
+/* 20305 住户记录 */
 .clue-record {
   position: absolute;
   bottom: 150px;

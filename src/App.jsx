@@ -4,6 +4,8 @@ import RoomManager from './components/rooms/RoomManager'
 import cluesData from './assets/clues.json'
 import truthStories from './assets/truthStories.json'
 
+import TruthFlashback from './components/TruthFlashback'
+
 function App() {
   const [gameStatus, setGameStatus] = useState('start') // 'start' | 'hotel' | 'room'
   const [currentRoomId, setCurrentRoomId] = useState(null)
@@ -18,7 +20,7 @@ function App() {
   const [selectedClue, setSelectedClue] = useState(null)
 
   // 203 Room States
-  const [isJiangXiaoliTruth1Unlocked, setIsJiangXiaoliTruth1Unlocked] = useState(false) // 蒋晓丽真相1解锁状态 (控制10105显示)
+  const [isJiangXiaoliTruth1Unlocked, setIsJiangXiaoliTruth1Unlocked] = useState(false) // 蒋晓丽真相1解锁状态 (控制20303显示)
 
   // Hidden clues unlocked by synthesizing truth1
   const [unlockedHiddenIds, setUnlockedHiddenIds] = useState([])
@@ -33,8 +35,9 @@ function App() {
   // Synthesis State
   const [synthesisSlots, setSynthesisSlots] = useState([null, null, null])
   const [synthesisName, setSynthesisName] = useState('')
-  const [truthModal, setTruthModal] = useState({ open: false, title: '', content: '' })
+  const [truthFlashbackData, setTruthFlashbackData] = useState(null) // { title, content }
   const [truth1CompletedNames, setTruth1CompletedNames] = useState([])
+  const [truth2CompletedNames, setTruth2CompletedNames] = useState([]) // Track truth 2 as well
   const [hasTriggeredTruthAll, setHasTriggeredTruthAll] = useState(false)
 
   // Drag and Drop Handlers
@@ -105,24 +108,29 @@ function App() {
   // Handle message revealing effect
   useEffect(() => {
     if (isDeathDialogOpen) {
-      // Clear unread status when dialog is open
       setHasUnread(false)
 
-      // If all messages are already displayed, do nothing
-      if (displayedMessages.length === chatHistory.length) return
+      if (displayedMessages.length >= chatHistory.length) return
 
-      // Sequential revealing logic
-      const timer = setInterval(() => {
+      const nextIndex = displayedMessages.length
+      const nextMessage = chatHistory[nextIndex]
+      
+      let delay = 300
+      if (nextMessage.sender === 'death') {
+        delay = 2500 // Even slower for death thinking
+      }
+
+      const timer = setTimeout(() => {
         setDisplayedMessages(prev => {
-          if (prev.length < chatHistory.length) {
-            return [...prev, chatHistory[prev.length]]
-          }
-          clearInterval(timer)
-          return prev
+            // Re-check index in case it changed
+            if (prev.length < chatHistory.length) {
+                return [...prev, chatHistory[prev.length]]
+            }
+            return prev
         })
-      }, 800) // 800ms delay between messages
+      }, delay)
 
-      return () => clearInterval(timer)
+      return () => clearTimeout(timer)
     }
   }, [isDeathDialogOpen, chatHistory, displayedMessages.length])
 
@@ -142,7 +150,7 @@ function App() {
 
     setInventory(prev => [...prev, {
       id: clue.clueId,
-      title: `线索：${clue.clueName}`,
+      title: `${clue.clueName}`,
       content: clue.clueDesc,
       detail: clue.detail
     }])
@@ -163,7 +171,7 @@ function App() {
     if (normalized === 'XS001') {
       setClueCollected(true)
     }
-    const titleMap = { 'XS001': '线索：死神-大火', 'XS002': '线索：死神-亡者复仇' }
+    const titleMap = { 'XS001': '死神-大火', 'XS002': '死神-亡者复仇' }
     const contentMap = { 
       'XS001': '昨夜归宁旅馆起了一场大火，所有人都死在房间内。', 
       'XS002': '亡者复仇的故事确实存在，但那个死去的灵魂仇恨必须很深才能影响到现实。' 
@@ -318,12 +326,39 @@ function App() {
     const content = storyConfig
       ? (isTruth1 ? storyConfig.truth1Story : storyConfig.truth2Story)
       : '真相已还原'
-    setTruthModal({ open: true, title, content })
+    
+    setTruthFlashbackData({ title, content })
+    
     if (isTruth1) {
       setTruth1CompletedNames(prev => (prev.includes(name) ? prev : [...prev, name]))
+      // 不再在个人真相1完成时立即解锁隐藏线索
+    } else {
+      setTruth2CompletedNames(prev => (prev.includes(name) ? prev : [...prev, name]))
     }
     // clear slots after success
     setSynthesisSlots([null, null, null])
+  }
+
+  // Helper to group inventory by room
+  const getGroupedInventory = () => {
+    const groups = {}
+    inventory.forEach(item => {
+      let groupKey = '其他'
+      if (item.id.startsWith('XS')) groupKey = '死神线索'
+      else if (/^\d{3}/.test(item.id)) groupKey = item.id.substring(0, 3) + '房间'
+      
+      if (!groups[groupKey]) groups[groupKey] = []
+      groups[groupKey].push(item)
+    })
+    return groups
+  }
+
+  const handleShowTruthReview = (name, type) => {
+    const storyConfig = truthStories[name]
+    if (!storyConfig) return
+    const title = type === 1 ? `【${name}-死亡真相】` : `【${name}-死亡真相2】`
+    const content = type === 1 ? storyConfig.truth1Story : storyConfig.truth2Story
+    setTruthFlashbackData({ title, content })
   }
 
   useEffect(() => {
@@ -392,16 +427,20 @@ function App() {
                 {inventory.length === 0 ? (
                   <div className="empty-tip">暂无收集的线索</div>
                 ) : (
-                  inventory.map((item, index) => (
-                    /* 物品栏线索详情: Clickable Clue Card */
-                    <div 
-                      key={index} 
-                      className="clue-card"
-                      draggable="true"
-                      onDragStart={(e) => handleDragStart(e, item)}
-                      onClick={() => setSelectedClue(item)}
-                    >
-                      {item.title}
+                  Object.entries(getGroupedInventory()).map(([groupName, items]) => (
+                    <div key={groupName} className="inventory-group">
+                      <h3 className="inventory-group-title">{groupName}</h3>
+                      {items.map((item, index) => (
+                        <div 
+                          key={item.id} 
+                          className="clue-card"
+                          draggable="true"
+                          onDragStart={(e) => handleDragStart(e, item)}
+                          onClick={() => setSelectedClue(item)}
+                        >
+                          {item.title}
+                        </div>
+                      ))}
                     </div>
                   ))
                 )}
@@ -493,6 +532,33 @@ function App() {
 
                 <button className="synthesize-btn" onClick={handleSynthesize}>合成真相</button>
               </div>
+
+              {/* Truth Review Section */}
+              {(truth1CompletedNames.length > 0 || truth2CompletedNames.length > 0) && (
+                <div className="truth-review-section">
+                  <h2 className="sidebar-title" style={{ marginTop: '2rem' }}>已还原真相</h2>
+                  <div className="truth-list">
+                    {truth1CompletedNames.map(name => (
+                      <button 
+                        key={`${name}-1`} 
+                        className="truth-review-btn"
+                        onClick={() => handleShowTruthReview(name, 1)}
+                      >
+                        {name} - 真相
+                      </button>
+                    ))}
+                    {truth2CompletedNames.map(name => (
+                      <button 
+                        key={`${name}-2`} 
+                        className="truth-review-btn"
+                        onClick={() => handleShowTruthReview(name, 2)}
+                      >
+                        {name} - 真相 2
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
@@ -544,6 +610,14 @@ function App() {
                       </div>
                     </div>
                   ))}
+                  {displayedMessages.length < chatHistory.length && chatHistory[displayedMessages.length].sender === 'death' && (
+                    <div className="chat-message death thinking">
+                      <div className="message-sender">死神</div>
+                      <div className="message-bubble">
+                        ...
+                      </div>
+                    </div>
+                  )}
                   <div ref={messagesEndRef} />
                 </div>
                 <div className="chat-input-area">
@@ -597,19 +671,13 @@ function App() {
             </div>
           )}
 
-          {/* Truth Result Modal */}
-          {truthModal.open && (
-            <div className="modal-overlay" onClick={() => setTruthModal({ open: false, title: '', content: '' })}>
-              <div className="modal-content clue-detail-modal" onClick={e => e.stopPropagation()}>
-                <div className="modal-header">
-                  <h3 className="modal-title">{truthModal.title}</h3>
-                  <span className="close-btn" onClick={() => setTruthModal({ open: false, title: '', content: '' })}>×</span>
-                </div>
-                <div className="modal-body">
-                  <p className="detail-item">{truthModal.content}</p>
-                </div>
-              </div>
-            </div>
+          {/* Truth Flashback Overlay */}
+          {truthFlashbackData && (
+            <TruthFlashback
+              title={truthFlashbackData.title}
+              content={truthFlashbackData.content}
+              onClose={() => setTruthFlashbackData(null)}
+            />
           )}
 
         </div>
