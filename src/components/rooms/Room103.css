@@ -12,28 +12,26 @@
 }
 
 /* Back Button */
-.room103-back {
+.return-btn {
   position: absolute;
   top: 20px;
   left: 20px;
-  padding: 8px 16px;
-  background: linear-gradient(90deg, #8b0000, #500000);
+  z-index: 100;
+  background: linear-gradient(90deg, #500000, #200000);
   color: white;
-  border: none;
+  border: 1px solid #8b0000;
+  padding: 10px 20px;
   border-radius: 4px;
   cursor: pointer;
-  z-index: 100;
-  transition: all 0.3s ease;
   font-weight: bold;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.5);
 }
 
-.room103-back:hover {
-  transform: scale(1.1);
-  background: linear-gradient(90deg, #600000, #300000);
-}
-
-.room103-back:active {
-  transform: scale(0.95);
+.return-btn:hover {
+  transform: scale(1.05);
+  background: linear-gradient(90deg, #8b0000, #300000);
+  box-shadow: 0 0 15px rgba(139, 0, 0, 0.5);
 }
 
 /* Layout Zones */
@@ -503,56 +501,57 @@
 }
 
 /* Phone UI Overlay */
-.room103-phone-ui {
-  position: fixed;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  width: 300px;
-  height: 500px;
-  background-color: #000;
-  border: 10px solid #333;
-  border-radius: 20px;
-  z-index: 200;
-  color: white;
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-  box-shadow: 0 0 50px rgba(0,0,0,0.9);
-}
 
-.room103-phone-close {
+/* Phone 组件 - 合并并优化 */
+.room103-phone {
+  width: 40px;
+  height: 70px;
+  background-color: #000000;
   position: absolute;
-  top: 10px; right: 10px;
-  background: none;
-  border: none;
-  color: #fff;
-  font-size: 20px;
-  cursor: pointer;
-}
-
-.room103-app-icon {
-  width: 60px; height: 60px;
-  border-radius: 12px;
-  margin: 10px;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 12px;
-  flex-direction: column;
-}
-
-.room103-app-chat { background-color: #07c160; }
-.room103-app-moments { background-color: #fff; color: #000; }
-
-.room103-phone-content {
-  flex: 1;
-  overflow-y: auto;
-  margin-top: 20px;
-  background-color: #111;
-  padding: 10px;
+  bottom: 20px; /* 桌面位置 */
+  left: 10px;
   border-radius: 4px;
+  border: 1px solid #333;
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.6);
+  cursor: pointer;
+  z-index: 20;
+  transition: all 0.3s ease; /* 统一过渡动画 */
+  /* 新增：防止点击时文字选中 */
+  user-select: none;
 }
+
+.room103-phone:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 15px rgba(0, 153, 255, 0.5);
+  border-color: #0099ff; /* 高亮边框 */
+}
+
+/* 点击按压效果 */
+.room103-phone:active {
+  transform: scale(0.98);
+  box-shadow: 0 0 8px rgba(0, 153, 255, 0.3);
+}
+
+.room103-phone-screen {
+  position: absolute;
+  top: 5px;
+  left: 2px;
+  right: 2px;
+  bottom: 8px;
+  background-color: #111;
+  border-radius: 2px;
+  /* 新增：屏幕默认暗态，hover 时亮一点（模拟唤醒） */
+  transition: background-color 0.3s ease;
+}
+
+.room103-phone:hover .room103-phone-screen {
+  background-color: #222;
+  /* 可选：加微弱的屏幕光效 */
+  box-shadow: inset 0 0 3px rgba(0, 153, 255, 0.4);
+}
+
+
+
 
 /* Blink Animation for specific clue areas */
 .room103-blink-spot {

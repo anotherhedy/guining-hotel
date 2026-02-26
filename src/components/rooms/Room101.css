@@ -12,28 +12,26 @@
 }
 
 /* Back Button */
-.room101-back {
+.return-btn {
   position: absolute;
   top: 20px;
   left: 20px;
-  padding: 8px 16px;
-  background: linear-gradient(90deg, #8b0000, #500000);
+  z-index: 100;
+  background: linear-gradient(90deg, #500000, #200000);
   color: white;
-  border: none;
+  border: 1px solid #8b0000;
+  padding: 10px 20px;
   border-radius: 4px;
   cursor: pointer;
-  z-index: 100;
-  transition: all 0.3s ease;
   font-weight: bold;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.5);
 }
 
-.room101-back:hover {
-  transform: scale(1.1);
-  background: linear-gradient(90deg, #a00000, #600000);
-}
-
-.room101-back:active {
-  transform: scale(0.95);
+.return-btn:hover {
+  transform: scale(1.05);
+  background: linear-gradient(90deg, #8b0000, #300000);
+  box-shadow: 0 0 15px rgba(139, 0, 0, 0.5);
 }
 
 /* Layout Zones */
@@ -55,18 +53,37 @@
   justify-content: center;
 }
 
-/* Desk */
+/* Desk - 增强真实感：木纹、光影、厚度、倒角 */
 .room101-desk {
   width: 80%;
   height: 60%;
-  background-color: #775533; /* Deep Brown */
+  /* 木纹背景 + 渐变增强立体感 */
+  background: linear-gradient(135deg, #775533 0%, #634528 100%);
+  background-image: 
+    repeating-linear-gradient(
+      0deg,
+      rgba(255,255,255,0.03) 0px,
+      rgba(255,255,255,0.03) 1px,
+      transparent 1px,
+      transparent 4px
+    ),
+    linear-gradient(135deg, #775533 0%, #634528 100%);
   position: relative;
-  box-shadow: 10px 10px 30px rgba(0,0,0,0.8);
+  /* 更真实的阴影：多层阴影模拟环境光 */
+  box-shadow: 
+    0 15px 25px rgba(0,0,0,0.7),
+    inset 0 2px 0 rgba(255,255,255,0.1),
+    inset 0 -2px 0 rgba(0,0,0,0.2);
   display: flex;
   flex-direction: column;
+  /* 桌子厚度 + 倒角 */
+  border-radius: 4px 4px 0 0;
+  border-bottom: 15px solid #5d4037;
+  /* 轻微倾斜增强透视 */
+  transform: perspective(800px) rotateX(2deg);
 }
 
-/* Desk Surface Dust */
+/* Desk Surface Dust - 更真实的灰尘效果 */
 .room101-desk::after {
   content: '';
   position: absolute;
@@ -74,8 +91,10 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: #999999;
-  opacity: 0.3;
+  /* 更自然的灰尘颜色 + 随机噪点 */
+  background-image: 
+    url("data:image/svg+xml,%3Csvg width='20' height='20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='10' cy='10' r='0.5' fill='%23999' opacity='0.5'/%3E%3C/svg%3E");
+  opacity: 0.15;
   pointer-events: none;
   z-index: 1;
 }
@@ -94,21 +113,27 @@
   flex: 1;
   border-bottom: 2px solid #5d4037;
   border-top: 1px solid #8d6e63;
-  background-color: #775533;
+  /* 抽屉木纹与桌子呼应 */
+  background: linear-gradient(90deg, #775533 0%, #69492e 100%);
   position: relative;
   cursor: pointer;
   transition: transform 0.3s ease;
+  /* 抽屉轻微凹陷 */
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.05),
+              inset 0 -1px 0 rgba(0,0,0,0.1);
 }
 
 .room101-drawer:hover {
   filter: brightness(1.1);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.1),
+              inset 0 -1px 0 rgba(0,0,0,0.1);
 }
 
 .room101-drawer.open {
   transform: translateX(50px);
 }
 
-/* Drawer Handle */
+/* Drawer Handle - 更真实的金属把手 */
 .room101-drawer::after {
   content: '';
   position: absolute;
@@ -117,93 +142,257 @@
   transform: translate(-50%, -50%);
   width: 40px;
   height: 10px;
-  background-color: #666666;
+  /* 金属渐变 + 高光 */
+  background: linear-gradient(90deg, #555 0%, #777 50%, #555 100%);
   border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  box-shadow: 
+    0 2px 4px rgba(0,0,0,0.5),
+    inset 0 1px 0 rgba(255,255,255,0.2),
+    inset 0 -1px 0 rgba(0,0,0,0.2);
 }
 
-/* Computer Area */
+/* Computer Area - 移除遮挡，增强透视 */
 .room101-computer-area {
   position: absolute;
-  top: -120px;
+  top: -160px;
   left: 35%;
-  width: 160px;
-  height: 140px;
+  width: 200px;
+  height: 180px;
   z-index: 5;
   display: flex;
   flex-direction: column;
   align-items: center;
+  pointer-events: auto;
 }
 
 .room101-computer {
   width: 100%;
   height: 100%;
-  background-color: #000000;
-  border: 10px solid #222;
-  border-radius: 5px;
-  padding: 5px;
+  position: relative;
+  transform: perspective(1000px) rotateY(-10deg) rotateX(5deg);
+  transition: transform 0.3s ease;
+}
+
+.room101-computer:hover {
+  transform: perspective(1000px) rotateY(-5deg) rotateX(2deg) scale(1.02);
+}
+
+.room101-computer-body {
+  width: 100%;
+  height: 85%;
+  background: linear-gradient(145deg, #2a2a2a 0%, #0d0d0d 100%);
+  border-radius: 12px;
+  padding: 12px;
   box-sizing: border-box;
-  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 
+    /* 外部厚度阴影 */
+    5px 10px 20px rgba(0,0,0,0.8),
+    /* 顶部高光 */
+    inset 0 2px 3px rgba(255,255,255,0.1),
+    /* 侧边阴影 */
+    inset -2px 0 5px rgba(0,0,0,0.5);
+  position: relative;
+}
+
+.room101-screen-bezel {
+  flex: 1;
+  background: #050505;
+  border-radius: 4px;
+  padding: 8px;
+  box-shadow: 
+    inset 2px 2px 5px rgba(0,0,0,0.9),
+    1px 1px 1px rgba(255,255,255,0.05);
+  display: flex;
+  overflow: hidden;
   position: relative;
 }
 
 .room101-screen {
+  flex: 1;
+  background-color: #000;
+  position: relative;
+  border-radius: 2px;
+  overflow: hidden;
+  box-shadow: inset 0 0 15px rgba(0,0,0,1);
+}
+
+.room101-screen-glare {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-  background-color: #888888;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
+  background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, transparent 50%, rgba(255,255,255,0.02) 100%);
+  pointer-events: none;
+  z-index: 10;
+}
+
+.room101-screen-off {
+  width: 100%;
+  height: 100%;
+  background: #000;
+  position: relative;
+}
+
+.room101-screen-off::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(135deg, transparent 45%, rgba(255,255,255,0.03) 50%, transparent 55%);
+  transform: rotate(15deg);
 }
 
 .room101-screen-content {
-  width: 95%;
-  height: 95%;
-  background-color: #000000;
+  width: 100%;
+  height: 100%;
+  background-color: #0a1a0a; /* 夜视风格暗绿 */
+  position: relative;
+  animation: crtFlicker 0.15s infinite;
+  cursor: pointer;
+  z-index: 1;
+}
+
+/* CRT 扫描线与像素感 */
+.room101-screen-content::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    /* 水平扫描线 */
+    repeating-linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.15) 0px,
+      rgba(0, 0, 0, 0.15) 1px,
+      transparent 1px,
+      transparent 2px
+    ),
+    /* 垂直像素网格 (RGB微粒感) */
+    repeating-linear-gradient(
+      90deg,
+      rgba(255, 0, 0, 0.02),
+      rgba(0, 255, 0, 0.02),
+      rgba(0, 0, 255, 0.02)
+    );
+  background-size: 100% 2px, 3px 100%;
+  pointer-events: none;
+  z-index: 2;
 }
 
 .room101-monitor {
   width: 100%;
   height: 100%;
-  background: repeating-linear-gradient(
-    0deg,
-    rgba(0, 0, 0, 0.9),
-    rgba(0, 0, 0, 0.9) 2px,
-    rgba(20, 20, 20, 0.9) 3px
-  );
-  position: relative;
-  color: #0f0;
-  font-family: monospace;
-  font-size: 10px;
-  padding: 5px;
-  opacity: 0.8;
+  padding: 10px;
+  box-sizing: border-box;
+  color: #2ecc71;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 11px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-shadow: 0 0 5px rgba(46, 204, 113, 0.5);
 }
 
-/* Storage Box */
-.room101-box {
-  position: absolute;
-  top: -50px;
-  right: 20px;
-  width: 100px;
-  height: 60px;
-  background-color: #bfa278; /* Light Brown */
-  border: 1px solid #8d6e63;
-  z-index: 5;
-  transform: rotate(5deg);
+.room101-rec-icon {
+  color: #e74c3c;
+  font-weight: bold;
+  animation: recBlink 1s step-end infinite;
+}
+
+.room101-monitor-body {
+  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 14px;
+  letter-spacing: 2px;
+  opacity: 0.7;
 }
 
-/* Bed Area */
+.room101-monitor-footer {
+  text-align: center;
+  font-size: 9px;
+  opacity: 0.5;
+}
+
+.room101-computer-controls {
+  height: 25px;
+  margin-top: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 5px;
+}
+
+.room101-brand {
+  font-size: 8px;
+  color: #444;
+  font-family: 'Arial Black', sans-serif;
+  letter-spacing: 1px;
+}
+
+.room101-power-btn {
+  width: 12px;
+  height: 12px;
+  background: #333;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 1px solid #1a1a1a;
+  box-shadow: inset 0 1px 2px rgba(255,255,255,0.1);
+  transition: all 0.3s ease;
+}
+
+.room101-power-btn.on {
+  background: #2ecc71;
+  box-shadow: 0 0 8px #2ecc71, inset 0 1px 2px rgba(255,255,255,0.3);
+}
+
+.room101-computer-stand {
+  width: 60px;
+  height: 15%;
+  background: linear-gradient(to bottom, #1a1a1a, #050505);
+  margin: -2px auto 0;
+  clip-path: polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+}
+
+/* 动画定义 */
+@keyframes crtFlicker {
+  0% { opacity: 0.99; }
+  5% { opacity: 0.95; }
+  10% { opacity: 0.99; }
+  15% { opacity: 0.97; }
+  20% { opacity: 0.99; }
+  100% { opacity: 1; }
+}
+
+@keyframes recBlink {
+  50% { opacity: 0; }
+}
+
+/* Bed Area - 增强床铺真实感：分层、纹理、光影 */
 .room101-bed {
   width: 300px;
   height: 180px;
-  background-color: #333333; /* Deep Grey Frame */
+  /* 床架深色木纹 */
+  background: linear-gradient(135deg, #333333 0%, #222 100%);
   position: relative;
   margin-right: 50px;
   border-radius: 5px;
+  /* 床架厚度 + 阴影 */
+  border-bottom: 10px solid #222;
+  box-shadow: 
+    0 10px 20px rgba(0,0,0,0.6),
+    inset 0 2px 0 rgba(255,255,255,0.05);
+  /* 轻微透视 */
+  transform: perspective(800px) rotateX(5deg) rotateY(-3deg);
 }
 
 .room101-mattress {
@@ -212,8 +401,20 @@
   left: 10px;
   right: 10px;
   bottom: 20px;
-  background-color: #555555; /* Light Grey Mattress */
+  /* 床垫纹理 + 渐变 */
+  background: linear-gradient(135deg, #555555 0%, #444 100%);
+  background-image: 
+    repeating-linear-gradient(
+      45deg,
+      rgba(255,255,255,0.02) 0px,
+      rgba(255,255,255,0.02) 2px,
+      transparent 2px,
+      transparent 8px
+    ),
+    linear-gradient(135deg, #555555 0%, #444 100%);
   border-radius: 3px;
+  /* 床垫凹陷感 */
+  box-shadow: inset 0 3px 8px rgba(0,0,0,0.3);
 }
 
 .room101-pillow {
@@ -222,35 +423,70 @@
   left: 20px;
   width: 60px;
   height: 40px;
-  background-color: #ddd;
-  border-radius: 5px;
+  /* 枕头纹理 + 渐变 */
+  background: linear-gradient(135deg, #ddd 0%, #ccc 100%);
+  background-image: 
+    repeating-linear-gradient(
+      0deg,
+      rgba(0,0,0,0.02) 0px,
+      rgba(0,0,0,0.02) 1px,
+      transparent 1px,
+      transparent 3px
+    ),
+    linear-gradient(135deg, #ddd 0%, #ccc 100%);
+  border-radius: 15px 15px 10px 10px; /* 更真实的枕头圆角 */
   z-index: 10;
   cursor: pointer;
   transition: transform 0.3s ease;
-  box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+  box-shadow: 
+    2px 5px 8px rgba(0,0,0,0.3),
+    inset 0 2px 0 rgba(255,255,255,0.2);
+  /* 枕头轻微褶皱 */
+  position: relative;
+}
+/* 枕头褶皱细节 */
+.room101-pillow::after {
+  content: '';
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 40px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.1);
 }
 
 .room101-pillow:hover {
   transform: translateY(-5px);
+  box-shadow: 2px 8px 10px rgba(0,0,0,0.4);
 }
 
 .room101-pillow.moved {
   transform: translate(30px, -20px) rotate(15deg);
+  box-shadow: 5px 8px 10px rgba(0,0,0,0.4);
 }
 
-/* Wall */
+/* Wall - 增强墙面真实感：纹理、污渍、凹凸 */
 .room101-wall {
   position: absolute;
   top: 50px;
   right: 50px;
   width: 200px;
   height: 300px;
-  background-color: #2a2a2a;
+  /* 墙面基底色 + 渐变 */
+  background: linear-gradient(180deg, #2a2a2a 0%, #222 100%);
   border-left: 1px solid #444;
   display: flex;
   flex-direction: column;
   align-items: center;
   padding-top: 50px;
+  /* 墙面凹凸感 */
+  box-shadow: 
+    inset 0 2px 10px rgba(0,0,0,0.3),
+    0 3px 8px rgba(0,0,0,0.4);
+  /* 墙面轻微倾斜 */
+  transform: perspective(800px) rotateY(5deg);
+  border-radius: 2px;
 }
 
 .room101-wall-texture {
@@ -259,21 +495,71 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: #d4b886;
-  opacity: 0.1;
+  /* 更真实的墙面纹理：墙纸纹路 + 轻微污渍 */
+  background: 
+    repeating-linear-gradient(
+      0deg,
+      rgba(212,184,134,0.05) 0px,
+      rgba(212,184,134,0.05) 1px,
+      transparent 1px,
+      transparent 20px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(212,184,134,0.05) 0px,
+      rgba(212,184,134,0.05) 1px,
+      transparent 1px,
+      transparent 20px
+    ),
+    linear-gradient(180deg, rgba(212,184,134,0.1) 0%, rgba(212,184,134,0.05) 100%);
   mask-image: url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 10 Q 50 50 90 10' stroke='black' fill='transparent'/%3E%3C/svg%3E");
   pointer-events: none;
+  /* 墙面轻微污渍 */
+  background-image: 
+    url("data:image/svg+xml,%3Csvg width='200' height='300' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='80' cy='80' r='30' fill='%231a1a1a' opacity='0.3'/%3E%3Ccircle cx='120' cy='180' r='20' fill='%231a1a1a' opacity='0.2'/%3E%3C/svg%3E"),
+    repeating-linear-gradient(
+      0deg,
+      rgba(212,184,134,0.05) 0px,
+      rgba(212,184,134,0.05) 1px,
+      transparent 1px,
+      transparent 20px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(212,184,134,0.05) 0px,
+      rgba(212,184,134,0.05) 1px,
+      transparent 1px,
+      transparent 20px
+    ),
+    linear-gradient(180deg, rgba(212,184,134,0.1) 0%, rgba(212,184,134,0.05) 100%);
 }
 
+/* 营业执照样式增强 */
 .room101-license {
   width: 100px;
   height: 70px;
-  background-color: #f0e6d2;
+  /* 纸张纹理 */
+  background: linear-gradient(135deg, #f0e6d2 0%, #e6d9b8 100%);
+  background-image: 
+    repeating-linear-gradient(
+      0deg,
+      rgba(0,0,0,0.02) 0px,
+      rgba(0,0,0,0.02) 1px,
+      transparent 1px,
+      transparent 3px
+    ),
+    linear-gradient(135deg, #f0e6d2 0%, #e6d9b8 100%);
   border: 4px solid #4e342e;
-  box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+  box-shadow: 
+    2px 2px 8px rgba(0,0,0,0.5),
+    inset 0 1px 0 rgba(255,255,255,0.3);
   margin-bottom: 30px;
-  position: relative;
+  position: absolute;
   cursor: pointer;
+  top: 100px;
+  /* 轻微卷曲 */
+  transform: 
+    perspective(600px) rotateY(-2deg);
 }
 
 .room101-license::after {
@@ -285,15 +571,81 @@
   font-size: 10px;
   color: #333;
   opacity: 0.7;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.3);
 }
 
+/* 钥匙管理处 - 增强真实感，突出空的状态 */
 .room101-keypos {
   width: 120px;
   height: 40px;
-  background-color: #222;
+  /* 金属质感的钥匙管理处 */
+  background: linear-gradient(90deg, #222 0%, #333 50%, #222 100%);
   border: 1px solid #444;
   border-radius: 4px;
-  box-shadow: inset 2px 2px 5px rgba(0,0,0,0.8);
+  box-shadow: 
+    inset 2px 2px 5px rgba(0,0,0,0.8),
+    0 2px 5px rgba(0,0,0,0.5),
+    inset 0 1px 0 rgba(255,255,255,0.1);
+  /* 钥匙挂钩区域 */
+  position: relative;
+  /* 标注文字 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #888;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+/* 钥匙挂钩（空） */
+.room101-keypos::before {
+  content: '旅馆钥匙管理处';
+  position: absolute;
+  top: -15px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  font-size: 8px;
+  color: #aaa;
+}
+/* 空挂钩的视觉表现 */
+.room101-keypos::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  height: 5px;
+  /* 金属挂钩 */
+  background: linear-gradient(90deg, #555 0%, #777 50%, #555 100%);
+  border-radius: 3px;
+  box-shadow: 
+    inset 0 1px 0 rgba(255,255,255,0.2),
+    inset 0 -1px 0 rgba(0,0,0,0.2);
+  /* 挂钩上的空挂位 */
+  position: relative;
+}
+/* 空挂位细节 */
+.room101-keypos::after::before {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: 20%;
+  width: 4px;
+  height: 8px;
+  background: #333;
+  border-radius: 1px;
+}
+.room101-keypos::after::after {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: 40%;
+  width: 4px;
+  height: 8px;
+  background: #333;
+  border-radius: 1px;
 }
 
 /* Clue Items */
@@ -312,14 +664,76 @@
   transform: scale(0.95);
 }
 
-/* Specific Items */
-
 .room101-medical {
   width: 70px;
   height: 50px;
-  background-color: #d4b886;
-  border: 1px solid #8d6e63;
+  /* ✅ 诊疗单：纯白纸张 + 轻微泛蓝（医院单据感） */
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 2px;
+  box-shadow: 
+    2px 2px 6px rgba(0,0,0,0.25),
+    inset 0 1px 0 rgba(255,255,255,0.8);
+  
+  /* ✅ 医疗单据纹理：浅蓝横线 + 红色标题栏 */
+  background-image: 
+    /* 顶部红色标题栏 */
+    linear-gradient(
+      to bottom,
+      #e53935 0%,
+      #e53935 8px,
+      transparent 8px,
+      transparent 100%
+    ),
+    /* 浅蓝横线：模拟表格线 */
+    repeating-linear-gradient(
+      0deg,
+      rgba(33, 150, 243, 0.08) 0px,
+      rgba(33, 150, 243, 0.08) 1px,
+      transparent 1px,
+      transparent 10px
+    ),
+    /* 纸张底色 */
+    linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  
+  /* ✅ 轻微倾斜 + 过渡 */
   transform: rotate(3deg);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* ✅ 悬停反馈 */
+.room101-medical:hover {
+  transform: rotate(3deg) scale(1.05);
+  box-shadow: 
+    4px 6px 12px rgba(0,0,0,0.35),
+    inset 0 1px 0 rgba(255,255,255,0.9);
+}
+
+/* ✅ 添加"诊疗单"文字标识（可选） */
+.room101-medical::after {
+  content: '诊疗单';
+  position: absolute;
+  top: 2px; /* 在红色标题栏内 */
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 8px;
+  color: #fff;
+  font-weight: bold;
+  letter-spacing: 1px;
+  text-shadow: 0 1px 0 rgba(0,0,0,0.2);
+  pointer-events: none;
+}
+
+/* ✅ 可选：添加医院 Logo 小圆点装饰 */
+.room101-medical::before {
+  content: '+';
+  position: absolute;
+  top: 3px;
+  left: 4px;
+  font-size: 10px;
+  color: #fff;
+  font-weight: bold;
+  pointer-events: none;
 }
 
 .room101-hukou {
@@ -329,6 +743,16 @@
   border-left: 4px solid #8d6e63; /* Spine */
   border-radius: 2px;
   box-shadow: 2px 2px 4px rgba(0,0,0,0.4);
+  /* 户口本纹理 */
+  background-image: 
+    repeating-linear-gradient(
+      0deg,
+      rgba(0,0,0,0.03) 0px,
+      rgba(0,0,0,0.03) 1px,
+      transparent 1px,
+      transparent 2px
+    ),
+    linear-gradient(135deg, #d4b886 0%, #c0a878 100%);
 }
 
 .room101-record {
@@ -336,14 +760,71 @@
   height: 90px;
   background-color: #d4b886;
   border-left: 5px solid #8d6e63;
+  /* 记录本纹理 */
+  background-image: 
+    repeating-linear-gradient(
+      0deg,
+      rgba(0,0,0,0.02) 0px,
+      rgba(0,0,0,0.02) 1px,
+      transparent 1px,
+      transparent 3px
+    ),
+    linear-gradient(135deg, #d4b886 0%, #c0a878 100%);
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
 }
 
 .room101-ledger {
   width: 60px;
   height: 40px;
-  background-color: #d4b886;
+  /* ✅ 账本主体：米黄纸张色 */
+  background-color: #f5f0e1;
   border: 1px solid #8d6e63;
-  box-shadow: 2px 2px 3px rgba(0,0,0,0.3);
+  border-radius: 2px;
+  box-shadow: 
+    2px 2px 5px rgba(0,0,0,0.3),
+    inset 0 1px 0 rgba(255,255,255,0.3); /* 纸张高光 */
+  
+  /* ✅ 左侧红边：账本装订线 */
+  border-left: 4px solid #c62828; /* 深红色装订边 */
+  
+  /* ✅ 纸张纹理 + 横线（模拟账本格子） */
+  background-image: 
+    /* 横线：模拟账本行 */
+    repeating-linear-gradient(
+      0deg,
+      rgba(139, 110, 99, 0.1) 0px,
+      rgba(139, 110, 99, 0.1) 1px,
+      transparent 1px,
+      transparent 8px
+    ),
+    /* 纸张底色渐变 */
+    linear-gradient(135deg, #f5f0e1 0%, #e8dfce 100%);
+  
+  /* ✅ 轻微倾斜更自然 */
+  transform: rotate(2deg);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* ✅ 悬停反馈 */
+.room101-ledger:hover {
+  transform: rotate(2deg) scale(1.05);
+  box-shadow: 
+    4px 6px 10px rgba(0,0,0,0.4),
+    inset 0 1px 0 rgba(255,255,255,0.4);
+}
+
+/* ✅ 可选：添加"账"字水印增强辨识度 */
+.room101-ledger::after {
+  content: '账';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-15deg);
+  font-size: 14px;
+  color: rgba(139, 110, 99, 0.15);
+  font-weight: bold;
+  font-family: 'KaiTi', 'STKaiti', serif;
+  pointer-events: none;
 }
 
 .room101-diary1 {
@@ -352,6 +833,17 @@
   background-color: #d4b886;
   border: 1px solid #8d6e63;
   transform: rotate(-10deg);
+  /* 日记本纹理 */
+  background-image: 
+    repeating-linear-gradient(
+      0deg,
+      rgba(0,0,0,0.02) 0px,
+      rgba(0,0,0,0.02) 1px,
+      transparent 1px,
+      transparent 3px
+    ),
+    linear-gradient(135deg, #d4b886 0%, #c0a878 100%);
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
 }
 
 /* Animations */
@@ -374,6 +866,10 @@
   animation: room101-blink 2s infinite;
   pointer-events: none;
   z-index: 50;
+}
+
+.room101-clue.no-flash::after {
+  display: none !important;
 }
 
 .room101-clue.collected {
@@ -402,6 +898,8 @@
   z-index: 100;
   cursor: pointer;
   white-space: nowrap;
+  /* 标签阴影增强 */
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
 }
 
 .room101-collect-tag::before {
@@ -426,4 +924,105 @@
 
 .room101-drawer.open .room101-drawer-content {
   display: block;
+}
+
+/* Modal Styles */
+.room101-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(5px);
+}
+
+.room101-modal-content {
+  background: #2c2c2c;
+  padding: 30px;
+  border-radius: 8px;
+  border: 1px solid #8b0000;
+  box-shadow: 0 0 20px rgba(139, 0, 0, 0.3);
+  width: 320px;
+  text-align: center;
+  /* 模态框纹理 */
+  background-image: 
+    repeating-linear-gradient(
+      0deg,
+      rgba(255,255,255,0.02) 0px,
+      rgba(255,255,255,0.02) 1px,
+      transparent 1px,
+      transparent 20px
+    ),
+    linear-gradient(180deg, #2c2c2c 0%, #222 100%);
+}
+
+.room101-modal-title {
+  color: #ff4d4d;
+  margin-top: 0;
+  margin-bottom: 10px;
+  text-shadow: 0 1px 0 rgba(0,0,0,0.5);
+}
+
+.room101-modal-hint {
+  color: #aaa;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.room101-modal-input {
+  width: 100%;
+  padding: 10px;
+  background: #1a1a1a;
+  border: 1px solid #444;
+  color: white;
+  margin-bottom: 20px;
+  border-radius: 4px;
+  box-sizing: border-box;
+  /* 输入框纹理 */
+  box-shadow: inset 2px 2px 5px rgba(0,0,0,0.3);
+}
+
+.room101-modal-actions {
+  display: flex;
+  justify-content: space-between;
+}
+
+.room101-modal-btn {
+  padding: 8px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  /* 按钮渐变 */
+  transition: all 0.2s ease;
+}
+
+.room101-modal-btn.cancel {
+  background: linear-gradient(90deg, #444 0%, #555 100%);
+  color: #ccc;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+.room101-modal-btn.cancel:hover {
+  background: linear-gradient(90deg, #555 0%, #666 100%);
+}
+
+.room101-modal-btn.confirm {
+  background: linear-gradient(90deg, #8b0000 0%, #a00000 100%);
+  color: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+.room101-modal-btn.confirm:hover {
+  background: linear-gradient(90deg, #a00000 0%, #b00000 100%);
+}
+
+.room101-drawer.locked::after {
+    background-color: #8b0000;
+    box-shadow: 0 0 5px #ff0000;
+    /* 锁定状态的红色高光 */
+    background: linear-gradient(90deg, #8b0000 0%, #a00000 50%, #8b0000 100%);
 }

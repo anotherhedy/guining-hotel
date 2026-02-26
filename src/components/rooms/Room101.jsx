@@ -7,6 +7,9 @@ const Room101 = ({ onReturn, onCollect, onShowDetail, inventory, unlockedHiddenI
   const [drawersOpen, setDrawersOpen] = useState({ 1: false, 2: false, 3: false, 4: false });
   const [pillowMoved, setPillowMoved] = useState(false);
   const [computerOn, setComputerOn] = useState(false);
+  const [isCabinetUnlocked, setIsCabinetUnlocked] = useState(false);
+  const [showCabinetLock, setShowCabinetLock] = useState(false);
+  const [passwordInput, setPasswordInput] = useState('');
 
   // Helper to find clue by ID from Room 101 or 203 (for newspaper)
   const findClue = (id) => {
@@ -22,8 +25,23 @@ const Room101 = ({ onReturn, onCollect, onShowDetail, inventory, unlockedHiddenI
   // Handlers
   const toggleDrawer = (e, drawerId) => {
     e.stopPropagation();
+    if (drawerId === 2 && !isCabinetUnlocked) {
+      setShowCabinetLock(true);
+      return;
+    }
     setDrawersOpen(prev => ({ ...prev, [drawerId]: !prev[drawerId] }));
     setActiveClueId(null); // Close any active collect tag
+  };
+
+  const handlePasswordSubmit = () => {
+    if (passwordInput.toLowerCase() === 'jiangyiyi') {
+      setIsCabinetUnlocked(true);
+      setShowCabinetLock(false);
+      setDrawersOpen(prev => ({ ...prev, 2: true }));
+      setPasswordInput('');
+    } else {
+      alert('密码错误');
+    }
   };
 
   const togglePillow = (e) => {
@@ -87,19 +105,9 @@ const Room101 = ({ onReturn, onCollect, onShowDetail, inventory, unlockedHiddenI
     setActiveClueId(null);
   };
 
-  // Clue Definitions (Mapped to visual elements)
-  // Drawer 1: 20301 (203 Newspaper) - Special
-  // Drawer 2: 10106 (Medical)
-  // Drawer 3: 10109 (Hukou) - Uncollectable
-  // Drawer 4: 10111 (Record) - Uncollectable
-  // Box: 10102 (Ledger)
-  // Computer: 10107 (Monitor)
-  // Pillow: 10103 (Diary 1), 10108 (Diary 2 - Hidden)
-  // Wall: 10110 (License)
-
   return (
     <div className="room101-container" onClick={handleBgClick}>
-      <button className="room101-back" onClick={onReturn}>
+      <button className="return-btn" onClick={onReturn}>
         ← 返回旅馆
       </button>
 
@@ -109,17 +117,17 @@ const Room101 = ({ onReturn, onCollect, onShowDetail, inventory, unlockedHiddenI
             
             {/* Drawers */}
             <div className="room101-drawers">
-                {/* Drawer 1: Newspaper */}
+                {/* Drawer 1: Ledger */}
                 <div className={`room101-drawer ${drawersOpen[1] ? 'open' : ''}`} onClick={(e) => toggleDrawer(e, 1)}>
                     <div className="room101-drawer-content">
-                         {/* 203 Newspaper (20301) */}
+                         {/* 101 Ledger (10102) */}
                          <div 
-                            className={`room101-clue room101-newspaper ${isCollected('20301') ? 'collected' : 'collectable'}`}
-                            onClick={(e) => handleClueClick(e, '20301', true)}
-                            title="203旧报纸"
+                            className={`room101-clue room101-ledger no-flash ${isCollected('10102') ? 'collected' : 'collectable'}`}
+                            onClick={(e) => handleClueClick(e, '10102', true)}
+                            title="101账本"
                          >
-                            {activeClueId === '20301' && (
-                                <div className="room101-collect-tag" onClick={(e) => handleCollect(e, '20301')}>
+                            {activeClueId === '10102' && (
+                                <div className="room101-collect-tag" onClick={(e) => handleCollect(e, '10102')}>
                                     【可收集】
                                 </div>
                             )}
@@ -127,8 +135,8 @@ const Room101 = ({ onReturn, onCollect, onShowDetail, inventory, unlockedHiddenI
                     </div>
                 </div>
 
-                {/* Drawer 2: Medical Sheet */}
-                <div className={`room101-drawer ${drawersOpen[2] ? 'open' : ''}`} onClick={(e) => toggleDrawer(e, 2)}>
+                {/* Drawer 2: Locked Cabinet (contains Medical Sheet and Hukou) */}
+                <div className={`room101-drawer ${drawersOpen[2] ? 'open' : ''} ${!isCabinetUnlocked ? 'locked' : ''}`} onClick={(e) => toggleDrawer(e, 2)}>
                     <div className="room101-drawer-content">
                         {/* 101 Medical (10106) */}
                         <div 
@@ -142,27 +150,18 @@ const Room101 = ({ onReturn, onCollect, onShowDetail, inventory, unlockedHiddenI
                                 </div>
                             )}
                          </div>
+                         {/* 101 Hukou (10109) - Uncollectable */}
+                         <div 
+                            className="room101-clue room101-hukou"
+                            style={{ top: '60px' }}
+                            onClick={(e) => handleClueClick(e, '10109', false)}
+                            title="101户口本"
+                         />
                     </div>
                 </div>
 
-                {/* Drawer 3: Hukou (Uncollectable) - Bottom drawer usually, but let's follow order */}
-                {/* User said "Bottom drawer (drawer 3)" then "Third drawer (drawer 4)". 
-                    Actually user said:
-                    4. Drawer 2
-                    8. Bottom Drawer (Drawer 3) -> Hukou
-                    9. Third Drawer (Drawer 4) -> Record
-                    This numbering is slightly confusing. 
-                    I'll assume visual order from top to bottom: 1, 2, 4, 3 (since 3 is called "bottom").
-                    Or just 1, 2, 3, 4 and map names accordingly.
-                    Let's assume:
-                    Top: Drawer 1
-                    Mid-Top: Drawer 2
-                    Mid-Bottom: Drawer 4 (Record)
-                    Bottom: Drawer 3 (Hukou)
-                */}
-                
-                 {/* Drawer 4: Record (10111) */}
-                 <div className={`room101-drawer ${drawersOpen[4] ? 'open' : ''}`} onClick={(e) => toggleDrawer(e, 4)}>
+                {/* Drawer 3: Record (10111) - Bottom */}
+                <div className={`room101-drawer ${drawersOpen[3] ? 'open' : ''}`} onClick={(e) => toggleDrawer(e, 3)}>
                     <div className="room101-drawer-content">
                          {/* 101 Record (10111) - Uncollectable */}
                          <div 
@@ -173,63 +172,66 @@ const Room101 = ({ onReturn, onCollect, onShowDetail, inventory, unlockedHiddenI
                     </div>
                 </div>
 
-                {/* Drawer 3: Hukou (10109) - Bottom */}
-                <div className={`room101-drawer ${drawersOpen[3] ? 'open' : ''}`} onClick={(e) => toggleDrawer(e, 3)}>
+                {/* Drawer 4: Empty or other items if needed */}
+                <div className={`room101-drawer ${drawersOpen[4] ? 'open' : ''}`} onClick={(e) => toggleDrawer(e, 4)}>
                     <div className="room101-drawer-content">
-                         {/* 101 Hukou (10109) - Uncollectable */}
-                         <div 
-                            className="room101-clue room101-hukou"
-                            onClick={(e) => handleClueClick(e, '10109', false)}
-                            title="101户口本"
-                         />
                     </div>
                 </div>
             </div>
 
             {/* Computer */}
             <div className="room101-computer-area">
-                <div className="room101-computer" onClick={toggleComputer}>
-                    <div className="room101-screen">
-                        {computerOn ? (
-                             // 101 Monitor (10107)
-                             <div 
-                                className="room101-screen-content"
-                                onClick={(e) => handleClueClick(e, '10107', true)}
-                                title="101监控片段"
-                             >
-                                <div className="room101-monitor">
-                                    REC [00:14:23]<br/>
-                                    CAM 04 - CORRIDOR<br/>
-                                    ...<br/>
-                                    (点击查看详情)
-                                </div>
-                                {activeClueId === '10107' && !isCollected('10107') && (
-                                    <div className="room101-collect-tag" onClick={(e) => handleCollect(e, '10107')}>
-                                        【可收集】
+                <div className={`room101-computer ${computerOn ? 'on' : ''}`}>
+                    <div className="room101-computer-body">
+                        <div className="room101-screen-bezel">
+                            <div className="room101-screen">
+                                {computerOn ? (
+                                    // 101 Monitor (10107)
+                                    <div 
+                                        className="room101-screen-content"
+                                        onClick={(e) => handleClueClick(e, '10107', true)}
+                                        title="101监控片段"
+                                    >
+                                        <div className="room101-monitor">
+                                            <div className="room101-monitor-header">
+                                                <span className="room101-rec-icon">● REC</span>
+                                                <span className="room101-timestamp">[00:14:23]</span>
+                                            </div>
+                                            <div className="room101-monitor-body">
+                                                CAM 04 - CORRIDOR
+                                            </div>
+                                            <div className="room101-monitor-footer">
+                                                (点击查看详情)
+                                            </div>
+                                        </div>
                                     </div>
+                                ) : (
+                                    <div className="room101-screen-off"></div>
                                 )}
-                             </div>
-                        ) : (
-                            <div className="room101-screen-off" style={{width:'100%', height:'100%', background:'black'}}></div>
-                        )}
-                    </div>
+                                <div className="room101-screen-glare"></div>
+                            </div>
+                        </div>
+                         <div className="room101-computer-controls">
+                             <div className="room101-brand">TRON-IX</div>
+                             <div 
+                                 className={`room101-power-btn ${computerOn ? 'on' : ''}`} 
+                                 onClick={toggleComputer}
+                                 title={computerOn ? "关闭电脑" : "开启电脑"}
+                             ></div>
+                         </div>
+                         {/* Monitor Collect Tag - Moved outside overflow:hidden screen */}
+                         {activeClueId === '10107' && !isCollected('10107') && (
+                            <div className="room101-collect-tag" onClick={(e) => handleCollect(e, '10107')}>
+                                【可收集】
+                            </div>
+                         )}
+                     </div>
+                    <div className="room101-computer-stand"></div>
                 </div>
             </div>
 
-            {/* Box */}
+            {/* Box (Empty) */}
             <div className="room101-box">
-                {/* 101 Ledger (10102) */}
-                <div 
-                    className={`room101-clue room101-ledger ${isCollected('10102') ? 'collected' : 'collectable'}`}
-                    onClick={(e) => handleClueClick(e, '10102', true)}
-                    title="101账本"
-                >
-                    {activeClueId === '10102' && (
-                        <div className="room101-collect-tag" onClick={(e) => handleCollect(e, '10102')}>
-                            【可收集】
-                        </div>
-                    )}
-                </div>
             </div>
 
         </div>
@@ -286,6 +288,29 @@ const Room101 = ({ onReturn, onCollect, onShowDetail, inventory, unlockedHiddenI
              )}
         </div>
       </div>
+
+      {/* Cabinet Lock Modal */}
+      {showCabinetLock && (
+        <div className="room101-modal-overlay" onClick={() => setShowCabinetLock(false)}>
+            <div className="room101-modal-content" onClick={e => e.stopPropagation()}>
+                <h3 className="room101-modal-title">抽屉被锁住了</h3>
+                <p className="room101-modal-hint">提示：最重要的人</p>
+                <input 
+                    type="text" 
+                    className="room101-modal-input" 
+                    placeholder="输入密码 (拼音)"
+                    value={passwordInput}
+                    onChange={(e) => setPasswordInput(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && handlePasswordSubmit()}
+                    autoFocus
+                />
+                <div className="room101-modal-actions">
+                    <button className="room101-modal-btn cancel" onClick={() => setShowCabinetLock(false)}>取消</button>
+                    <button className="room101-modal-btn confirm" onClick={handlePasswordSubmit}>确认</button>
+                </div>
+            </div>
+        </div>
+      )}
     </div>
   );
 };

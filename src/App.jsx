@@ -39,6 +39,8 @@ function App() {
   const [truth1CompletedNames, setTruth1CompletedNames] = useState([])
   const [truth2CompletedNames, setTruth2CompletedNames] = useState([])
   const [hasTriggeredTruthAll, setHasTriggeredTruthAll] = useState(false)
+  const [hasTriggeredTruth2All, setHasTriggeredTruth2All] = useState(false)
+  const [finalChoice, setFinalChoice] = useState(null) // 'truth1' | 'truth2'
   
   // Drag and Drop Handlers
   const handleDragStart = (e, item) => {
@@ -162,7 +164,7 @@ function App() {
       
       let delay = 300
       if (nextMessage.sender === 'death') {
-        delay = 2500
+        delay = 800
       }
       
       const timer = setTimeout(() => {
@@ -483,7 +485,38 @@ function App() {
     setHasUnread(true)
     setHasTriggeredTruthAll(true)
   }, [truth1CompletedNames, hasTriggeredTruthAll, truthClueMap])
+
+  useEffect(() => {
+    if (hasTriggeredTruth2All) return
+    const allNames = Object.keys(truthClueMap)
+    if (!allNames.every(n => truth2CompletedNames.includes(n))) return
+
+    const dialogLines = [
+      { sender: 'user', text: '为什么……', type: 'text' },
+      { sender: 'death', text: '看来，你有了新的发现。', type: 'text' },
+      { sender: 'user', text: '我找到了一些新的线索，但这些线索指向的，是完全截然不同的故事。我不明白，两种真相都说得通，到底哪个才是正确的？', type: 'text' },
+      { sender: 'death', text: '不管真相是哪一种，对我来说都无所谓，只要能符合逻辑，我就可以交差了。既然两种都能说通，那你就选一种给我吧。', type: 'text' }
+    ]
+
+    setChatHistory(prev => {
+      let nextId = prev.length + 1
+      const appended = dialogLines.map(line => ({
+        id: nextId++,
+        sender: line.sender === 'death' ? 'death' : 'user',
+        text: line.text,
+        type: line.type
+      }))
+      return [...prev, ...appended]
+    })
+    setHasUnread(true)
+    setHasTriggeredTruth2All(true)
+  }, [truth2CompletedNames, hasTriggeredTruth2All, truthClueMap])
   
+  const handleFinalChoice = (choice) => {
+    setFinalChoice(choice)
+    setGameStatus('ending')
+  }
+
   const rooms = ['101', '102', '103', '201', '202', '203']
   
   // 辅助函数：生成灰烬粒子
@@ -586,6 +619,26 @@ function App() {
       {/* Hotel Main Screen */}
       {(gameStatus === 'hotel' || gameStatus === 'room') && (
         <div className="hotel-screen">
+          {/* Final Choice Prompt (Appears after Truth 2 All) */}
+          {hasTriggeredTruth2All && gameStatus === 'hotel' && !finalChoice && (
+            <div className="final-choice-overlay">
+                <div className="final-choice-content">
+                    <h2 className="final-choice-title">最终的抉择</h2>
+                    <p className="final-choice-desc">死神正在等待你的答案。大火烧尽了一切，唯有你的笔尖能决定他们的终局。</p>
+                    <div className="final-choice-buttons">
+                        <button className="final-btn choice-1" onClick={() => handleFinalChoice('truth1')}>
+                            提交【罪恶与惩罚】
+                            <span className="btn-subtext">真相 1：人性深处的黑暗</span>
+                        </button>
+                        <button className="final-btn choice-2" onClick={() => handleFinalChoice('truth2')}>
+                            提交【遗憾与安宁】
+                            <span className="btn-subtext">真相 2：无可奈何的意外</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+          )}
+
           {/* Notification Toast */}
           {notification && (
             <div className="notification-toast">
@@ -879,6 +932,46 @@ function App() {
               onClose={() => setTruthFlashbackData(null)}
             />
           )}
+        </div>
+      )}
+
+      {/* Ending Screen */}
+      {gameStatus === 'ending' && (
+        <div className="ending-screen">
+          <div className="ash-container">
+            {renderAshParticles()}
+          </div>
+          <div className="ending-content">
+            <h1 className="ending-title">结案：{finalChoice === 'truth1' ? '罪恶与惩罚' : '遗憾与安宁'}</h1>
+            <div className="ending-text">
+              {finalChoice === 'truth1' ? (
+                <>
+                  <p>死神走了，带着那份充满罪恶的档案。</p>
+                  <p>蒋晓丽是杀人犯，许鹤是谋杀者，邹良生是勒索者……</p>
+                  <p>这是一个完美的悬疑故事，有动机，有手法，有人性的黑暗。</p>
+                  <p>我知道，这可能不是真相。</p>
+                  <p>也许蒋晓丽只是想去拿灭火器，也许许鹤只是过度自责，也许邹良生只是来还钱。</p>
+                  <p>但谁在乎呢？大火烧尽了一切，死人无法辩解。</p>
+                  <p>我最初只是为了找素材才接下这个委托。</p>
+                  <p>现在，我得到了最好的素材。</p>
+                </>
+              ) : (
+                <>
+                  <p>死神走了，带着那份充满遗憾的档案。</p>
+                  <p>蒋晓丽是善良的母亲，许鹤是自责的朋友，邹良生是知恩图报的陌生人……</p>
+                  <p>这是一个平淡的悲剧故事，没有反转，只有无奈和意外。</p>
+                  <p>我知道，这可能也不是真相。</p>
+                  <p>也许他们真的犯过罪，真的有过恶念，真的互相伤害过。</p>
+                  <p>但谁在乎呢？大火烧尽了一切，死人需要安宁。</p>
+                  <p>我最初只是为了找素材才接下这个委托。</p>
+                  <p>现在，我亲手毁掉了最好的素材。</p>
+                  <p>但当我写下“意外”二字时，我仿佛看到他们松了一口气。</p>
+                  <p>归宁旅馆的火灭了，愿你们在另一个世界安好。</p>
+                </>
+              )}
+            </div>
+            <button className="restart-btn" onClick={() => window.location.reload()}>重新开始</button>
+          </div>
         </div>
       )}
     </div>

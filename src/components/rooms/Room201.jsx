@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import cluesData from '../../assets/clues.json'
+import './Room201.css'
 
 const Room201 = ({ onReturn, onCollect, onShowDetail, inventory, unlockedHiddenIds }) => {
   const collectable = cluesData.room201.collectable
@@ -57,66 +58,66 @@ const Room201 = ({ onReturn, onCollect, onShowDetail, inventory, unlockedHiddenI
   const clue20109 = getUncollectable('20109')
 
   return (
-    <div className="room-203-container" onClick={handleBgClick}>
+    <div className="room201-container" onClick={handleBgClick}>
       <button className="return-btn" onClick={onReturn}>
         ← 返回旅馆
       </button>
 
-      <div className="room-203-content">
-        <div className="zone left-zone">
+      <div className="room201-content">
+        <div className="room201-zone">
           <div
-            className="clue-item clue-bathroom"
+            className="room201-clue-item room201-clue-bathroom"
             onClick={(e) => handleItemClick(e, clue20101, true)}
             title={clue20101?.clueName}
           >
             {activeClueId === '20101' && !isCollected('20101') && (
-              <div className="collect-label" onClick={(e) => handleLabelClick(e, clue20101)}>
+              <div className="room201-collect-label" onClick={(e) => handleLabelClick(e, clue20101)}>
                 【可收集】
               </div>
             )}
           </div>
         </div>
 
-        <div className="zone middle-zone">
+        <div className="room201-zone">
           <div
-            className={`clue-item clue-pills ${isCollected('20102') ? 'collected' : ''}`}
+            className={`room201-clue-item room201-clue-pills ${isCollected('20102') ? 'collected' : ''}`}
             onClick={(e) => handleItemClick(e, clue20102, true)}
             title={clue20102?.clueName}
           >
             {activeClueId === '20102' && !isCollected('20102') && (
-              <div className="collect-label" onClick={(e) => handleLabelClick(e, clue20102)}>
+              <div className="room201-collect-label" onClick={(e) => handleLabelClick(e, clue20102)}>
                 【可收集】
               </div>
             )}
           </div>
 
           <div
-            className="clue-item clue-idcard"
+            className="room201-clue-item room201-clue-idcard"
             onClick={(e) => handleItemClick(e, clue20108, false)}
             title={clue20108?.clueName}
           />
         </div>
 
-        <div className="zone right-zone">
+        <div className="room201-zone">
           <div
-            className={`clue-item clue-phone ${isCollected('20103') ? 'collected' : ''}`}
+            className="room201-clue-item room201-clue-phone"
             onClick={(e) => handleItemClick(e, clue20103, true)}
             title={clue20103?.clueName}
           >
             {activeClueId === '20103' && !isCollected('20103') && (
-              <div className="collect-label" onClick={(e) => handleLabelClick(e, clue20103)}>
+              <div className="room201-collect-label" onClick={(e) => handleLabelClick(e, clue20103)}>
                 【可收集】
               </div>
             )}
           </div>
 
           <div
-            className={`clue-item clue-news ${isCollected('20105') ? 'collected' : ''}`}
+            className="room201-clue-item room201-clue-news"
             onClick={(e) => handleItemClick(e, clue20105, true)}
             title={clue20105?.clueName}
           >
             {activeClueId === '20105' && !isCollected('20105') && (
-              <div className="collect-label" onClick={(e) => handleLabelClick(e, clue20105)}>
+              <div className="room201-collect-label" onClick={(e) => handleLabelClick(e, clue20105)}>
                 【可收集】
               </div>
             )}
@@ -124,12 +125,12 @@ const Room201 = ({ onReturn, onCollect, onShowDetail, inventory, unlockedHiddenI
 
           {isVisible(clue20106) && (
             <div
-              className={`clue-item clue-news-updated ${isCollected('20106') ? 'collected' : ''}`}
+              className="room201-clue-item room201-clue-news-updated"
               onClick={(e) => handleItemClick(e, clue20106, true)}
               title={clue20106?.clueName}
             >
               {activeClueId === '20106' && !isCollected('20106') && (
-                <div className="collect-label" onClick={(e) => handleLabelClick(e, clue20106)}>
+                <div className="room201-collect-label" onClick={(e) => handleLabelClick(e, clue20106)}>
                   【可收集】
                 </div>
               )}
@@ -138,12 +139,12 @@ const Room201 = ({ onReturn, onCollect, onShowDetail, inventory, unlockedHiddenI
 
           {isVisible(clue20104) && (
             <div
-              className={`clue-item clue-photo ${isCollected('20104') ? 'collected' : ''}`}
+              className="room201-clue-item room201-clue-photo"
               onClick={(e) => handleItemClick(e, clue20104, true)}
               title={clue20104?.clueName}
             >
               {activeClueId === '20104' && !isCollected('20104') && (
-                <div className="collect-label" onClick={(e) => handleLabelClick(e, clue20104)}>
+                <div className="room201-collect-label" onClick={(e) => handleLabelClick(e, clue20104)}>
                   【可收集】
                 </div>
               )}
@@ -151,13 +152,13 @@ const Room201 = ({ onReturn, onCollect, onShowDetail, inventory, unlockedHiddenI
           )}
 
           <div
-            className="clue-item clue-chat"
+            className="room201-clue-item room201-clue-chat"
             onClick={(e) => handleItemClick(e, clue20107, false)}
             title={clue20107?.clueName}
           />
 
           <div
-            className="clue-item clue-form"
+            className="room201-clue-item room201-clue-form"
             onClick={(e) => handleItemClick(e, clue20109, false)}
             title={clue20109?.clueName}
           />

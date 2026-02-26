@@ -1000,6 +1000,148 @@ html, body {
   margin-left: 5px;
 }
 
+/* Final Choice Overlay */
+.final-choice-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  backdrop-filter: blur(10px);
+}
+
+.final-choice-content {
+  background: #1a1a1a;
+  padding: 40px;
+  border-radius: 12px;
+  border: 2px solid #8b0000;
+  max-width: 600px;
+  text-align: center;
+  box-shadow: 0 0 50px rgba(139, 0, 0, 0.4);
+}
+
+.final-choice-title {
+  color: #ff4d4d;
+  font-size: 28px;
+  margin-bottom: 20px;
+  letter-spacing: 4px;
+}
+
+.final-choice-desc {
+  color: #ccc;
+  line-height: 1.6;
+  margin-bottom: 40px;
+}
+
+.final-choice-buttons {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+.final-btn {
+  flex: 1;
+  padding: 20px;
+  border: 1px solid #444;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  background: #222;
+  color: #fff;
+  font-weight: bold;
+}
+
+.final-btn .btn-subtext {
+  font-size: 12px;
+  color: #888;
+  font-weight: normal;
+}
+
+.final-btn.choice-1:hover {
+  background: #300;
+  border-color: #8b0000;
+  transform: translateY(-5px);
+}
+
+.final-btn.choice-2:hover {
+  background: #002;
+  border-color: #007bff;
+  transform: translateY(-5px);
+}
+
+/* Ending Screen */
+.ending-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3000;
+  color: #ddd;
+}
+
+.ending-content {
+  max-width: 800px;
+  text-align: center;
+  padding: 40px;
+  background: rgba(20, 20, 20, 0.8);
+  border: 1px solid #333;
+  border-radius: 10px;
+  animation: fadeIn 2s ease;
+}
+
+.ending-title {
+  color: #fff;
+  font-size: 32px;
+  margin-bottom: 40px;
+  letter-spacing: 5px;
+}
+
+.ending-text {
+  font-size: 18px;
+  line-height: 2;
+  text-align: left;
+  margin-bottom: 50px;
+  white-space: pre-wrap;
+}
+
+.ending-text p {
+  margin-bottom: 15px;
+}
+
+.restart-btn {
+  background: none;
+  border: 1px solid #666;
+  color: #aaa;
+  padding: 10px 30px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.restart-btn:hover {
+  color: #fff;
+  border-color: #fff;
+  background: rgba(255,255,255,0.1);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 .sidebar-content::-webkit-scrollbar,
 .inventory-list::-webkit-scrollbar {
   width: 8px;
@@ -1187,144 +1329,6 @@ html, body {
   border: 1px solid #555;
   z-index: 200;
   box-shadow: 0 2px 5px rgba(0,0,0,0.5);
-}
-
-/* ---------------- 203 杂物间样式 ---------------- */
-.room-203-container {
-  flex: 1;
-  height: 100%;
-  position: relative;
-  background-color: #0a0a0a;
-  /* 场景背景：掉皮墙面、生锈金属、积灰家具 */
-  background-image: 
-    radial-gradient(circle at 70% 30%, rgba(20, 20, 20, 0.8), rgba(0, 0, 0, 0.95)),
-    url("data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.1'/%3E%3C/svg%3E");
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  animation: fadeIn 1s ease;
-  z-index: 50;
-}
-
-/* 返回按钮 */
-.return-btn {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  z-index: 100;
-  background: linear-gradient(90deg, #500000, #200000);
-  color: white;
-  border: 1px solid #8b0000;
-  padding: 10px 20px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.5);
-}
-
-.return-btn:hover {
-  transform: scale(1.05);
-  background: linear-gradient(90deg, #8b0000, #300000);
-  box-shadow: 0 0 15px rgba(139, 0, 0, 0.5);
-}
-
-/* 核心区域容器 */
-.room-203-content {
-  flex: 1;
-  display: flex;
-  width: 100%;
-  height: 100%;
-  position: relative;
-  /* 预留纵向滚动 (如果屏幕太小) */
-  overflow-y: auto;
-}
-
-/* 区域通用样式 */
-.zone {
-  position: relative;
-  height: 100%;
-  box-sizing: border-box;
-}
-
-/* 左侧：储物柜 (30%) */
-.left-zone {
-  width: 30%;
-  border-right: 2px solid rgba(0, 0, 0, 0.5);
-  background: linear-gradient(to right, #1a1510, #2a2018);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between; /* 3 layers */
-  padding: 2rem 1rem;
-  /* 柜门半开效果 */
-  box-shadow: inset -10px 0 20px rgba(0,0,0,0.8);
-}
-
-/* 储物柜层板 */
-.cabinet-layer {
-  flex: 1;
-  border-bottom: 8px solid #3e2723; /* Dark wood */
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: flex-end; /* Items sit on bottom */
-  padding-bottom: 10px;
-  box-shadow: 0 5px 10px rgba(0,0,0,0.7);
-}
-
-.cabinet-layer::after {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: linear-gradient(to bottom, rgba(0,0,0,0.4), transparent);
-  pointer-events: none;
-}
-
-/* 中间：杂物堆 (40%) */
-.middle-zone {
-  width: 40%;
-  position: relative;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  padding-bottom: 50px;
-}
-
-/* 杂物装饰 */
-.debris-decoration {
-  position: absolute;
-  bottom: 0;
-  background-color: #222;
-  border: 1px solid #333;
-  opacity: 0.6;
-  filter: blur(1px);
-}
-
-.debris-decoration.box {
-  width: 120px;
-  height: 100px;
-  left: 20%;
-  bottom: 20px;
-  transform: rotate(-5deg);
-  background: #3e2723;
-}
-
-.debris-decoration.rag {
-  width: 80px;
-  height: 60px;
-  right: 30%;
-  bottom: 10px;
-  background: #5d4037;
-  border-radius: 40% 60% 30% 70% / 60% 30% 70% 40%;
-}
-
-.debris-decoration.wood {
-  width: 200px;
-  height: 20px;
-  left: 10%;
-  bottom: 5px;
-  transform: rotate(5deg);
-  background: #4e342e;
 }
 
 /* ---------------- Drag and Drop Styles ---------------- */
@@ -1533,524 +1537,6 @@ html, body {
   position: relative;
   opacity: 0.7;
 }
-
-.radiator::before {
-  content: '';
-  position: absolute;
-  top: -10px; left: -10px; right: -10px; bottom: -10px;
-  border: 1px solid rgba(139, 69, 19, 0.3); /* Rust hint */
-  pointer-events: none;
-}
-
-/* ---------------- 线索物品样式 ---------------- */
-.clue-item {
-  position: relative;
-  cursor: pointer;
-  transition: transform 0.2s;
-  z-index: 10;
-}
-
-.clue-item:active {
-  transform: scale(0.95);
-}
-
-/* 已收集状态：置灰 */
-.clue-item.collected {
-  filter: grayscale(100%) brightness(50%);
-  cursor: default;
-}
-
-.clue-item.collected:active {
-  transform: none;
-}
-
-/* 20301 旧报纸 */
-.clue-newspaper {
-  width: 100px;
-  height: 60px;
-  background: #d7ccc8;
-  border: 1px solid #a1887f;
-  transform: rotate(5deg);
-  box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
-  /* Fold lines */
-  background-image: repeating-linear-gradient(180deg, transparent 0, transparent 4px, #3e2723 5px, transparent 6px);
-}
-
-/* 20302 灭火器 */
-.clue-extinguisher {
-  width: 40px;
-  height: 100px;
-  background: #b71c1c;
-  border-radius: 10px 10px 5px 5px;
-  position: relative;
-  box-shadow: inset -5px 0 10px rgba(0,0,0,0.5);
-}
-
-.clue-extinguisher::before { /* Nozzle */
-  content: '';
-  position: absolute;
-  top: -10px; left: 10px;
-  width: 20px; height: 10px;
-  background: #212121;
-}
-
-.clue-extinguisher::after { /* Rust */
-  content: '';
-  position: absolute;
-  bottom: 10px; left: 5px;
-  width: 10px; height: 20px;
-  background: #5d4037;
-  opacity: 0.6;
-  filter: blur(2px);
-}
-
-/* 20303 房梁碎片 */
-.clue-beam {
-  width: 120px;
-  height: 40px;
-  background: #3e2723;
-  clip-path: polygon(0% 20%, 90% 0%, 100% 80%, 10% 100%);
-  position: relative;
-  z-index: 20; /* Ensure clickable */
-  cursor: pointer;
-}
-
-.clue-beam:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
-}
-
-.clue-beam::after { /* Burn marks */
-  content: '';
-  position: absolute;
-  top: 0; left: 0; width: 100%; height: 100%;
-  background: radial-gradient(circle at 30% 50%, #000, transparent 50%);
-  opacity: 0.8;
-}
-
-/* 20304 画笔 */
-.clue-brush {
-  position: absolute;
-  bottom: 40px;
-  left: 50%;
-  width: 8px;
-  height: 120px;
-  background: #8d6e63;
-  transform: rotate(45deg);
-  z-index: 15;
-}
-
-.clue-brush::before { /* Tip */
-  content: '';
-  position: absolute;
-  top: -15px; left: -2px;
-  width: 12px; height: 20px;
-  background: #5d4037; /* Bristles */
-  border-radius: 50% 50% 0 0;
-}
-
-.clue-brush::after { /* Paint stain */
-  content: '';
-  position: absolute;
-  top: -10px; left: 0;
-  width: 100%; height: 10px;
-  background: #ef5350; /* Red paint */
-  opacity: 0.8;
-}
-
-/* 20305 住户记录 */
-.clue-record {
-  position: absolute;
-  bottom: 150px;
-  right: 20px;
-  width: 60px;
-  height: 80px;
-  background: #fff9c4;
-  clip-path: polygon(0 0, 100% 0, 100% 85%, 85% 100%, 0 100%); /* Torn corner */
-  transform: rotate(-10deg);
-  box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
-}
-
-.clue-record::before {
-  content: '';
-  position: absolute;
-  top: 10px; left: 10px; right: 10px; bottom: 10px;
-  border: 1px dashed #999;
-}
-
-.clue-bed {
-  width: 180px;
-  height: 90px;
-  background: #424242;
-  border-radius: 6px;
-  position: absolute;
-  bottom: 40px;
-  left: 50%;
-  transform: translateX(-50%);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.7);
-}
-
-.clue-bed::before {
-  content: '';
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  right: 10px;
-  bottom: 15px;
-  background: linear-gradient(135deg, #616161, #757575);
-  border-radius: 4px;
-}
-
-.clue-toys {
-  width: 120px;
-  height: 60px;
-  position: absolute;
-  bottom: 10px;
-  left: 15%;
-}
-
-.clue-toys::before,
-.clue-toys::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  width: 40px;
-  height: 20px;
-  border-radius: 4px;
-}
-
-.clue-toys::before {
-  left: 0;
-  background: #ff7043;
-}
-
-.clue-toys::after {
-  left: 30px;
-  background: #29b6f6;
-}
-
-.clue-keys {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  border: 2px solid #bdbdbd;
-  position: absolute;
-  bottom: 60px;
-  left: 50%;
-  transform: translateX(-50%);
-  box-shadow: 0 4px 10px rgba(0,0,0,0.7);
-}
-
-.clue-keys::before,
-.clue-keys::after {
-  content: '';
-  position: absolute;
-  bottom: -18px;
-  width: 14px;
-  height: 30px;
-  background: #bdbdbd;
-  border-radius: 3px;
-}
-
-.clue-keys::before {
-  left: 8px;
-}
-
-.clue-keys::after {
-  right: 8px;
-}
-
-.clue-candy {
-  width: 60px;
-  height: 30px;
-  position: absolute;
-  bottom: 20px;
-  left: 30%;
-}
-
-.clue-candy::before,
-.clue-candy::after {
-  content: '';
-  position: absolute;
-  top: 5px;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: radial-gradient(circle, #ffeb3b 0%, #f44336 80%);
-}
-
-.clue-candy::before {
-  left: 0;
-}
-
-.clue-candy::after {
-  left: 22px;
-}
-
-.clue-crayon {
-  width: 120px;
-  height: 80px;
-  background: #fafafa;
-  border-radius: 6px;
-  position: absolute;
-  bottom: 80px;
-  right: 40px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.7);
-}
-
-.clue-crayon::before {
-  content: '';
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  right: 10px;
-  bottom: 10px;
-  border: 1px dashed #9e9e9e;
-}
-
-.clue-family-drawing {
-  width: 100px;
-  height: 70px;
-  background: #fffde7;
-  position: absolute;
-  top: 60px;
-  right: 20px;
-  border-radius: 4px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.5);
-}
-
-.clue-family-drawing::before {
-  content: '';
-  position: absolute;
-  top: 8px;
-  left: 8px;
-  right: 8px;
-  bottom: 8px;
-  border: 1px dashed #bdbdbd;
-}
-
-.clue-bathroom {
-  width: 140px;
-  height: 160px;
-  background: #263238;
-  position: absolute;
-  top: 80px;
-  left: 50%;
-  transform: translateX(-50%);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.8);
-  border-radius: 4px;
-}
-
-.clue-bathroom::before {
-  content: '';
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  right: 10px;
-  bottom: 40px;
-  background: linear-gradient(135deg, #455a64, #37474f);
-  border-radius: 3px;
-}
-
-.clue-pills {
-  width: 60px;
-  height: 90px;
-  background: #ffcc80;
-  border-radius: 8px 8px 4px 4px;
-  position: absolute;
-  bottom: 50px;
-  left: 40%;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.8);
-}
-
-.clue-pills::before {
-  content: '';
-  position: absolute;
-  top: -15px;
-  left: 10px;
-  right: 10px;
-  height: 15px;
-  background: #ef6c00;
-  border-radius: 4px 4px 0 0;
-}
-
-.clue-idcard {
-  width: 80px;
-  height: 50px;
-  background: #e0f7fa;
-  border-radius: 4px;
-  position: absolute;
-  bottom: 20px;
-  right: 15%;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.7);
-}
-
-.clue-phone {
-  width: 60px;
-  height: 110px;
-  background: #212121;
-  border-radius: 10px;
-  position: absolute;
-  top: 80px;
-  right: 25%;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.8);
-}
-
-.clue-phone::before {
-  content: '';
-  position: absolute;
-  top: 8px;
-  left: 6px;
-  right: 6px;
-  bottom: 8px;
-  background: #111;
-  border-radius: 6px;
-}
-
-.clue-news {
-  width: 120px;
-  height: 70px;
-  background: #fafafa;
-  border-radius: 4px;
-  position: absolute;
-  bottom: 80px;
-  right: 40px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.7);
-}
-
-.clue-news-updated {
-  width: 110px;
-  height: 60px;
-  background: #e3f2fd;
-  border-radius: 4px;
-  position: absolute;
-  bottom: 20px;
-  right: 20px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.7);
-}
-
-.clue-photo {
-  width: 90px;
-  height: 70px;
-  background: #3e2723;
-  border-radius: 4px;
-  position: absolute;
-  top: 40px;
-  right: 15px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.8);
-}
-
-.clue-photo::before {
-  content: '';
-  position: absolute;
-  top: 8px;
-  left: 8px;
-  right: 8px;
-  bottom: 8px;
-  background: #fafafa;
-  border-radius: 2px;
-}
-
-.clue-chat {
-  width: 70px;
-  height: 50px;
-  background: #e0f2f1;
-  position: absolute;
-  top: 150px;
-  right: 60px;
-  border-radius: 4px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.7);
-}
-
-.clue-form {
-  width: 90px;
-  height: 60px;
-  background: #fff3e0;
-  position: absolute;
-  top: 210px;
-  right: 30px;
-  border-radius: 4px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.7);
-}
-
-.clue-bag {
-  width: 120px;
-  height: 80px;
-  background: #5d4037;
-  border-radius: 8px;
-  position: absolute;
-  bottom: 40px;
-  left: 50%;
-  transform: translateX(-50%);
-  box-shadow: 0 6px 16px rgba(0,0,0,0.8);
-}
-
-.clue-bag-note {
-  width: 80px;
-  height: 50px;
-  background: #fff9c4;
-  position: absolute;
-  bottom: 90px;
-  left: 55%;
-  transform: rotate(-8deg);
-  box-shadow: 0 3px 8px rgba(0,0,0,0.7);
-}
-
-.clue-wallet {
-  width: 80px;
-  height: 50px;
-  background: #4e342e;
-  border-radius: 4px;
-  position: absolute;
-  bottom: 10px;
-  left: 20%;
-  box-shadow: 0 3px 8px rgba(0,0,0,0.8);
-}
-
-.clue-phone-trucker {
-  width: 60px;
-  height: 110px;
-  background: #212121;
-  border-radius: 10px;
-  position: absolute;
-  bottom: 60px;
-  left: 45%;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.8);
-}
-
-.clue-phone-trucker::before {
-  content: '';
-  position: absolute;
-  top: 8px;
-  left: 6px;
-  right: 6px;
-  bottom: 8px;
-  background: #111;
-  border-radius: 6px;
-}
-
-.clue-transport {
-  width: 110px;
-  height: 60px;
-  background: #eceff1;
-  border-radius: 4px;
-  position: absolute;
-  bottom: 10px;
-  right: 15%;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.7);
-}
-
-.clue-ashtray {
-  width: 70px;
-  height: 25px;
-  background: #424242;
-  border-radius: 50%;
-  position: absolute;
-  bottom: 40px;
-  right: 20%;
-  box-shadow: 0 3px 8px rgba(0,0,0,0.8);
-}
-
 
 /* ---------------- 动画与交互 ---------------- */
 

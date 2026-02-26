@@ -8,7 +8,7 @@ const TruthFlashback = ({ title, content, onClose }) => {
   const timerRef = useRef(null);
   
   // Speed of typing in ms
-  const typingSpeed = 150; // Slowed down more (from 100) 
+  const typingSpeed = 80; // Faster speed 
 
   useEffect(() => {
     setDisplayedText('');

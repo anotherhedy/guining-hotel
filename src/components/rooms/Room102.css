@@ -1,0 +1,812 @@
+/* Room 102 Styles - Jiang Yiyi's Room */
+
+.room102-container {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  background-color: #121212;
+  background-image: 
+    radial-gradient(circle at 50% 50%, #2c251d 0%, #1a1510 100%);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: fadeIn 1s ease;
+  z-index: 50;
+  color: #ddd;
+}
+
+/* 火灾烟熏层 */
+.room102-smoke-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.7) 0%, transparent 40%);
+  pointer-events: none;
+  z-index: 60;
+}
+
+.room102-return-btn {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 100;
+  background: linear-gradient(90deg, #500000, #200000);
+  color: white;
+  border: 1px solid #8b0000;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.room102-return-btn:hover {
+  transform: scale(1.05);
+  background: #8b0000;
+  box-shadow: 0 0 15px rgba(139, 0, 0, 0.5);
+}
+
+.room102-content {
+  flex: 1;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  padding: 40px;
+  box-sizing: border-box;
+  gap: 20px;
+}
+
+.room102-zone {
+  height: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 通用物品样式 */
+.room102-clue-item {
+  position: relative;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 10;
+}
+
+.room102-clue-item:hover {
+  transform: scale(1.05) translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+.room102-clue-item.collected {
+  filter: grayscale(100%) brightness(50%);
+}
+
+/* --- 左侧区域 - 休息区 (35%) --- */
+.room102-rest-zone {
+  flex: 0 0 35%;
+  background: linear-gradient(to right, rgba(44, 37, 29, 0.5), transparent);
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 20px;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.room102-wall-decorations {
+  position: absolute;
+  top: 40px;
+  left: 20px;
+  width: 100%;
+  height: 200px;
+}
+
+.room102-height-mark {
+  position: absolute;
+  left: 10px;
+  top: 0;
+  width: 2px;
+  height: 150px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.room102-height-mark::after {
+  content: '170cm\A 160cm\A 150cm';
+  white-space: pre;
+  position: absolute;
+  left: 5px;
+  top: 0;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.2);
+  line-height: 50px;
+}
+
+.room102-sticker {
+  position: absolute;
+  opacity: 0.3;
+}
+
+.sticker-star {
+  width: 20px;
+  height: 20px;
+  background: #fff176;
+  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  top: 20px;
+  left: 40px;
+}
+
+.sticker-bear {
+  width: 30px;
+  height: 25px;
+  background: #8d6e63;
+  border-radius: 10px 10px 5px 5px;
+  top: 50px;
+  left: 80px;
+}
+
+.room102-nightstand {
+  width: 80px;
+  height: 100px;
+  background: linear-gradient(145deg, #5d4037, #3e2723);
+  margin-bottom: 10px;
+  margin-left: -120px;
+  border-radius: 4px;
+  box-shadow: 2px 5px 15px rgba(0,0,0,0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+}
+
+.room102-lamp {
+  width: 30px;
+  height: 40px;
+  background: #eceff1;
+  border-radius: 15px 15px 2px 2px;
+  margin-bottom: 10px;
+  position: relative;
+  box-shadow: 0 0 10px rgba(255, 255, 200, 0.1);
+}
+
+.room102-clue-keys {
+  width: 40px;
+  height: 20px;
+  background: linear-gradient(90deg, #bdbdbd, #9e9e9e);
+  border-radius: 2px;
+  box-shadow: 1px 2px 4px rgba(0,0,0,0.3);
+}
+
+.room102-clue-keys::after {
+  content: '🔑';
+  font-size: 14px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.room102-bed {
+  width: 220px;
+  height: 140px;
+  position: relative;
+  margin-bottom: 40px;
+}
+
+.room102-bed-frame {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 40px;
+  background: linear-gradient(to bottom, #4e342e, #2a1b18);
+  border-radius: 4px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.6);
+}
+
+.room102-mattress {
+  position: absolute;
+  bottom: 30px;
+  left: 5px;
+  width: 210px;
+  height: 80px;
+  background: #fff9c4;
+  border-radius: 8px;
+  box-shadow: inset 0 -5px 10px rgba(0,0,0,0.1);
+}
+
+.room102-quilt {
+  position: absolute;
+  bottom: 30px;
+  left: 10px;
+  width: 180px;
+  height: 90px;
+  background: linear-gradient(135deg, #ffecb3, #ffe082);
+  border-radius: 10px;
+  transform: rotate(-2deg);
+  box-shadow: 2px 5px 15px rgba(0,0,0,0.2);
+}
+
+.room102-pillow {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  width: 60px;
+  height: 35px;
+  background: #fafafa;
+  border-radius: 12px;
+  box-shadow: 2px 4px 8px rgba(0,0,0,0.2);
+}
+
+.room102-plush-toy {
+  position: absolute;
+  bottom: 50px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  background: #ff8a65;
+  border-radius: 50% 50% 40% 40%;
+  box-shadow: 1px 3px 6px rgba(0,0,0,0.3);
+}
+
+/* --- 中间区域 - 游戏区 (35%) --- */
+.room102-play-zone {
+  flex: 0 0 35%;
+  justify-content: flex-end;
+  align-items: center;
+  padding-bottom: 40px;
+}
+
+.room102-carpet {
+  position: absolute;
+  bottom: 20px;
+  width: 260px;
+  height: 160px;
+  background: radial-gradient(circle, #ffecb3 0%, #ffe082 100%);
+  border-radius: 50%;
+  opacity: 0.15;
+  filter: blur(5px);
+}
+
+.room102-blocks-area {
+  margin-bottom: 20px;
+}
+
+.room102-blocks-clue {
+  width: 120px;
+  height: 80px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.room102-block {
+  width: 30px;
+  height: 30px;
+  border-radius: 4px;
+  box-shadow: 
+    2px 2px 0 rgba(0,0,0,0.2),
+    inset 2px 2px 2px rgba(255,255,255,0.3);
+  transition: transform 0.3s ease;
+}
+
+.room102-block:hover {
+  transform: rotate(15deg) scale(1.1);
+}
+
+.block-orange { background: #ff7043; }
+.block-blue { background: #4fc3f7; }
+.block-green { background: #81c784; }
+.block-yellow { background: #fff176; }
+
+.room102-toy-box {
+  width: 150px;
+  height: 100px;
+  background: linear-gradient(145deg, #2196f3, #1976d2);
+  border-radius: 8px;
+  position: relative;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+}
+
+.room102-toy-box-lid {
+  position: absolute;
+  top: -20px;
+  left: -10px;
+  width: 160px;
+  height: 40px;
+  background: #64b5f6;
+  border-radius: 4px;
+  transform: rotate(-5deg);
+  box-shadow: 2px 5px 10px rgba(0,0,0,0.3);
+}
+
+/* --- 右侧区域 - 学习区 (30%) --- */
+.room102-study-zone {
+  flex: 0 0 30%;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.room102-shelf {
+  width: 180px;
+  height: 20px;
+  background: #5d4037;
+  border-radius: 2px;
+  position: relative;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+}
+
+.room102-shelf-item {
+  position: absolute;
+  bottom: 20px;
+}
+
+.book-1 {
+  width: 15px;
+  height: 50px;
+  background: #ef5350;
+  left: 20px;
+  transform: rotate(-5deg);
+}
+
+.book-2 {
+  width: 12px;
+  height: 45px;
+  background: #42a5f5;
+  left: 40px;
+}
+
+.figure {
+  width: 25px;
+  height: 40px;
+  background: #ffca28;
+  right: 30px;
+  border-radius: 50% 50% 0 0;
+}
+
+.room102-desk {
+  width: 200px;
+  height: 120px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.room102-desk-top {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 15px;
+  background: #8d6e63;
+  border-radius: 2px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+}
+
+.room102-clue-candy {
+  position: absolute;
+  bottom: 15px;
+  left: 20px;
+  width: 40px;
+  height: 20px;
+  background: radial-gradient(circle, #ffeb3b, #f44336);
+  border-radius: 10px;
+  box-shadow: 1px 2px 4px rgba(0,0,0,0.3);
+}
+
+.room102-clue-crayon-drawing {
+  width: 140px;
+  height: 100px;
+  position: absolute;
+  bottom: 15px;
+  right: 10px;
+}
+
+.room102-crayon {
+  width: 5px;
+  height: 20px;
+  position: absolute;
+}
+
+.crayon-red { background: #f44336; left: 50px; top: 15px; transform: rotate(45deg); }
+.crayon-blue { background: #2196f3; left: 70px; top: 10px; transform: rotate(-15deg); }
+
+.room102-drawing-paper {
+  width: 100%;
+  height: 100%;
+  background: #fffde7;
+  border: 1px solid #dcdcdc;
+  box-shadow: 2px 2px 8px rgba(0,0,0,0.2);
+  transform: rotate(2deg);
+}
+
+.room102-drawing-paper::after {
+  content: '';
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+  border: 1px dashed rgba(0,0,0,0.1);
+  background-image: 
+    radial-gradient(circle, rgba(0,0,0,0.05) 1px, transparent 1px);
+  background-size: 10px 10px;
+}
+
+.room102-wall-frames {
+  width: 160px;
+  height: 120px;
+}
+
+.room102-family-drawing {
+  width: 100%;
+  height: 100%;
+  background: #fafafa;
+  padding: 10px;
+  box-sizing: border-box;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+  position: relative;
+  transform: rotate(-3deg);
+}
+
+.room102-drawing-content {
+  width: 100%;
+  height: 100%;
+  border: 1px solid #eee;
+  background: 
+    linear-gradient(to bottom, transparent 90%, #eee 90%),
+    linear-gradient(to right, transparent 90%, #eee 90%);
+  background-size: 20px 20px;
+}
+
+.room102-drawing-content::after {
+  content: 'Family';
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+  font-family: 'Comic Sans MS', cursive;
+  font-size: 12px;
+  color: #999;
+}
+
+.room102-thumbtack {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: #f44336;
+  border-radius: 50%;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.5);
+}
+
+.pin-top-left { top: 5px; left: 5px; }
+.pin-top-right { top: 5px; right: 5px; }
+
+/* 线索收集标签 */
+.room102-collect-label {
+  position: absolute;
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #0099ff;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: bold;
+  white-space: nowrap;
+  z-index: 100;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.room102-collect-label::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid #0099ff;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes popIn {
+  from { transform: translateX(-50%) scale(0); }
+  to { transform: translateX(-50%) scale(1); }
+}
+
+/* ================================
+   蜡笔画图片拼图样式 - 无序号无遮挡版
+   ================================ */
+
+/* 拼图完成状态 - 画作边框高亮 */
+.room102-clue-crayon-drawing.puzzle-completed .room102-drawing-paper,
+.room102-family-drawing.puzzle-completed .room102-drawing-content {
+  border: 2px solid #4caf50;
+  box-shadow: 0 0 15px rgba(76, 175, 80, 0.5);
+}
+
+/* ✅ 移除问号遮挡 - 仅保留画纸背景 */
+.room102-drawing-paper,
+.room102-drawing-content {
+  width: 100%;
+  height: 100%;
+  background: #fffde7;
+  border: 1px solid #dcdcdc;
+  box-shadow: 2px 2px 8px rgba(0,0,0,0.2);
+}
+
+/* 拼图提示文字 */
+.room102-puzzle-hint {
+  position: absolute;
+  bottom: -25px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px;
+  color: #0099ff;
+  white-space: nowrap;
+  animation: pulse 2s infinite;
+  pointer-events: none;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+/* ================================
+   拼图模态框
+   ================================ */
+
+.room102-puzzle-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  backdrop-filter: blur(5px);
+  animation: fadeIn 0.3s ease;
+}
+
+.room102-puzzle-modal {
+  background: linear-gradient(180deg, #2a2a2a 0%, #1a1a1a 100%);
+  border: 2px solid #8b0000;
+  border-radius: 12px;
+  padding: 24px;
+  width: 400px;
+  max-width: 90%;
+  box-shadow: 0 0 40px rgba(139, 0, 0, 0.4);
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.room102-puzzle-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #500000;
+}
+
+.room102-puzzle-header h3 {
+  color: #fff;
+  margin: 0;
+  font-size: 18px;
+  letter-spacing: 2px;
+}
+
+.room102-puzzle-close {
+  background: none;
+  border: none;
+  color: #888;
+  font-size: 28px;
+  cursor: pointer;
+  transition: color 0.2s;
+  padding: 0;
+  line-height: 1;
+}
+
+.room102-puzzle-close:hover {
+  color: #fff;
+}
+
+.room102-puzzle-instructions {
+  color: #aaa;
+  font-size: 13px;
+  text-align: center;
+  margin-bottom: 20px;
+  padding: 8px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+}
+
+/* 拼图网格 2x2 */
+.room102-puzzle-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 4px;
+  width: 280px;
+  height: 280px;
+  margin: 0 auto 20px;
+  background: #0a0a0a;
+  padding: 8px;
+  border-radius: 8px;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
+}
+
+/* 拼图碎片 - 核心样式 */
+.room102-puzzle-piece {
+  background-color: #fffde7;
+  background-size: 200% 200%; /* ✅ 2x2 网格关键 */
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  border: 2px solid #555;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  will-change: transform;
+}
+
+.room102-puzzle-piece:hover {
+  transform: scale(1.02);
+  border-color: #8b0000;
+  box-shadow: 0 0 15px rgba(139, 0, 0, 0.5);
+}
+
+.room102-puzzle-piece.selected {
+  border-color: #0099ff;
+  box-shadow: 0 0 20px rgba(0, 153, 255, 0.6);
+  transform: scale(1.05);
+}
+
+/* ✅ 拼对时的绿色高亮 */
+.room102-puzzle-piece.correct {
+  border-color: #4caf50;
+  box-shadow: 0 0 10px rgba(76, 175, 80, 0.4);
+}
+
+/* ✅ 背景图片切片定位 - 通过 data-piece-index 控制 */
+/* 原始图片索引：0=左上，1=右上，2=左下，3=右下 */
+
+.room102-puzzle-piece[data-piece-index="0"] {
+  background-position: 0% 0%;
+}
+
+.room102-puzzle-piece[data-piece-index="1"] {
+  background-position: 100% 0%;
+}
+
+.room102-puzzle-piece[data-piece-index="2"] {
+  background-position: 0% 100%;
+}
+
+.room102-puzzle-piece[data-piece-index="3"] {
+  background-position: 100% 100%;
+}
+
+/* ✅ 不同蜡笔画使用不同图片 - 通过父类控制 */
+.room102-puzzle-10203 .room102-puzzle-piece {
+  background-image: url('../../assets/drawing-10203.png');
+}
+
+.room102-puzzle-10206 .room102-puzzle-piece {
+  background-image: url('../../assets/drawing-10206.png');
+}
+
+/* ✅ 拼图完成后的完整画作显示 */
+.room102-clue-crayon-drawing.puzzle-completed .room102-drawing-paper {
+  background-image: url('../../assets/drawing-10203.png');
+  background-size: cover;
+  background-position: center;
+}
+
+.room102-family-drawing.puzzle-completed .room102-drawing-content {
+  background-image: url('../../assets/drawing-10206.png');
+  background-size: cover;
+  background-position: center;
+}
+
+/* 拼图操作按钮区 */
+.room102-puzzle-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.room102-puzzle-btn {
+  padding: 10px 24px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.room102-puzzle-reset {
+  background: linear-gradient(90deg, #555 0%, #444 100%);
+  color: #fff;
+}
+
+.room102-puzzle-reset:hover {
+  background: linear-gradient(90deg, #666 0%, #555 100%);
+  transform: translateY(-2px);
+}
+
+.room102-puzzle-cancel {
+  background: linear-gradient(90deg, #8b0000 0%, #500000 100%);
+  color: #fff;
+}
+
+.room102-puzzle-cancel:hover {
+  background: linear-gradient(90deg, #a00000 0%, #600000 100%);
+  transform: translateY(-2px);
+}
+
+/* 拼图成功提示 */
+.room102-puzzle-success {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(76, 175, 80, 0.95);
+  color: #fff;
+  padding: 20px 40px;
+  border-radius: 8px;
+  font-size: 20px;
+  font-weight: bold;
+  box-shadow: 0 0 30px rgba(76, 175, 80, 0.6);
+  animation: successPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  z-index: 10;
+  pointer-events: none;
+}
+
+@keyframes successPop {
+  from {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+
+/* 拼图完成后图钉变色 */
+.room102-family-drawing.puzzle-completed .room102-thumbtack {
+  background: #4caf50;
+  box-shadow: 0 0 8px rgba(76, 175, 80, 0.6);
+}
+
+/* 响应式适配 */
+@media (max-width: 768px) {
+  .room102-puzzle-modal {
+    width: 90%;
+    padding: 16px;
+  }
+  
+  .room102-puzzle-grid {
+    width: 240px;
+    height: 240px;
+  }
+  
+  .room102-puzzle-header h3 {
+    font-size: 16px;
+  }
+}

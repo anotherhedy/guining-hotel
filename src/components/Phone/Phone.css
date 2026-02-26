@@ -1,0 +1,716 @@
+/* ================================
+   手机组件样式 - 逼真 iPhone 风格
+   ================================ */
+
+.phone-container *,
+.phone-container *::before,
+.phone-container *::after {
+  box-sizing: border-box;
+}
+
+/* 遮罩层 */
+.phone-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3000;
+  backdrop-filter: blur(5px);
+  animation: phoneFadeIn 0.3s ease;
+}
+
+@keyframes phoneFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* 手机容器 */
+.phone-container {
+  position: relative;
+  animation: phoneSlideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes phoneSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(50px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* 手机外壳 */
+.phone-frame {
+  width: 320px;
+  height: 650px;
+  background: linear-gradient(145deg, #1a1a1a 0%, #0d0d0d 100%);
+  border-radius: 40px;
+  padding: 12px;
+  box-shadow: 
+    0 0 0 2px #333,
+    0 20px 60px rgba(0, 0, 0, 0.8),
+    0 0 100px rgba(0, 0, 0, 0.5),
+    inset 0 0 20px rgba(255, 255, 255, 0.05);
+  position: relative;
+}
+
+/* 听筒 */
+.phone-earpiece {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 6px;
+  background: #222;
+  border-radius: 3px;
+  z-index: 10;
+}
+
+/* 前置摄像头 */
+.phone-camera {
+  position: absolute;
+  top: 18px;
+  right: 80px;
+  width: 12px;
+  height: 12px;
+  background: radial-gradient(circle at 30% 30%, #333 0%, #111 100%);
+  border-radius: 50%;
+  border: 1px solid #444;
+  z-index: 10;
+}
+
+/* 屏幕区域 */
+.phone-screen {
+  width: 100%;
+  height: 100%;
+  background: #000;
+  border-radius: 32px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.8);
+}
+
+/* ================================
+   锁屏界面
+   ================================ */
+.phone-lock-screen {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  box-sizing: border-box;
+}
+
+.lock-time {
+  font-size: 64px;
+  font-weight: 200;
+  color: #fff;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  margin-bottom: 10px;
+}
+
+.lock-date {
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 40px;
+}
+
+.lock-hint {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 20px;
+}
+
+.lock-password-input {
+  width: 200px;
+  padding: 12px 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 25px;
+  color: #fff;
+  font-size: 16px;
+  text-align: center;
+  letter-spacing: 8px;
+  outline: none;
+  transition: all 0.3s;
+  margin-bottom: 15px;
+}
+
+.lock-password-input:focus {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+}
+
+.lock-unlock-btn {
+  padding: 12px 40px;
+  background: linear-gradient(90deg, #007aff 0%, #0056b3 100%);
+  border: none;
+  border-radius: 25px;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 4px 15px rgba(0, 122, 255, 0.4);
+}
+
+.lock-unlock-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(0, 122, 255, 0.6);
+}
+
+.lock-unlock-btn:active {
+  transform: scale(0.95);
+}
+
+/* ================================
+   主屏幕
+   ================================ */
+.phone-home-screen {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, #2c3e50 0%, #34495e 100%);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* 状态栏 */
+.phone-status-bar {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  padding: 8px 20px;
+  font-size: 12px;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.3);
+  width: 100%;
+}
+
+.status-carrier {
+  font-weight: 600;
+  text-align: left;
+}
+
+.status-time {
+  font-weight: 500;
+  padding: 0 10px;
+  /* 避开刘海屏位置 */
+  position: relative;
+  left: -40px; 
+}
+
+.status-icons {
+  display: flex;
+  gap: 4px;
+  justify-content: flex-end;
+}
+
+/* 应用网格 */
+.app-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  gap: 15px;
+  padding: 30px 20px;
+  align-content: start;
+}
+
+.app-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.app-icon:hover {
+  transform: scale(1.1);
+}
+
+.app-icon-bg {
+  width: 55px;
+  height: 55px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.app-name {
+  font-size: 11px;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+/* 应用内容区域 */
+.app-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  overflow: hidden;
+}
+
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px;
+  background: #f8f8f8;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.app-back-btn {
+  background: none;
+  border: none;
+  color: #007aff;
+  font-size: 15px;
+  cursor: pointer;
+  padding: 5px 10px;
+}
+
+.app-back-btn:hover {
+  text-decoration: underline;
+}
+
+.app-title {
+  font-weight: 600;
+  font-size: 16px;
+  color: #000;
+}
+
+.app-header-spacer {
+  width: 50px;
+}
+
+
+/* ================================
+   新闻界面
+   ================================ */
+.news-interface {
+  flex: 1;
+  padding: 15px;
+  overflow-y: auto;
+  background: #fff;
+}
+
+.news-item {
+  padding: 15px 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.news-title {
+  font-weight: 600;
+  font-size: 15px;
+  color: #000;
+  margin-bottom: 5px;
+}
+
+.news-time {
+  font-size: 12px;
+  color: #999;
+  margin-bottom: 8px;
+}
+
+.news-content {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #333;
+}
+
+.news-update {
+  margin-top: 10px;
+  padding: 10px;
+  background: #fff3e0;
+  border-left: 3px solid #ff9800;
+  border-radius: 4px;
+  font-size: 13px;
+  color: #333;
+}
+
+/* ================================
+   行车记录界面
+   ================================ */
+.drive-interface {
+  flex: 1;
+  padding: 20px;
+  background: #f5f5f5;
+}
+
+.drive-map {
+  background: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.drive-route {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.route-point {
+  font-size: 14px;
+  color: #333;
+  padding: 8px 15px;
+  background: #f8f8f8;
+  border-radius: 20px;
+}
+
+.route-point.start {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+
+.route-point.end {
+  background: #ffebee;
+  color: #c62828;
+}
+
+.route-line {
+  width: 2px;
+  height: 40px;
+  background: linear-gradient(to bottom, #1976d2, #c62828);
+}
+
+.drive-info {
+  background: #fff;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.drive-date {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.drive-note {
+  font-size: 13px;
+  color: #333;
+  line-height: 1.5;
+}
+
+/* ================================
+   相册界面
+   ================================ */
+.album-interface {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  overflow: hidden;
+}
+
+.album-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  padding: 2px;
+  overflow-y: auto;
+}
+
+.album-item {
+  aspect-ratio: 1;
+  background: #e0e0e0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  cursor: pointer;
+  transition: transform 0.2s;
+  position: relative;
+}
+
+.album-item:hover {
+  transform: scale(1.05);
+  z-index: 1;
+}
+
+.album-thumbnail {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.album-caption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  font-size: 10px;
+  padding: 4px;
+  text-align: center;
+}
+
+/* ================================
+   Home 条
+   ================================ */
+.phone-home-bar {
+  width: 120px;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+  margin: 10px auto;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.phone-home-bar:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* ================================
+   滚动条样式
+   ================================ */
+.chat-messages::-webkit-scrollbar,
+.moments-interface::-webkit-scrollbar,
+.news-interface::-webkit-scrollbar,
+.album-grid::-webkit-scrollbar,
+.chat-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.chat-messages::-webkit-scrollbar-track,
+.moments-interface::-webkit-scrollbar-track,
+.news-interface::-webkit-scrollbar-track,
+.album-grid::-webkit-scrollbar-track,
+.chat-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.chat-messages::-webkit-scrollbar-thumb,
+.moments-interface::-webkit-scrollbar-thumb,
+.news-interface::-webkit-scrollbar-thumb,
+.album-grid::-webkit-scrollbar-thumb,
+.chat-list::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 2px;
+}
+
+/* ================================
+   响应式适配
+   ================================ */
+@media (max-width: 768px) {
+  .phone-frame {
+    width: 280px;
+    height: 580px;
+  }
+  
+  .lock-time {
+    font-size: 48px;
+  }
+  
+  .app-grid {
+    gap: 10px;
+    padding: 20px 15px;
+  }
+  
+  .app-icon-bg {
+    width: 48px;
+    height: 48px;
+    font-size: 24px;
+  }
+}
+
+/* ================================
+   微信界面
+   ================================ */
+/* 微信主界面 - 聊天列表 */
+.wechat-interface {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: #e5e5e5;
+  overflow: hidden;
+}
+
+.wechat-chat-list {
+  flex: 1;
+  overflow-y: auto;
+  background: #e5e5e5;
+}
+
+.wechat-chat-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  background: #fff;
+  border-bottom: 1px solid #e0e0e0;
+  transition: background 0.2s;
+}
+
+.wechat-chat-item:not(.no-click) {
+  cursor: pointer;
+}
+
+.wechat-chat-item:not(.no-click):hover {
+  background: #f5f5f5;
+}
+
+.wechat-chat-item.no-click {
+  cursor: default;
+}
+
+.wechat-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 5px;
+  background: #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  margin-right: 12px;
+}
+
+.wechat-chat-info {
+  flex: 1;
+  overflow: hidden;
+}
+
+.wechat-chat-name {
+  font-size: 15px;
+  color: #000;
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.wechat-chat-last {
+  font-size: 12px;
+  color: #999;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.wechat-chat-time {
+  font-size: 10px;
+  color: #999;
+}
+
+/* 微信聊天界面 */
+.wechat-chat-interface {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: #e5e5e5;
+}
+
+.chat-messages {
+  flex: 1;
+  padding: 15px;
+  overflow-y: auto;
+  background: url('https://images.unsplash.com/photo-1519751138087-5bf79df62d5b?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80') center/cover;
+}
+
+.chat-message {
+  max-width: 75%;
+  margin-bottom: 12px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  position: relative;
+  clear: both;
+}
+
+.chat-message.received {
+  background: #fff;
+  float: left;
+  border-bottom-left-radius: 2px;
+}
+
+.chat-message.sent {
+  background: #d3eafd;
+  float: right;
+  border-bottom-right-radius: 2px;
+}
+
+.chat-message-time {
+  font-size: 10px;
+  color: #999;
+  position: absolute;
+  bottom: -15px;
+  white-space: nowrap;
+}
+
+.chat-message.received .chat-message-time {
+  left: 12px;
+}
+
+.chat-message.sent .chat-message-time {
+  right: 12px;
+}
+
+/* 微信朋友圈界面 */
+.wechat-moments-interface {
+  flex: 1;
+  overflow-y: auto;
+  background: #e5e5e5;
+}
+
+.moments-item {
+  background: #fff;
+  padding: 15px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.moments-time {
+  font-size: 12px;
+  color: #999;
+  margin-bottom: 8px;
+}
+
+.moments-text {
+  font-size: 14px;
+  color: #333;
+  line-height: 1.5;
+  margin-bottom: 8px;
+}
+
+.moments-interact {
+  font-size: 11px;
+  color: #999;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.moments-like::before {
+  content: '👍';
+  margin-right: 3px;
+}
+
+.moments-comment::before {
+  content: '💬';
+  margin-right: 3px;
+}

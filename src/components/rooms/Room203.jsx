@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import cluesData from '../../assets/clues.json'
+import './Room203.css'
 
 /* ---------------- 203 杂物间组件 ---------------- */
 const Room203 = ({ onReturn, onCollect, onShowDetail, inventory, isTruth1Unlocked, unlockedHiddenIds }) => {
