@@ -74,6 +74,8 @@ function App() {
   const [hasTriggeredFiveCorpses, setHasTriggeredFiveCorpses] = useState(() => JSON.parse(localStorage.getItem('hasTriggeredFiveCorpses')) || false)
   const [hasTriggeredDialogue1_5, setHasTriggeredDialogue1_5] = useState(() => JSON.parse(localStorage.getItem('hasTriggeredDialogue1_5')) || false)
   const [canTriggerDialogue1_5, setCanTriggerDialogue1_5] = useState(() => JSON.parse(localStorage.getItem('canTriggerDialogue1_5')) || false)
+  const [canTriggerDialogue3, setCanTriggerDialogue3] = useState(() => JSON.parse(localStorage.getItem('canTriggerDialogue3')) || false)
+  const [showFinalChoiceModal, setShowFinalChoiceModal] = useState(() => JSON.parse(localStorage.getItem('showFinalChoiceModal')) || false)
   const [showGameTips, setShowGameTips] = useState(false)
   
   // State for Room Verification
@@ -90,6 +92,8 @@ function App() {
   const [hasTriggeredTruthAll, setHasTriggeredTruthAll] = useState(() => JSON.parse(localStorage.getItem('hasTriggeredTruthAll')) || false)
   const [hasTriggeredTruth2All, setHasTriggeredTruth2All] = useState(() => JSON.parse(localStorage.getItem('hasTriggeredTruth2All')) || false)
   const [finalChoice, setFinalChoice] = useState(null)
+
+  const roomCorpseMap = { '101': 0, '102': 1, '103': 2, '201': 1, '202': 1, '203': 2 }
 
   // State for Death Dialog Chat
   const [chatHistory, setChatHistory] = useState(() => JSON.parse(localStorage.getItem('chatHistory')) || [
@@ -123,13 +127,15 @@ function App() {
     localStorage.setItem('hasTriggeredFiveCorpses', JSON.stringify(hasTriggeredFiveCorpses))
     localStorage.setItem('hasTriggeredDialogue1_5', JSON.stringify(hasTriggeredDialogue1_5))
     localStorage.setItem('canTriggerDialogue1_5', JSON.stringify(canTriggerDialogue1_5))
+    localStorage.setItem('canTriggerDialogue3', JSON.stringify(canTriggerDialogue3))
+    localStorage.setItem('showFinalChoiceModal', JSON.stringify(showFinalChoiceModal))
     localStorage.setItem('chatHistory', JSON.stringify(chatHistory))
     localStorage.setItem('unlockedRooms', JSON.stringify(unlockedRooms))
     localStorage.setItem('truth1CompletedNames', JSON.stringify(truth1CompletedNames))
     localStorage.setItem('truth2CompletedNames', JSON.stringify(truth2CompletedNames))
     localStorage.setItem('hasTriggeredTruthAll', JSON.stringify(hasTriggeredTruthAll))
     localStorage.setItem('hasTriggeredTruth2All', JSON.stringify(hasTriggeredTruth2All))
-  }, [gameStatus, inventory, isJiangXiaoliTruth1Unlocked, unlockedHiddenIds, visitedRooms, hasTriggeredFiveCorpses, hasTriggeredDialogue1_5, canTriggerDialogue1_5, chatHistory, unlockedRooms, truth1CompletedNames, truth2CompletedNames, hasTriggeredTruthAll, hasTriggeredTruth2All])
+  }, [gameStatus, inventory, isJiangXiaoliTruth1Unlocked, unlockedHiddenIds, visitedRooms, hasTriggeredFiveCorpses, hasTriggeredDialogue1_5, canTriggerDialogue1_5, canTriggerDialogue3, showFinalChoiceModal, chatHistory, unlockedRooms, truth1CompletedNames, truth2CompletedNames, hasTriggeredTruthAll, hasTriggeredTruth2All])
 
   const clearSave = () => {
     localStorage.clear()
@@ -355,6 +361,38 @@ function App() {
     });
   };
 
+  const handleTriggerDialogue3 = () => {
+    if (hasTriggeredTruth2All) return;
+    setHasTriggeredTruth2All(true);
+    setCanTriggerDialogue3(false);
+
+    const dialogLines = [
+      { sender: 'user', text: '为什么……', type: 'text' },
+      { sender: 'death', text: '看来，你有了新的发现。', type: 'text' },
+      { sender: 'user', text: '我找到了一些新的线索，但这些线索指向的，是完全截然不同的故事。', type: 'text' },
+      { sender: 'user', text: '我不明白，两种真相都说得通，到底哪个才是正确的？', type: 'text' },
+      { sender: 'death', text: '不管真相是哪一种，对我来说都无所谓，只要能符合逻辑，我就可以交差了。', type: 'text' },
+      { sender: 'death', text: '既然两种都能说通。', type: 'text' },
+      { sender: 'death', text: '那你就选一种给我吧。', type: 'text' }
+    ]
+
+    setChatHistory(prev => {
+      let nextId = prev.length + 1
+      const appended = dialogLines.map(line => ({
+        id: nextId++,
+        sender: line.sender === 'death' ? 'death' : 'user',
+        text: line.text,
+        type: line.type
+      }))
+      return [...prev, ...appended]
+    })
+  };
+
+  const handleEnterFinalChoice = () => {
+    setShowFinalChoiceModal(true);
+    setIsDeathDialogOpen(false); // Close dialog when entering final choice
+  };
+
   const handleSendMessage = () => {
     if (!inputValue.trim()) return
     const newMessage = {
@@ -367,6 +405,18 @@ function App() {
     setChatHistory(prev => [...prev, newMessage])
     setDisplayedMessages(prev => [...prev, newMessage])
     setInputValue('')
+
+    // Death automatic response
+    setTimeout(() => {
+      const deathResponse = {
+        id: chatHistory.length + 2,
+        sender: 'death',
+        text: '在忙，勿cue',
+        type: 'text'
+      }
+      setChatHistory(prev => [...prev, deathResponse])
+      setDisplayedMessages(prev => [...prev, deathResponse])
+    }, 1000)
   }
   
   const handleRoomClick = (room) => {
@@ -376,17 +426,6 @@ function App() {
         setNotification(null)
         setGameStatus('room')
         setCurrentRoomId(room)
-        
-        const roomCorpseMap = { '101': 0, '102': 1, '103': 2, '201': 1, '202': 1, '203': 2 }
-        const hasCorpse = roomCorpseMap[room]
-        
-        setNotification(
-          hasCorpse === 0 ? `提示：房间内无尸体` :
-          hasCorpse === 1 ? `提示：房间内有一具男性尸体` :
-          hasCorpse === 2 ? `提示：房间内有一具女性尸体` :
-          ``
-        )
-        setTimeout(() => setNotification(null), 2000)
         
         if (!visitedRooms.includes(room)) {
           const newVisited = [...visitedRooms, room]
@@ -535,7 +574,7 @@ function App() {
       { sender: 'user', text: '喂。', type: 'text' },
       { sender: 'user', text: '我已经知道真相了。', type: 'text' },
       { sender: 'death', text: '哦？怎样的真相？', type: 'text' },
-      { sender: 'user', text: '……非异人作恶，非异人受苦报，自业自得果。', type: 'text' },
+      { sender: 'user', text: '……非异人作恶，异人受苦报，自业自得果。', type: 'text' },
       { sender: 'user', text: '做过的事，总是要还的。', type: 'text' },
       { sender: 'death', text: '看来你挺有感触的。', type: 'text' },
       { sender: 'death', text: '我刚刚又复原了一部分线索，你可以去看看有什么遗漏的地方。', type: 'text' }
@@ -556,33 +595,13 @@ function App() {
   }, [truth1CompletedNames, hasTriggeredTruthAll, truthClueMap])
 
   useEffect(() => {
-    if (hasTriggeredTruth2All) return
+    if (hasTriggeredTruth2All || canTriggerDialogue3) return
     const allNames = Object.keys(truthClueMap)
     if (!allNames.every(n => truth2CompletedNames.includes(n))) return
 
-    const dialogLines = [
-      { sender: 'user', text: '为什么……', type: 'text' },
-      { sender: 'death', text: '看来，你有了新的发现。', type: 'text' },
-      { sender: 'user', text: '我找到了一些新的线索，但这些线索指向的，是完全截然不同的故事。', type: 'text' },
-      { sender: 'user', text: '我不明白，两种真相都说得通，到底哪个才是正确的？', type: 'text' },
-      { sender: 'death', text: '不管真相是哪一种，对我来说都无所谓，只要能符合逻辑，我就可以交差了。', type: 'text' },
-      { sender: 'death', text: '既然两种都能说通。', type: 'text' },
-      { sender: 'death', text: '那你就选一种给我吧。', type: 'text' }
-    ]
-
-    setChatHistory(prev => {
-      let nextId = prev.length + 1
-      const appended = dialogLines.map(line => ({
-        id: nextId++,
-        sender: line.sender === 'death' ? 'death' : 'user',
-        text: line.text,
-        type: line.type
-      }))
-      return [...prev, ...appended]
-    })
+    setCanTriggerDialogue3(true)
     setHasUnread(true)
-    setHasTriggeredTruth2All(true)
-  }, [truth2CompletedNames, hasTriggeredTruth2All, truthClueMap])
+  }, [truth2CompletedNames, hasTriggeredTruth2All, canTriggerDialogue3, truthClueMap])
   
   const handleFinalChoice = (choice) => {
     setFinalChoice(choice)
@@ -732,6 +751,11 @@ function App() {
               <p>2.一般情况下，1 个线索碎片仅对应 1 个人；</p>
               <p>3.旅馆房间需要输入对应住户名称解锁，203 未上锁；</p>
               <p>4.房间内可交互物品点击会有提示，收集的线索会在右侧线索栏展示。</p>
+              {hasTriggeredTruthAll && (
+                <p style={{ color: '#ff8a80', fontWeight: 'bold', borderBottom: '1px solid rgba(255, 138, 128, 0.3)' }}>
+                  5.本游戏有2种真相，每个线索都会被用到，同一个人物的真相2有1-2个线索与真相1相同（奇怪，刚才有这条吗）
+                </p>
+              )}
             </div>
             <button className="modal-btn confirm" onClick={() => setShowGameTips(false)}>
               我已知晓
@@ -788,8 +812,8 @@ function App() {
           {/* Center Content: Switch between Hotel Doors and Room */}
           {gameStatus === 'hotel' ? (
             <div className="main-content">
-              {/* Final Choice Prompt (Appears after Truth 2 All and dialogue complete) */}
-              {hasTriggeredTruth2All && !finalChoice && displayedMessages.length >= chatHistory.length && (
+              {/* Final Choice Prompt (Triggered by user click in death dialog) */}
+              {showFinalChoiceModal && !finalChoice && (
                 <div className="final-choice-overlay">
                     <div className="final-choice-content">
                         <h2 className="final-choice-title">最终的抉择</h2>
@@ -828,18 +852,25 @@ function App() {
               </div>
             </div>
           ) : (
-            <RoomManager
-              roomId={currentRoomId}
-              onReturn={() => {
-                setGameStatus('hotel')
-                setCurrentRoomId(null)
-              }}
-              onCollect={handleGenericCollectClue}
-              onShowDetail={(clue) => setSelectedClue(clue)}
-              inventory={inventory}
-              isTruth1Unlocked={isJiangXiaoliTruth1Unlocked}
-              unlockedHiddenIds={unlockedHiddenIds}
-            />
+            <>
+              <div className="room-corpse-status">
+                {roomCorpseMap[currentRoomId] === 0 && <span>此房间无尸体</span>}
+                {roomCorpseMap[currentRoomId] === 1 && <span>此房间有一具男性尸体</span>}
+                {roomCorpseMap[currentRoomId] === 2 && <span>此房间有一具女性尸体</span>}
+              </div>
+              <RoomManager
+                roomId={currentRoomId}
+                onReturn={() => {
+                  setGameStatus('hotel')
+                  setCurrentRoomId(null)
+                }}
+                onCollect={handleGenericCollectClue}
+                onShowDetail={(clue) => setSelectedClue(clue)}
+                inventory={inventory}
+                isTruth1Unlocked={isJiangXiaoliTruth1Unlocked}
+                unlockedHiddenIds={unlockedHiddenIds}
+              />
+            </>
           )}
           
           {/* Right Sidebar: Truth Synthesis */}
@@ -852,6 +883,22 @@ function App() {
             </button>
             <div className="sidebar-content">
               <h2 className="sidebar-title">合成真相</h2>
+              
+              {/* 真相进度条 */}
+              <div className="truth-progress-container">
+                <div className="truth-progress-label">
+                  还原进度: {truth1CompletedNames.length + truth2CompletedNames.length}/{hasTriggeredTruthAll ? 12 : 6}
+                </div>
+                <div className="truth-progress-bar-bg">
+                  <div 
+                    className="truth-progress-bar-fill" 
+                    style={{ 
+                      width: `${((truth1CompletedNames.length + truth2CompletedNames.length) / (hasTriggeredTruthAll ? 12 : 6)) * 100}%` 
+                    }}
+                  ></div>
+                </div>
+              </div>
+
               <div className="synthesis-form">
                 <input
                   type="text"
@@ -936,7 +983,7 @@ function App() {
                   }
                 }}
               >
-                {(hasUnread || canTriggerDialogue1_5) && !isDeathDialogOpen && <div className="notification-dot"></div>}
+                {(hasUnread || canTriggerDialogue1_5 || canTriggerDialogue3) && !isDeathDialogOpen && <div className="notification-dot"></div>}
               
               <div className="skull-shape">
                 <div className="skull-eyes"></div>
@@ -1000,14 +1047,32 @@ function App() {
               </div>
 
               {/* 对话触发选项 */}
-              {canTriggerDialogue1_5 && (displayedMessages.length >= chatHistory.length) && (
+              {(canTriggerDialogue1_5 || canTriggerDialogue3 || (hasTriggeredTruth2All && !finalChoice && !showFinalChoiceModal)) && (displayedMessages.length >= chatHistory.length) && (
                 <div className="dialog-options">
-                  <button 
-                    className="dialog-option-btn" 
-                    onClick={handleTriggerDialogue1_5}
-                  >
-                    一周前的灵魂难道是来复仇的？（点击发送）
-                  </button>
+                  {canTriggerDialogue1_5 && (
+                    <button 
+                      className="dialog-option-btn" 
+                      onClick={handleTriggerDialogue1_5}
+                    >
+                      一周前的灵魂难道是来复仇的？（点击发送）
+                    </button>
+                  )}
+                  {canTriggerDialogue3 && (
+                    <button 
+                      className="dialog-option-btn" 
+                      onClick={handleTriggerDialogue3}
+                    >
+                      为什么有2种真相（点击发送）
+                    </button>
+                  )}
+                  {hasTriggeredTruth2All && !finalChoice && !showFinalChoiceModal && (
+                    <button 
+                      className="dialog-option-btn highlight" 
+                      onClick={handleEnterFinalChoice}
+                    >
+                      进入最后的选择
+                    </button>
+                  )}
                 </div>
               )}
 
