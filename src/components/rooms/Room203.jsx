@@ -150,9 +150,8 @@ const Room203 = ({ onReturn, onCollect, onShowDetail, inventory, isTruth1Unlocke
                 )}
                 {activeClueId === '20303' && (
                   <div 
-                    className="collect-label" 
+                    className="collect-label beam-label" 
                     onClick={(e) => handleLabelClick(e, room203Clues.find(c => c.clueId === '20303'))}
-                    style={{ zIndex: 1000, top: 'auto', bottom: '100%', left: '50%', transform: 'translateX(-50%)', right: 'auto', marginBottom: '8px' }}
                   >
                     【可收集】
                   </div>

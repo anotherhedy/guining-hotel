@@ -19,14 +19,15 @@ const TruthFlashback = ({ title, content, onClose }) => {
     if (timerRef.current) clearInterval(timerRef.current);
 
     timerRef.current = setInterval(() => {
-      if (index < content.length) {
-        setDisplayedText((prev) => prev + content.charAt(index));
-        index++;
-        // Auto scroll to bottom
-        if (textRef.current) {
-          textRef.current.scrollTop = textRef.current.scrollHeight;
-        }
-      } else {
+      setDisplayedText(content.substring(0, index + 1));
+      index++;
+      
+      // Auto scroll to bottom
+      if (textRef.current) {
+        textRef.current.scrollTop = textRef.current.scrollHeight;
+      }
+
+      if (index >= content.length) {
         setIsTyping(false);
         clearInterval(timerRef.current);
       }

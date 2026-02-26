@@ -5,11 +5,57 @@ import cluesData from './assets/clues.json'
 import truthStories from './assets/truthStories.json'
 import TruthFlashback from './components/TruthFlashback'
 
+// Typewriter Component moved outside to prevent unmounting/remounting on every App render
+const TypewriterText = ({ text, delay = 50, startDelay = 0, onComplete, forceComplete = false }) => {
+  const [displayedText, setDisplayedText] = useState(forceComplete ? text : '')
+  const [currentIndex, setCurrentIndex] = useState(forceComplete ? text.length : 0)
+  const [isReady, setIsReady] = useState(forceComplete)
+
+  // 监听 forceComplete 变化，确保文字立即显示且不被后续逻辑清空
+  useEffect(() => {
+    if (forceComplete) {
+      setDisplayedText(text)
+      setCurrentIndex(text.length)
+      setIsReady(true)
+    }
+  }, [forceComplete, text])
+
+  // 只有在非强制完成且 text 真正变化时才重置
+  useEffect(() => {
+    if (!forceComplete) {
+      setDisplayedText('')
+      setCurrentIndex(0)
+      setIsReady(false)
+      
+      const startTimeout = setTimeout(() => {
+        setIsReady(true)
+      }, startDelay)
+      return () => clearTimeout(startTimeout)
+    }
+  }, [text, startDelay]) // 注意这里去掉了 forceComplete，防止触发时闪烁
+
+  useEffect(() => {
+    if (forceComplete) return
+
+    if (isReady && currentIndex < text.length) {
+      const timeout = setTimeout(() => {
+        setDisplayedText(text.substring(0, currentIndex + 1))
+        setCurrentIndex(prev => prev + 1)
+      }, delay)
+      return () => clearTimeout(timeout)
+    } else if (isReady && currentIndex === text.length && onComplete) {
+      onComplete()
+    }
+  }, [isReady, currentIndex, delay, text, onComplete, forceComplete])
+
+  return <span>{displayedText}</span>
+}
+
 function App() {
-  const [gameStatus, setGameStatus] = useState('start') // 'start' | 'hotel' | 'room'
-  const [isStarting, setIsStarting] = useState(false) // For transition animation
-  const [showStartBtn, setShowStartBtn] = useState(false) // Show button after typing
-  const [isLoading, setIsLoading] = useState(false) // For loading transition
+  const [gameStatus, setGameStatus] = useState(() => localStorage.getItem('gameStatus') || 'start')
+  const [isStarting, setIsStarting] = useState(false)
+  const [showStartBtn, setShowStartBtn] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const [currentRoomId, setCurrentRoomId] = useState(null)
   const [isLeftOpen, setIsLeftOpen] = useState(true)
   const [isRightOpen, setIsRightOpen] = useState(true)
@@ -17,30 +63,53 @@ function App() {
   
   // State for Clue Collection
   const [clueCollected, setClueCollected] = useState(false)
-  const [inventory, setInventory] = useState([])
+  const [inventory, setInventory] = useState(() => JSON.parse(localStorage.getItem('inventory')) || [])
   const [notification, setNotification] = useState(null)
   const [selectedClue, setSelectedClue] = useState(null)
   
   // 203 Room States
-  const [isJiangXiaoliTruth1Unlocked, setIsJiangXiaoliTruth1Unlocked] = useState(false)
-  const [unlockedHiddenIds, setUnlockedHiddenIds] = useState([])
-  const [visitedRooms, setVisitedRooms] = useState([])
-  const [hasTriggeredFiveCorpses, setHasTriggeredFiveCorpses] = useState(false)
+  const [isJiangXiaoliTruth1Unlocked, setIsJiangXiaoliTruth1Unlocked] = useState(() => JSON.parse(localStorage.getItem('isJiangXiaoliTruth1Unlocked')) || false)
+  const [unlockedHiddenIds, setUnlockedHiddenIds] = useState(() => JSON.parse(localStorage.getItem('unlockedHiddenIds')) || [])
+  const [visitedRooms, setVisitedRooms] = useState(() => JSON.parse(localStorage.getItem('visitedRooms')) || [])
+  const [hasTriggeredFiveCorpses, setHasTriggeredFiveCorpses] = useState(() => JSON.parse(localStorage.getItem('hasTriggeredFiveCorpses')) || false)
+  const [hasTriggeredDialogue1_5, setHasTriggeredDialogue1_5] = useState(() => JSON.parse(localStorage.getItem('hasTriggeredDialogue1_5')) || false)
+  const [showGameTips, setShowGameTips] = useState(false)
   
   // State for Room Verification
   const [selectedRoom, setSelectedRoom] = useState(null)
   const [verificationName, setVerificationName] = useState('')
-  const [unlockedRooms, setUnlockedRooms] = useState(['203']) // 203 is unlocked by default
+  const [unlockedRooms, setUnlockedRooms] = useState(() => JSON.parse(localStorage.getItem('unlockedRooms')) || ['203'])
   
   // Synthesis State
   const [synthesisSlots, setSynthesisSlots] = useState([null, null, null])
   const [synthesisName, setSynthesisName] = useState('')
-  const [truthFlashbackData, setTruthFlashbackData] = useState(null) // { title, content }
-  const [truth1CompletedNames, setTruth1CompletedNames] = useState([])
-  const [truth2CompletedNames, setTruth2CompletedNames] = useState([])
-  const [hasTriggeredTruthAll, setHasTriggeredTruthAll] = useState(false)
-  const [hasTriggeredTruth2All, setHasTriggeredTruth2All] = useState(false)
-  const [finalChoice, setFinalChoice] = useState(null) // 'truth1' | 'truth2'
+  const [truthFlashbackData, setTruthFlashbackData] = useState(null)
+  const [truth1CompletedNames, setTruth1CompletedNames] = useState(() => JSON.parse(localStorage.getItem('truth1CompletedNames')) || [])
+  const [truth2CompletedNames, setTruth2CompletedNames] = useState(() => JSON.parse(localStorage.getItem('truth2CompletedNames')) || [])
+  const [hasTriggeredTruthAll, setHasTriggeredTruthAll] = useState(() => JSON.parse(localStorage.getItem('hasTriggeredTruthAll')) || false)
+  const [hasTriggeredTruth2All, setHasTriggeredTruth2All] = useState(() => JSON.parse(localStorage.getItem('hasTriggeredTruth2All')) || false)
+  const [finalChoice, setFinalChoice] = useState(null)
+
+  // Auto-save useEffect
+  useEffect(() => {
+    localStorage.setItem('gameStatus', gameStatus === 'ending' ? 'hotel' : gameStatus) // Keep 'hotel' if refresh on ending
+    localStorage.setItem('inventory', JSON.stringify(inventory))
+    localStorage.setItem('isJiangXiaoliTruth1Unlocked', JSON.stringify(isJiangXiaoliTruth1Unlocked))
+    localStorage.setItem('unlockedHiddenIds', JSON.stringify(unlockedHiddenIds))
+    localStorage.setItem('visitedRooms', JSON.stringify(visitedRooms))
+    localStorage.setItem('hasTriggeredFiveCorpses', JSON.stringify(hasTriggeredFiveCorpses))
+    localStorage.setItem('hasTriggeredDialogue1_5', JSON.stringify(hasTriggeredDialogue1_5))
+    localStorage.setItem('unlockedRooms', JSON.stringify(unlockedRooms))
+    localStorage.setItem('truth1CompletedNames', JSON.stringify(truth1CompletedNames))
+    localStorage.setItem('truth2CompletedNames', JSON.stringify(truth2CompletedNames))
+    localStorage.setItem('hasTriggeredTruthAll', JSON.stringify(hasTriggeredTruthAll))
+    localStorage.setItem('hasTriggeredTruth2All', JSON.stringify(hasTriggeredTruth2All))
+  }, [gameStatus, inventory, isJiangXiaoliTruth1Unlocked, unlockedHiddenIds, visitedRooms, hasTriggeredFiveCorpses, hasTriggeredDialogue1_5, unlockedRooms, truth1CompletedNames, truth2CompletedNames, hasTriggeredTruthAll, hasTriggeredTruth2All])
+
+  const clearSave = () => {
+    localStorage.clear()
+    window.location.reload()
+  }
   
   // Drag and Drop Handlers
   const handleDragStart = (e, item) => {
@@ -199,52 +268,52 @@ function App() {
     }, 1500)
   }
 
-  // Typewriter Component
-  const TypewriterText = ({ text, delay = 50, startDelay = 0, onComplete, forceComplete = false }) => {
-    const [displayedText, setDisplayedText] = useState('')
-    const [currentIndex, setCurrentIndex] = useState(0)
-    const [isReady, setIsReady] = useState(false)
-
-    useEffect(() => {
-      if (forceComplete) {
-        setDisplayedText(text)
-        setCurrentIndex(text.length)
-        setIsReady(true)
-        return
-      }
-      
-      const startTimeout = setTimeout(() => {
-        setIsReady(true)
-      }, startDelay)
-      return () => clearTimeout(startTimeout)
-    }, [startDelay, forceComplete, text])
-
-    useEffect(() => {
-      if (forceComplete) return
-
-      if (isReady && currentIndex < text.length) {
-        const timeout = setTimeout(() => {
-          setDisplayedText(prev => prev + text[currentIndex])
-          setCurrentIndex(prev => prev + 1)
-        }, delay)
-        return () => clearTimeout(timeout)
-      } else if (isReady && currentIndex === text.length && onComplete) {
-        onComplete()
-      }
-    }, [isReady, currentIndex, delay, text, onComplete, forceComplete])
-
-    return <span>{displayedText}</span>
+  const handleShowTips = () => {
+  setShowGameTips(true)
   }
-  
+
   /* 通用线索收集函数 */
   const handleGenericCollectClue = (clue) => {
     if (inventory.some(item => item.id === clue.clueId)) return
-    setInventory(prev => [...prev, {
+    const newClue = {
       id: clue.clueId,
       title: `${clue.clueName}`,
       content: clue.clueDesc,
       detail: clue.detail
-    }])
+    };
+    setInventory(prev => {
+      const newInventory = [...prev, newClue];
+      
+      // Trigger Dialogue 1.5 after collecting specific clues
+      const hasDuiBuQi = newInventory.some(item => item.id === '20101');
+      const hasCheHuo = newInventory.some(item => item.id === '20105');
+      const alreadyInChat = chatHistory.some(msg => msg.clueId === '死神 - 亡者复仇');
+      
+      if (!hasTriggeredDialogue1_5 && hasDuiBuQi && hasCheHuo && !alreadyInChat) {
+        setHasTriggeredDialogue1_5(true);
+        localStorage.setItem('hasTriggeredDialogue1_5', JSON.stringify(true)); // 强制立即持久化
+        const dialogLines = [
+          { sender: 'user', text: '还在吗？', type: 'text' },
+          { sender: 'user', text: '这个灵魂……会不会是来复仇的？', type: 'text' },
+          { sender: 'death', text: '亡者复仇的故事确实存在，但那个死去的灵魂仇恨必须很深才能影响到现实。', type: 'clue', clueId: '死神 - 亡者复仇' }
+        ];
+        
+        setChatHistory(prevChat => {
+          let nextId = prevChat.length + 1;
+          const appended = dialogLines.map(line => ({
+            id: nextId++,
+            sender: line.sender,
+            text: line.text,
+            type: line.type,
+            clueId: line.clueId
+          }));
+          return [...prevChat, ...appended];
+        });
+        setHasUnread(true);
+      }
+      
+      return newInventory;
+    })
     
     setNotification(`已收集线索：${clue.clueName}`)
     setTimeout(() => setNotification(null), 3000)
@@ -319,14 +388,12 @@ function App() {
           const roomsAll = ['101', '102', '103', '201', '202', '203']
           
           if (!hasTriggeredFiveCorpses && roomsAll.every(r => newVisited.includes(r))) {
-            const clue = cluesData.publicClues.find(c => c.clueId === 'XS002')
             const dialogLines = [
-              { sender: 'death', text: '进展如何。', type: 'text' },
+              { sender: 'death', text: '进展如何？', type: 'text' },
               { sender: 'user', text: '有一个问题，旅馆之中只有 5 具尸体。', type: 'text' },
               { sender: 'death', text: '奇怪，我明明抓到了 6 个灵魂来着……', type: 'text' },
               { sender: 'death', text: '……', type: 'text' },
-              { sender: 'death', text: '哦，有一个灵魂是一周前的，没想到啊，藏了这么久。', type: 'text' },
-              { sender: 'user', text: '这个灵魂……会不会是来复仇的？', type: 'text' }
+              { sender: 'death', text: '哦，有一个灵魂是一周前的，没想到啊，藏了这么久。', type: 'text' }
             ]
             
             setChatHistory(prev => {
@@ -337,15 +404,6 @@ function App() {
                 text: line.text,
                 type: line.type
               }))
-              if (clue) {
-                appended.push({
-                  id: nextId++,
-                  sender: 'death',
-                  text: clue.clueDesc,
-                  type: 'clue',
-                  clueId: '死神 - 亡者复仇'
-                })
-              }
               return [...prev, ...appended]
             })
             setHasUnread(true)
@@ -468,8 +526,13 @@ function App() {
     setIsJiangXiaoliTruth1Unlocked(true)
     
     const dialogLines = [
+      { sender: 'user', text: '喂。', type: 'text' },
       { sender: 'user', text: '我已经知道真相了。', type: 'text' },
-      { sender: 'death', text: '还挺快的，不过，我刚刚又复原了一部分线索，你可以去看看有什么遗漏的地方。', type: 'text' }
+      { sender: 'death', text: '哦？怎样的真相？', type: 'text' },
+      { sender: 'user', text: '……非异人作恶，非异人受苦报，自业自得果。', type: 'text' },
+      { sender: 'user', text: '做过的事，总是要还的。', type: 'text' },
+      { sender: 'death', text: '看来你挺有感触的。', type: 'text' },
+      { sender: 'death', text: '我刚刚又复原了一部分线索，你可以去看看有什么遗漏的地方。', type: 'text' }
     ]
     
     setChatHistory(prev => {
@@ -494,8 +557,11 @@ function App() {
     const dialogLines = [
       { sender: 'user', text: '为什么……', type: 'text' },
       { sender: 'death', text: '看来，你有了新的发现。', type: 'text' },
-      { sender: 'user', text: '我找到了一些新的线索，但这些线索指向的，是完全截然不同的故事。我不明白，两种真相都说得通，到底哪个才是正确的？', type: 'text' },
-      { sender: 'death', text: '不管真相是哪一种，对我来说都无所谓，只要能符合逻辑，我就可以交差了。既然两种都能说通，那你就选一种给我吧。', type: 'text' }
+      { sender: 'user', text: '我找到了一些新的线索，但这些线索指向的，是完全截然不同的故事。', type: 'text' },
+      { sender: 'user', text: '我不明白，两种真相都说得通，到底哪个才是正确的？', type: 'text' },
+      { sender: 'death', text: '不管真相是哪一种，对我来说都无所谓，只要能符合逻辑，我就可以交差了。', type: 'text' },
+      { sender: 'death', text: '既然两种都能说通。', type: 'text' },
+      { sender: 'death', text: '那你就选一种给我吧。', type: 'text' }
     ]
 
     setChatHistory(prev => {
@@ -517,22 +583,42 @@ function App() {
     setGameStatus('ending')
   }
 
+  const handleReturnFromEnding = () => {
+    setFinalChoice(null)
+    setGameStatus('hotel')
+  }
+
   const rooms = ['101', '102', '103', '201', '202', '203']
   
-  // 辅助函数：生成灰烬粒子
-  const renderAshParticles = () => {
-    const particles = []
-    for (let i = 0; i < 20; i++) {
-      const style = {
+  // 辅助函数：生成灰烬粒子 (使用 memo 避免重渲染时位置跳变)
+  const ashParticles = useRef([])
+  if (ashParticles.current.length === 0) {
+    for (let i = 0; i < 30; i++) {
+      ashParticles.current.push({
+        id: i,
         left: `${Math.random() * 100}%`,
         width: `${Math.random() * 4 + 2}px`,
         height: `${Math.random() * 4 + 2}px`,
-        animationDuration: `${Math.random() * 5 + 5}s`,
-        animationDelay: `${Math.random() * 5}s`,
-      }
-      particles.push(<div key={i} className="ash" style={style}></div>)
+        duration: `${Math.random() * 5 + 5}s`,
+        delay: `${Math.random() * 5}s`
+      })
     }
-    return particles
+  }
+
+  const renderAshParticles = () => {
+    return ashParticles.current.map(p => (
+      <div 
+        key={p.id} 
+        className="ash" 
+        style={{
+          left: p.left,
+          width: p.width,
+          height: p.height,
+          animationDuration: p.duration,
+          animationDelay: p.delay
+        }}
+      />
+    ))
   }
 
   return (
@@ -575,26 +661,37 @@ function App() {
             </p>
             <p>
               <TypewriterText 
-                text="这天，一个自称是“死神”的男人找了过来。他说有一家旅馆在昨天一夜之间起了大火，所有线索都被烧了干净。" 
+                text="这天，一个自称是“死神”的男人找了过来。" 
                 delay={40}
-                startDelay={3500}
+                startDelay={3000}
                 forceComplete={showStartBtn}
               />
             </p>
             <p>
               <TypewriterText 
-                text="他必须找到这旅馆中 6 个灵魂的身份和对应的死因才能把灵魂成功送入轮回。因为他还有别的业务要忙，所以找你来帮忙解决这件事。" 
+                text="他说有一家旅馆在昨天一夜之间起了大火，所有线索都被烧了干净，现在，他必须找到这旅馆中 6 个灵魂的身份和对应的死因才能把灵魂成功送入轮回。" 
                 delay={40}
-                startDelay={7500}
+                startDelay={5000}
                 forceComplete={showStartBtn}
               />
             </p>
             <p>
               <TypewriterText 
-                text="他会尝试还原大火前的旅馆（只能复原死物，不保证线索的完整度），你需要寻找线索找到所有人的身份和真正死因。" 
+                text="因为他还有别的业务要忙，所以找你来帮忙解决这件事。" 
                 delay={40}
-                startDelay={13000}
-                onComplete={() => setShowStartBtn(true)}
+                startDelay={9000}
+                forceComplete={showStartBtn}
+              />
+            </p>
+            <p>
+              <TypewriterText 
+                text="他会尝试还原大火前的旅馆，但只能复原死物，且不保证线索的完整度，你需要寻找线索找到所有人的身份和真正死因。" 
+                delay={40}
+                startDelay={12000}
+                onComplete={() => {
+                  setShowStartBtn(true);
+                  setShowGameTips(true);
+                }}
                 forceComplete={showStartBtn}
               />
             </p>
@@ -609,36 +706,37 @@ function App() {
 
           {/* 跳过按钮 */}
           {!showStartBtn && (
-            <div className="skip-btn" onClick={() => setShowStartBtn(true)}>
+            <div className="skip-btn" onClick={() => {
+              setShowStartBtn(true);
+              setShowGameTips(true);
+            }}>
               跳过剧情
             </div>
           )}
         </div>
       )}
+
+      {/* 游玩提示弹窗 - 移出 start-screen 容器，防止布局干扰 */}
+      {showGameTips && (
+        <div className="modal-overlay tips-modal-overlay">
+          <div className="modal-content tips-modal-content">
+            <h3 className="modal-title">游玩提示</h3>
+            <div className="tips-list">
+              <p>1.主要玩法是收集线索合成真相，每个真相需要 3 个线索碎片；</p>
+              <p>2.一般情况下，1 个线索碎片仅对应 1 个人；</p>
+              <p>3.旅馆房间需要输入对应住户名称解锁，203 未上锁；</p>
+              <p>4.房间内可交互物品点击会有提示，收集的线索会在右侧线索栏展示。</p>
+            </div>
+            <button className="modal-btn confirm" onClick={() => setShowGameTips(false)}>
+              我已知晓
+            </button>
+          </div>
+        </div>
+      )}
       
-      {/* Hotel Main Screen */}
+          {/* Hotel Main Screen */}
       {(gameStatus === 'hotel' || gameStatus === 'room') && (
         <div className="hotel-screen">
-          {/* Final Choice Prompt (Appears after Truth 2 All) */}
-          {hasTriggeredTruth2All && gameStatus === 'hotel' && !finalChoice && (
-            <div className="final-choice-overlay">
-                <div className="final-choice-content">
-                    <h2 className="final-choice-title">最终的抉择</h2>
-                    <p className="final-choice-desc">死神正在等待你的答案。大火烧尽了一切，唯有你的笔尖能决定他们的终局。</p>
-                    <div className="final-choice-buttons">
-                        <button className="final-btn choice-1" onClick={() => handleFinalChoice('truth1')}>
-                            提交【罪恶与惩罚】
-                            <span className="btn-subtext">真相 1：人性深处的黑暗</span>
-                        </button>
-                        <button className="final-btn choice-2" onClick={() => handleFinalChoice('truth2')}>
-                            提交【遗憾与安宁】
-                            <span className="btn-subtext">真相 2：无可奈何的意外</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-          )}
-
           {/* Notification Toast */}
           {notification && (
             <div className="notification-toast">
@@ -684,6 +782,25 @@ function App() {
           {/* Center Content: Switch between Hotel Doors and Room */}
           {gameStatus === 'hotel' ? (
             <div className="main-content">
+              {/* Final Choice Prompt (Appears after Truth 2 All and dialogue complete) */}
+              {hasTriggeredTruth2All && !finalChoice && displayedMessages.length >= chatHistory.length && (
+                <div className="final-choice-overlay">
+                    <div className="final-choice-content">
+                        <h2 className="final-choice-title">最终的抉择</h2>
+                        <p className="final-choice-desc">死神正在等待你的答案。大火烧尽了一切，唯有你的笔尖能决定他们的终局。</p>
+                        <div className="final-choice-buttons">
+                            <button className="final-btn choice-1" onClick={() => handleFinalChoice('truth1')}>
+                                提交【真相1】
+                                <span className="btn-subtext">真相 1：执念造就的因果</span>
+                            </button>
+                            <button className="final-btn choice-2" onClick={() => handleFinalChoice('truth2')}>
+                                提交【真相2】
+                                <span className="btn-subtext">真相 2：无可奈何的意外</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+              )}
               <h1 className="hotel-title">归宁旅馆</h1>
               <div className="room-grid">
                 {rooms.map((room) => (
@@ -696,6 +813,12 @@ function App() {
                     <div className="door-knob"></div>
                   </div>
                 ))}
+              </div>
+              <div className="hotel-controls">
+                <button className="clear-save-btn" onClick={clearSave}>清除所有存档</button>
+                <button className="clear-save-btn" onClick={handleShowTips} style={{ marginLeft: '1rem' }}>
+                  游玩提示
+                </button>
               </div>
             </div>
           ) : (
@@ -946,31 +1069,35 @@ function App() {
             <div className="ending-text">
               {finalChoice === 'truth1' ? (
                 <>
-                  <p>死神走了，带着那份充满罪恶的档案。</p>
-                  <p>蒋晓丽是杀人犯，许鹤是谋杀者，邹良生是勒索者……</p>
-                  <p>这是一个完美的悬疑故事，有动机，有手法，有人性的黑暗。</p>
-                  <p>我知道，这可能不是真相。</p>
-                  <p>也许蒋晓丽只是想去拿灭火器，也许许鹤只是过度自责，也许邹良生只是来还钱。</p>
-                  <p>但谁在乎呢？大火烧尽了一切，死人无法辩解。</p>
-                  <p>我最初只是为了找素材才接下这个委托。</p>
-                  <p>现在，我得到了最好的素材。</p>
+                  <p><TypewriterText text="死神走了，带着那份充满罪恶的档案。" delay={50} startDelay={500} /></p>
+                  <p><TypewriterText text="蒋晓丽是杀人犯，许鹤是谋杀者，邹良生是勒索者……" delay={50} startDelay={2500} /></p>
+                  <p><TypewriterText text="这是一个完美的悬疑故事，有动机，有手法，有人性的黑暗。" delay={50} startDelay={5500} /></p>
+                  <p><TypewriterText text="我知道，这可能不是真相。" delay={50} startDelay={9000} /></p>
+                  <p><TypewriterText text="也许蒋晓丽只是想去拿灭火器，也许许鹤只是过度自责，也许邹良生只是来还钱。" delay={50} startDelay={11000} /></p>
+                  <p><TypewriterText text="但谁在乎呢？大火烧尽了一切，死人无法辩解。" delay={50} startDelay={15500} /></p>
+                  <p><TypewriterText text="我最初只是为了找素材才接下这个委托。" delay={50} startDelay={18500} /></p>
+                  <p><TypewriterText text="现在，我得到了最好的素材。" delay={50} startDelay={21000} /></p>
                 </>
               ) : (
                 <>
-                  <p>死神走了，带着那份充满遗憾的档案。</p>
-                  <p>蒋晓丽是善良的母亲，许鹤是自责的朋友，邹良生是知恩图报的陌生人……</p>
-                  <p>这是一个平淡的悲剧故事，没有反转，只有无奈和意外。</p>
-                  <p>我知道，这可能也不是真相。</p>
-                  <p>也许他们真的犯过罪，真的有过恶念，真的互相伤害过。</p>
-                  <p>但谁在乎呢？大火烧尽了一切，死人需要安宁。</p>
-                  <p>我最初只是为了找素材才接下这个委托。</p>
-                  <p>现在，我亲手毁掉了最好的素材。</p>
-                  <p>但当我写下“意外”二字时，我仿佛看到他们松了一口气。</p>
-                  <p>归宁旅馆的火灭了，愿你们在另一个世界安好。</p>
+                  <p><TypewriterText text="死神走了，带着那份充满遗憾的档案。" delay={50} startDelay={500} /></p>
+                  <p><TypewriterText text="蒋晓丽是善良的母亲，许鹤是自责的朋友，邹良生是知恩图报的陌生人……" delay={50} startDelay={2500} /></p>
+                  <p><TypewriterText text="这是一个平淡的悲剧故事，没有反转，只有无奈和意外。" delay={50} startDelay={6500} /></p>
+                  <p><TypewriterText text="我知道，这可能也不是真相。" delay={50} startDelay={10000} /></p>
+                  <p><TypewriterText text="也许他们真的犯过罪，真的有过恶念，真的互相伤害过。" delay={50} startDelay={12000} /></p>
+                  <p><TypewriterText text="但谁在乎呢？大火烧尽了一切，死人需要安宁。" delay={50} startDelay={15500} /></p>
+                  <p><TypewriterText text="我最初只是为了找素材才接下这个委托。" delay={50} startDelay={18500} /></p>
+                  <p><TypewriterText text="现在，我亲手毁掉了最好的素材。" delay={50} startDelay={21000} /></p>
+                  <p><TypewriterText text="但当我写下“意外”二字时，我仿佛看到他们松了一口气。" delay={50} startDelay={23500} /></p>
+                  <p><TypewriterText text="归宁旅馆的火灭了，记忆随风逝去。" delay={50} startDelay={27000} /></p>
+                  <p><TypewriterText text="愿你们在另一个世界安好。" delay={50} startDelay={30000} /></p>
                 </>
               )}
             </div>
-            <button className="restart-btn" onClick={() => window.location.reload()}>重新开始</button>
+            <div className="ending-actions">
+              <button className="restart-btn" onClick={handleReturnFromEnding}>返回</button>
+              <button className="restart-btn secondary" onClick={clearSave}>清除存档并重置</button>
+            </div>
           </div>
         </div>
       )}

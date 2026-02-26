@@ -41,12 +41,18 @@ const Room102 = ({ onReturn, onCollect, onShowDetail, inventory, unlockedHiddenI
     // ✅ 特殊处理：蜡笔画需要拼图
     if (clue.clueId === '10203' || clue.clueId === '10206') {
       if (puzzleCompleted[clue.clueId]) {
-        // 已拼好，直接查看详情
-        onShowDetail({
-          id: clue.clueId,
-          content: clue.clueDesc,
-          title: clue.clueName
-        })
+        // 已拼好
+        if (isCollectable && !isCollected(clue.clueId)) {
+          // 如果是可收集且未收集，切换收集按钮
+          setActiveClueId(activeClueId === clue.clueId ? null : clue.clueId)
+        } else {
+          // 否则直接查看详情
+          onShowDetail({
+            id: clue.clueId,
+            content: clue.clueDesc,
+            title: clue.clueName
+          })
+        }
       } else {
         // 未拼好，打开拼图界面
         setActivePuzzleId(clue.clueId)
@@ -107,6 +113,12 @@ const Room102 = ({ onReturn, onCollect, onShowDetail, inventory, unlockedHiddenI
         // 检查是否拼对
         if (JSON.stringify(newPieces) === JSON.stringify(CORRECT_ORDER)) {
           setPuzzleCompleted(prev => ({ ...prev, [activePuzzleId]: true }))
+          
+          // 如果是可收集的线索（10203），拼图完成后自动显示收集按钮
+          if (activePuzzleId === '10203') {
+            setActiveClueId('10203')
+          }
+          
           setTimeout(() => {
             setIsPuzzleOpen(false)
             setSelectedPiece(null)

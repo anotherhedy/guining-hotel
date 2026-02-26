@@ -10,15 +10,23 @@ const Phone = ({
   chatData = { contacts: [], moments: [] },
   newsData = [],
   driveData = null,
-  albumData = [],
-  showHiddenApps = false
+  inventory = [],
+  onCollect,
+  isLocked: externalIsLocked,
+  setIsLocked: externalSetIsLocked
 }) => {
-  const [isLocked, setIsLocked] = useState(true)
+  const [internalIsLocked, setInternalIsLocked] = useState(true)
   const [inputPassword, setInputPassword] = useState('')
+  
+  // 决定使用外部状态还是内部状态
+  const isLocked = externalIsLocked !== undefined ? externalIsLocked : (password ? internalIsLocked : false)
+  const setIsLocked = externalSetIsLocked || setInternalIsLocked
+
   const [currentApp, setCurrentApp] = useState(null)
-  const [showAlbum, setShowAlbum] = useState(false)
+  const [activeContact, setActiveContact] = useState(null)
+  const [wechatTab, setWechatTab] = useState('chat') // 'chat' or 'moments'
   const [currentTime, setCurrentTime] = useState(new Date())
-  const [showMoments, setShowMoments] = useState(false) // 是否显示朋友圈
+  const [collectedInPhone, setCollectedInPhone] = useState([])
 
   // 更新时间
   useEffect(() => {
@@ -46,53 +54,49 @@ const Phone = ({
 
   // 关闭手机
   const handleClose = () => {
-    setIsLocked(true)
     setCurrentApp(null)
-    setShowAlbum(false)
-    setShowMoments(false) // 重置朋友圈状态
+    setActiveContact(null)
+    setWechatTab('chat')
     setInputPassword('')
     onClose()
   }
 
   // 打开应用
   const handleAppClick = (app) => {
-    if (app === 'album') {
-      if (!showHiddenApps) return
-      setShowAlbum(true)
-      return
-    }
     setCurrentApp(app)
-    setShowMoments(false) // 打开应用时关闭朋友圈
+    setWechatTab('chat')
   }
 
-  // 微信：打开朋友圈
-  const handleOpenMoments = () => {
-    setShowMoments(true)
+  // 检查是否已收集
+  const isCollected = (id) => {
+    return inventory.some(item => item.id === id) || collectedInPhone.includes(id)
+  }
+
+  // 处理手机内收集
+  const handlePhoneCollect = (e, clue) => {
+    e.stopPropagation()
+    if (!clue || isCollected(clue.clueId)) return
+    onCollect(clue)
+    setCollectedInPhone([...collectedInPhone, clue.clueId])
   }
 
   if (!isOpen) return null
 
-  // 应用图标配置
+  // 应用图标配置（✅ 移除相册）
   const appIcons = {
     wechat: { emoji: '💬', name: '微信', color: 'linear-gradient(135deg, #07c160 0%, #06ad56 100%)' },
     news: { emoji: '📰', name: '新闻', color: 'linear-gradient(135deg, #ff2d55 0%, #ff3b30 100%)' },
-    drive: { emoji: '🗺️', name: '行车记录', color: 'linear-gradient(135deg, #007aff 0%, #0056b3 100%)' },
-    album: { emoji: '🖼️', name: '相册', color: 'linear-gradient(135deg, #ff9500 0%, #ff6b00 100%)' }
+    drive: { emoji: '🗺️', name: '行车记录', color: 'linear-gradient(135deg, #007aff 0%, #0056b3 100%)' }
   }
 
   return (
     <div className="phone-overlay" onClick={handleClose}>
       <div className="phone-container" onClick={e => e.stopPropagation()}>
-        {/* 手机外壳 */}
         <div className="phone-frame">
-          {/* 听筒 */}
           <div className="phone-earpiece"></div>
-          {/* 前置摄像头 */}
           <div className="phone-camera"></div>
           
-          {/* 屏幕区域 */}
           <div className="phone-screen">
-            {/* 锁屏界面 */}
             {isLocked ? (
               <div className="phone-lock-screen">
                 <div className="lock-time">
@@ -124,9 +128,7 @@ const Phone = ({
                 </button>
               </div>
             ) : (
-              /* 主屏幕/应用界面 */
               <div className="phone-home-screen">
-                {/* 状态栏 */}
                 <div className="phone-status-bar">
                   <span className="status-carrier">中国移动</span>
                   <span className="status-time">
@@ -143,13 +145,9 @@ const Phone = ({
                   </div>
                 </div>
 
-                {/* 应用界面 */}
-                {!currentApp && !showAlbum ? (
-                  /* 主屏幕 - 应用图标 */
+                {!currentApp ? (
                   <div className="app-grid">
                     {apps.map(app => {
-                      // 相册需要隐藏线索解锁才显示
-                      if (app === 'album' && !showHiddenApps) return null
                       const icon = appIcons[app]
                       return (
                         <div 
@@ -165,121 +163,202 @@ const Phone = ({
                       )
                     })}
                   </div>
-                ) : showAlbum ? (
-                  /* 相册界面 */
-                  <div className="album-interface">
-                    <div className="app-header">
-                      <button className="app-back-btn" onClick={() => setShowAlbum(false)}>
-                        ← 返回
-                      </button>
-                      <span className="app-title">相册</span>
-                      <div className="app-header-spacer"></div>
-                    </div>
-                    <div className="album-grid">
-                      {albumData.map((img, idx) => (
-                        <div key={idx} className="album-item">
-                          <div className="album-thumbnail">
-                            <img src={img.src || img} alt={img.caption || `图片 ${idx + 1}`} />
-                          </div>
-                          {img.caption && (
-                            <div className="album-caption">{img.caption}</div>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
                 ) : (
-                  /* 应用内容 */
                   <div className="app-content">
-                    {/* 返回按钮 */}
                     <div className="app-header">
                       <button className="app-back-btn" onClick={() => {
-                        if (currentApp === 'wechat' && showMoments) {
-                          setShowMoments(false)
-                        } else {
-                          setCurrentApp(null)
-                        }
+                        setCurrentApp(null)
+                        setActiveContact(null)
                       }}>
                         ← 返回
                       </button>
                       <span className="app-title">
-                        {currentApp === 'wechat' && (showMoments ? '朋友圈' : '微信')}
+                        {currentApp === 'wechat' && '微信'}
                         {currentApp === 'news' && '新闻'}
                         {currentApp === 'drive' && '行车记录'}
                       </span>
-                      {currentApp === 'wechat' && !showMoments ? (
-                        <button 
-                          className="app-back-btn" 
-                          style={{ padding: 0, width: '50px' }}
-                          onClick={handleOpenMoments}
-                        >
-                          朋友圈
-                        </button>
-                      ) : (
-                        <div className="app-header-spacer"></div>
-                      )}
+                      <div className="app-header-spacer"></div>
                     </div>
 
-                    {/* 微信主界面 */}
-                    {currentApp === 'wechat' && !showMoments && (
+                    {/* 微信界面 */}
+                    {currentApp === 'wechat' && (
                       <div className="wechat-interface">
-                        <div className="wechat-chat-list">
-                          {chatData.contacts.map((contact, idx) => (
-                            <div 
-                              key={idx} 
-                              className="wechat-chat-item no-click"
-                            >
-                              <div className="wechat-avatar">{contact.avatar}</div>
-                              <div className="wechat-chat-info">
-                                <div className="wechat-chat-name">{contact.name}</div>
-                                <div className="wechat-chat-last">
-                                  {contact.messages?.length > 0 
-                                    ? contact.messages[contact.messages.length - 1].text 
-                                    : '暂无消息'}
+                        {!activeContact ? (
+                          <>
+                            {wechatTab === 'chat' ? (
+                              <div className="chat-list">
+                                {chatData.contacts?.map((contact, idx) => {
+                                  const clue = contact.clueId ? { 
+                                    clueId: contact.clueId, 
+                                    clueName: contact.clueName || contact.name, 
+                                    clueDesc: contact.messages[contact.messages.length - 1]?.text 
+                                  } : null
+                                  
+                                  const collected = isCollected(contact.clueId);
+
+                                  return (
+                                    <div key={idx} className="chat-contact-container">
+                                      <div 
+                                        className="chat-contact"
+                                        onClick={() => setActiveContact(contact)}
+                                      >
+                                        <div className="contact-avatar">
+                                          {contact.name.charAt(0)}
+                                        </div>
+                                        <div className="contact-info">
+                                          <span className="contact-name">{contact.name}</span>
+                                          <span className="contact-last-message">
+                                            {contact.messages[contact.messages.length - 1]?.text.substring(0, 20)}...
+                                          </span>
+                                        </div>
+                                      </div>
+                                      {contact.isCollectable && clue && (
+                                        collected ? (
+                                          <div className="phone-collected-status chat-status">已收集“{clue.clueName}”线索</div>
+                                        ) : (
+                                          <div 
+                                            className="phone-collect-tag chat-tag"
+                                            onClick={(e) => handlePhoneCollect(e, clue)}
+                                          >
+                                            【可收集】
+                                          </div>
+                                        )
+                                      )}
+                                    </div>
+                                  )
+                                })}
+                              </div>
+                            ) : (
+                              <div className="moments-interface">
+                                <div className="moments-header">
+                                  <div className="moments-header-bg"></div>
+                                  <div className="moments-user-profile">
+                                    <span className="profile-name">我</span>
+                                    <div className="profile-avatar">我</div>
+                                  </div>
+                                </div>
+                                <div className="moments-list">
+                                  {chatData.moments?.map((moment, idx) => {
+                                    const clue = moment.clueId ? { 
+                                      clueId: moment.clueId, 
+                                      clueName: moment.clueName || '朋友圈线索', 
+                                      clueDesc: moment.text 
+                                    } : null
+                                    
+                                    const collected = isCollected(moment.clueId);
+
+                                    return (
+                                      <div key={idx} className="moments-post">
+                                        <div className="moments-user">
+                                          <div className="moments-avatar">👤</div>
+                                          <div className="moments-info">
+                                            <span className="moments-name">我</span>
+                                            <span className="moments-time">{moment.time}</span>
+                                          </div>
+                                        </div>
+                                        <div className="moments-content">
+                                          {moment.text}
+                                        </div>
+                                        <div className="moments-actions">
+                                          <span className="moments-like">❤️ {moment.likes}</span>
+                                          <span className="moments-comment">💬 {moment.comments}</span>
+                                        </div>
+                                        {moment.isCollectable && clue && (
+                                          collected ? (
+                                            <div className="phone-collected-status">已收集“{clue.clueName}”线索</div>
+                                          ) : (
+                                            <div 
+                                              className="phone-collect-tag"
+                                              onClick={(e) => handlePhoneCollect(e, clue)}
+                                            >
+                                              【可收集】
+                                            </div>
+                                          )
+                                        )}
+                                      </div>
+                                    )
+                                  })}
                                 </div>
                               </div>
-                              <div className="wechat-chat-time">
-                                {contact.messages?.length > 0 
-                                  ? contact.messages[contact.messages.length - 1].time 
-                                  : ''}
+                            )}
+                            
+                            {/* 微信底部导航栏 */}
+                            <div className="wechat-tab-bar">
+                              <div 
+                                className={`wechat-tab-item ${wechatTab === 'chat' ? 'active' : ''}`}
+                                onClick={() => setWechatTab('chat')}
+                              >
+                                <span className="tab-icon">💬</span>
+                                <span className="tab-text">微信</span>
+                              </div>
+                              <div 
+                                className={`wechat-tab-item ${wechatTab === 'moments' ? 'active' : ''}`}
+                                onClick={() => setWechatTab('moments')}
+                              >
+                                <span className="tab-icon">⭕</span>
+                                <span className="tab-text">朋友圈</span>
                               </div>
                             </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* 微信朋友圈界面 */}
-                    {currentApp === 'wechat' && showMoments && (
-                      <div className="wechat-moments-interface">
-                        {chatData.moments.map((moment, idx) => (
-                          <div key={idx} className="moments-item">
-                            <div className="moments-time">{moment.time}</div>
-                            <div className="moments-text">{moment.text}</div>
-                            <div className="moments-interact">
-                              <span className="moments-like">{moment.likes}</span>
-                              <span className="moments-comment">{moment.comments}</span>
+                          </>
+                        ) : (
+                          <div className="chat-detail">
+                            <div className="chat-messages">
+                              {activeContact.messages.map((msg, idx) => (
+                                <div key={idx} className={`chat-message ${msg.type}`}>
+                                  <div className="message-avatar">
+                                    {msg.type === 'received' ? activeContact.name.charAt(0) : '我'}
+                                  </div>
+                                  <div className="message-content">
+                                    <div className="message-bubble">
+                                      {msg.text}
+                                    </div>
+                                    <div className="message-time">{msg.time}</div>
+                                  </div>
+                                </div>
+                              ))}
                             </div>
                           </div>
-                        ))}
+                        )}
                       </div>
                     )}
 
-                    {/* 新闻界面 */}
+                    {/* 新闻界面 - 集成收集逻辑 */}
                     {currentApp === 'news' && (
                       <div className="news-interface">
-                        {newsData.map((news, idx) => (
-                          <div key={idx} className="news-item">
-                            <div className="news-title">{news.title}</div>
-                            <div className="news-time">{news.time}</div>
-                            <div className="news-content">{news.content}</div>
-                            {news.update && (
-                              <div className="news-update">
-                                <strong>更新：</strong>{news.update}
-                              </div>
-                            )}
-                          </div>
-                        ))}
+                        {newsData.map((news, idx) => {
+                          const clue = news.clueId ? { 
+                            clueId: news.clueId, 
+                            clueName: news.clueName || news.title, 
+                            clueDesc: news.content 
+                          } : null
+                          
+                          const collected = isCollected(news.clueId);
+
+                          return (
+                            <div key={idx} className="news-item">
+                              <div className="news-title">{news.title}</div>
+                              <div className="news-time">{news.time}</div>
+                              <div className="news-content">{news.content}</div>
+                              {news.update && (
+                                <div className="news-update">
+                                  <strong>更新：</strong>{news.update}
+                                </div>
+                              )}
+                              {news.isCollectable && clue && (
+                                collected ? (
+                                  <div className="phone-collected-status">已收集“{clue.clueName}”线索</div>
+                                ) : (
+                                  <div 
+                                    className="phone-collect-tag"
+                                    onClick={(e) => handlePhoneCollect(e, clue)}
+                                  >
+                                    【可收集】
+                                  </div>
+                                )
+                              )}
+                            </div>
+                          )
+                        })}
                       </div>
                     )}
 
@@ -297,17 +376,30 @@ const Phone = ({
                           <div className="drive-date">📅 {driveData.date}</div>
                           <div className="drive-note">{driveData.note}</div>
                         </div>
+                        {driveData.isCollectable && driveData.clueId && (
+                          isCollected(driveData.clueId) ? (
+                            <div className="phone-collected-status">已收集“{driveData.clueName || '行车记录'}”线索</div>
+                          ) : (
+                            <div 
+                              className="phone-collect-tag"
+                              onClick={(e) => handlePhoneCollect(e, { 
+                                clueId: driveData.clueId, 
+                                clueName: driveData.clueName || '行车记录', 
+                                clueDesc: driveData.note 
+                              })}
+                            >
+                              【可收集】
+                            </div>
+                          )
+                        )}
                       </div>
                     )}
                   </div>
                 )}
 
-                {/* 底部 Home 条 */}
                 <div className="phone-home-bar" onClick={() => {
                   setCurrentApp(null)
                   setActiveContact(null)
-                  setShowAlbum(false)
-                  setShowMoments(false)
                 }}></div>
               </div>
             )}

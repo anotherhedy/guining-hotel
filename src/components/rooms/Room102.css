@@ -10,7 +10,7 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  animation: fadeIn 1s ease;
+  animation: room102-fadeIn 1s ease;
   z-index: 50;
   color: #ddd;
 }
@@ -27,7 +27,7 @@
   z-index: 60;
 }
 
-.room102-return-btn {
+.return-btn {
   position: absolute;
   top: 20px;
   left: 20px;
@@ -40,11 +40,12 @@
   cursor: pointer;
   font-weight: bold;
   transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.5);
 }
 
-.room102-return-btn:hover {
+.return-btn:hover {
   transform: scale(1.05);
-  background: #8b0000;
+  background: linear-gradient(90deg, #8b0000, #300000);
   box-shadow: 0 0 15px rgba(139, 0, 0, 0.5);
 }
 
@@ -493,7 +494,7 @@
   white-space: nowrap;
   z-index: 100;
   box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-  animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  animation: room102-popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .room102-collect-label::after {
@@ -507,12 +508,12 @@
   border-top: 6px solid #0099ff;
 }
 
-@keyframes fadeIn {
+@keyframes room102-fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
 }
 
-@keyframes popIn {
+@keyframes room102-popIn {
   from { transform: translateX(-50%) scale(0); }
   to { transform: translateX(-50%) scale(1); }
 }
@@ -547,11 +548,11 @@
   font-size: 10px;
   color: #0099ff;
   white-space: nowrap;
-  animation: pulse 2s infinite;
+  animation: room102-pulse 2s infinite;
   pointer-events: none;
 }
 
-@keyframes pulse {
+@keyframes room102-pulse {
   0%, 100% { opacity: 0.6; }
   50% { opacity: 1; }
 }
@@ -572,7 +573,7 @@
   justify-content: center;
   z-index: 2000;
   backdrop-filter: blur(5px);
-  animation: fadeIn 0.3s ease;
+  animation: room102-fadeIn 0.3s ease;
 }
 
 .room102-puzzle-modal {
@@ -583,10 +584,10 @@
   width: 400px;
   max-width: 90%;
   box-shadow: 0 0 40px rgba(139, 0, 0, 0.4);
-  animation: slideIn 0.3s ease;
+  animation: room102-slideIn 0.3s ease;
 }
 
-@keyframes slideIn {
+@keyframes room102-slideIn {
   from { opacity: 0; transform: translateY(-20px); }
   to { opacity: 1; transform: translateY(0); }
 }
@@ -772,12 +773,12 @@
   font-size: 20px;
   font-weight: bold;
   box-shadow: 0 0 30px rgba(76, 175, 80, 0.6);
-  animation: successPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  animation: room102-successPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   z-index: 10;
   pointer-events: none;
 }
 
-@keyframes successPop {
+@keyframes room102-successPop {
   from {
     transform: translate(-50%, -50%) scale(0);
     opacity: 0;

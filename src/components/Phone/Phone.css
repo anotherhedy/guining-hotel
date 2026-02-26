@@ -2,12 +2,6 @@
    手机组件样式 - 逼真 iPhone 风格
    ================================ */
 
-.phone-container *,
-.phone-container *::before,
-.phone-container *::after {
-  box-sizing: border-box;
-}
-
 /* 遮罩层 */
 .phone-overlay {
   position: fixed;
@@ -190,33 +184,26 @@
 
 /* 状态栏 */
 .phone-status-bar {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  display: flex;
+  justify-content: space-between;
   align-items: center;
   padding: 8px 20px;
   font-size: 12px;
   color: #fff;
   background: rgba(0, 0, 0, 0.3);
-  width: 100%;
 }
 
 .status-carrier {
   font-weight: 600;
-  text-align: left;
 }
 
 .status-time {
   font-weight: 500;
-  padding: 0 10px;
-  /* 避开刘海屏位置 */
-  position: relative;
-  left: -40px; 
 }
 
 .status-icons {
   display: flex;
   gap: 4px;
-  justify-content: flex-end;
 }
 
 /* 应用网格 */
@@ -301,6 +288,276 @@
   width: 50px;
 }
 
+/* ================================
+   微信界面
+   ================================ */
+.wechat-interface {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: #f5f5f5;
+  overflow: hidden;
+}
+
+.chat-list {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.chat-contact {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 15px;
+  background: #fff;
+  border-bottom: 1px solid #e0e0e0;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.chat-contact:hover {
+  background: #f8f8f8;
+}
+
+.contact-avatar {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #07c160 0%, #06ad56 100%);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+}
+
+.contact-name {
+  font-weight: 600;
+  font-size: 15px;
+  color: #000;
+  margin-bottom: 4px;
+}
+
+.contact-last-message {
+  font-size: 13px;
+  color: #999;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 聊天详情 */
+.chat-detail {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: #f5f5f5;
+}
+
+.chat-messages {
+  flex: 1;
+  padding: 15px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.chat-message {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.chat-message.received {
+  flex-direction: row;
+}
+
+.chat-message.sent {
+  flex-direction: row-reverse;
+}
+
+.message-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #e0e0e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: bold;
+  color: #666;
+  flex-shrink: 0;
+}
+
+.message-content {
+  display: flex;
+  flex-direction: column;
+  max-width: 70%;
+}
+
+.message-bubble {
+  padding: 10px 14px;
+  border-radius: 16px;
+  font-size: 14px;
+  line-height: 1.5;
+  word-wrap: break-word;
+}
+
+.chat-message.received .message-bubble {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  color:#000;
+  border-top-left-radius: 4px;
+}
+
+.chat-message.sent .message-bubble {
+  background: #06ad56;
+  color: #000;
+  border-top-right-radius: 4px;
+}
+
+.message-time {
+  font-size: 11px;
+  color: #999;
+  margin-top: 4px;
+  text-align: center;
+}
+
+/* ================================
+   朋友圈界面
+   ================================ */
+.moments-interface {
+  flex: 1;
+  overflow-y: auto;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+}
+
+.moments-header {
+  position: relative;
+  margin-bottom: 40px;
+  flex-shrink: 0;
+}
+
+.moments-header-bg {
+  width: 100%;
+  height: 200px;
+  background: linear-gradient(135deg, #444, #222);
+  background-image: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80'); /* 默认背景图 */
+  background-size: cover;
+  background-position: center;
+}
+
+.moments-user-profile {
+  position: absolute;
+  right: 15px;
+  bottom: -20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.profile-name {
+  color: #fff;
+  font-weight: 600;
+  font-size: 18px;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+}
+
+.profile-avatar {
+  width: 70px;
+  height: 70px;
+  background: #e0e0e0;
+  border: 3px solid #fff;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.moments-list {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+.moments-post {
+  background: #fff;
+  padding: 15px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.moments-post:last-child {
+  border-bottom: none;
+}
+
+.moments-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.moments-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #e0e0e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+
+.moments-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.moments-name {
+  font-weight: 600;
+  font-size: 14px;
+  color: #000;
+}
+
+.moments-time {
+  font-size: 12px;
+  color: #999;
+}
+
+.moments-content {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.moments-actions {
+  display: flex;
+  gap: 15px;
+  padding-top: 10px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.moments-like,
+.moments-comment {
+  font-size: 12px;
+  color: #666;
+}
 
 /* ================================
    新闻界面
@@ -541,176 +798,76 @@
   }
 }
 
-/* ================================
-   微信界面
-   ================================ */
-/* 微信主界面 - 聊天列表 */
-.wechat-interface {
+/* 手机内收集标签 - 居中显示 */
+.phone-collect-tag {
+  display: block;
+  margin: 15px auto 5px;
+  width: fit-content;
+  padding: 6px 12px;
+  background-color: #0099ff;
+  color: white;
+  font-size: 13px;
+  font-weight: bold;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+  z-index: 100;
+  white-space: nowrap;
+  text-align: center;
+  position: relative;
+}
+
+.phone-collect-tag:hover {
+  background-color: #0077cc;
+  transform: scale(1.05);
+}
+
+.phone-collected-status {
+  margin: 15px auto 5px;
+  text-align: center;
+  font-size: 12px;
+  color: #666;
+  font-style: italic;
+}
+
+.chat-contact-container {
+  border-bottom: 1px solid #e0e0e0;
+  background: #fff;
+}
+
+.chat-tag, .chat-status {
+  margin: 5px auto 10px;
+}
+
+/* 微信底部导航栏 */
+.wechat-tab-bar {
+  display: flex;
+  height: 55px;
+  background: #f8f8f8;
+  border-top: 1px solid #e0e0e0;
+  flex-shrink: 0;
+}
+
+.wechat-tab-item {
   flex: 1;
   display: flex;
   flex-direction: column;
-  background: #e5e5e5;
-  overflow: hidden;
-}
-
-.wechat-chat-list {
-  flex: 1;
-  overflow-y: auto;
-  background: #e5e5e5;
-}
-
-.wechat-chat-item {
-  display: flex;
-  align-items: center;
-  padding: 10px 15px;
-  background: #fff;
-  border-bottom: 1px solid #e0e0e0;
-  transition: background 0.2s;
-}
-
-.wechat-chat-item:not(.no-click) {
-  cursor: pointer;
-}
-
-.wechat-chat-item:not(.no-click):hover {
-  background: #f5f5f5;
-}
-
-.wechat-chat-item.no-click {
-  cursor: default;
-}
-
-.wechat-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 5px;
-  background: #ccc;
-  display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
+  color: #999;
+  transition: all 0.2s;
+}
+
+.wechat-tab-item.active {
+  color: #07c160;
+}
+
+.tab-icon {
   font-size: 20px;
-  margin-right: 12px;
-}
-
-.wechat-chat-info {
-  flex: 1;
-  overflow: hidden;
-}
-
-.wechat-chat-name {
-  font-size: 15px;
-  color: #000;
   margin-bottom: 2px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
-.wechat-chat-last {
-  font-size: 12px;
-  color: #999;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.wechat-chat-time {
+.tab-text {
   font-size: 10px;
-  color: #999;
-}
-
-/* 微信聊天界面 */
-.wechat-chat-interface {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  background: #e5e5e5;
-}
-
-.chat-messages {
-  flex: 1;
-  padding: 15px;
-  overflow-y: auto;
-  background: url('https://images.unsplash.com/photo-1519751138087-5bf79df62d5b?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80') center/cover;
-}
-
-.chat-message {
-  max-width: 75%;
-  margin-bottom: 12px;
-  padding: 8px 12px;
-  border-radius: 8px;
-  position: relative;
-  clear: both;
-}
-
-.chat-message.received {
-  background: #fff;
-  float: left;
-  border-bottom-left-radius: 2px;
-}
-
-.chat-message.sent {
-  background: #d3eafd;
-  float: right;
-  border-bottom-right-radius: 2px;
-}
-
-.chat-message-time {
-  font-size: 10px;
-  color: #999;
-  position: absolute;
-  bottom: -15px;
-  white-space: nowrap;
-}
-
-.chat-message.received .chat-message-time {
-  left: 12px;
-}
-
-.chat-message.sent .chat-message-time {
-  right: 12px;
-}
-
-/* 微信朋友圈界面 */
-.wechat-moments-interface {
-  flex: 1;
-  overflow-y: auto;
-  background: #e5e5e5;
-}
-
-.moments-item {
-  background: #fff;
-  padding: 15px;
-  border-bottom: 1px solid #e0e0e0;
-}
-
-.moments-time {
-  font-size: 12px;
-  color: #999;
-  margin-bottom: 8px;
-}
-
-.moments-text {
-  font-size: 14px;
-  color: #333;
-  line-height: 1.5;
-  margin-bottom: 8px;
-}
-
-.moments-interact {
-  font-size: 11px;
-  color: #999;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.moments-like::before {
-  content: '👍';
-  margin-right: 3px;
-}
-
-.moments-comment::before {
-  content: '💬';
-  margin-right: 3px;
 }

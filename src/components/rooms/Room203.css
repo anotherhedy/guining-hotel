@@ -211,15 +211,33 @@
   width: 120px;
   height: 40px;
   background: #3e2723;
-  clip-path: polygon(0% 20%, 90% 0%, 100% 80%, 10% 100%);
+  /* 去掉 clip-path，改用 transform 倾斜，防止裁剪掉子元素标签 */
+  transform: rotate(-5deg) skewX(10deg);
   position: relative;
   z-index: 20;
   cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.5);
 }
 
 .clue-beam:hover {
-  transform: scale(1.05);
+  transform: rotate(-5deg) skewX(10deg) scale(1.05);
   box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+}
+
+.beam-label {
+  top: -40px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  margin-left: 0 !important;
+}
+
+.beam-label::before {
+  left: 50% !important;
+  top: 100% !important;
+  transform: translateX(-50%) !important;
+  border-right: 6px solid transparent !important;
+  border-left: 6px solid transparent !important;
+  border-top: 6px solid #0099ff !important;
 }
 
 .clue-beam::after {
