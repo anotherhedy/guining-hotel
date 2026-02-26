@@ -13,7 +13,8 @@ const Phone = ({
   inventory = [],
   onCollect,
   isLocked: externalIsLocked,
-  setIsLocked: externalSetIsLocked
+  setIsLocked: externalSetIsLocked,
+  storageKey
 }) => {
   const [internalIsLocked, setInternalIsLocked] = useState(true)
   const [inputPassword, setInputPassword] = useState('')
@@ -34,10 +35,22 @@ const Phone = ({
     return () => clearInterval(timer)
   }, [])
 
+  useEffect(() => {
+    if (storageKey && externalIsLocked === undefined) {
+      const saved = localStorage.getItem(storageKey)
+      if (saved === 'unlocked') {
+        setInternalIsLocked(false)
+      }
+    }
+  }, [storageKey, externalIsLocked])
+
   // 处理密码提交
   const handlePasswordSubmit = () => {
     if (inputPassword === password) {
       setIsLocked(false)
+      if (storageKey) {
+        localStorage.setItem(storageKey, 'unlocked')
+      }
       setInputPassword('')
     } else {
       alert('密码错误')

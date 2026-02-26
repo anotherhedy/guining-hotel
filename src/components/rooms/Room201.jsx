@@ -6,7 +6,9 @@ import './Room201.css'
 const Room201 = ({ onReturn, onCollect, onShowDetail, inventory, unlockedHiddenIds }) => {
   const [activeClueId, setActiveClueId] = useState(null)
   const [isPhoneOpen, setIsPhoneOpen] = useState(false)
-  const [wipedPercent, setWipedPercent] = useState(0)
+  const [wipedPercent, setWipedPercent] = useState(() => {
+    return localStorage.getItem('room201MirrorWiped') === 'true' ? 100 : 0
+  })
   const mirrorCanvasRef = useRef(null)
   const isWiping = useRef(false)
 
@@ -25,6 +27,12 @@ const Room201 = ({ onReturn, onCollect, onShowDetail, inventory, unlockedHiddenI
     if (!canvas) return
     const ctx = canvas.getContext('2d')
     
+    // 如果初始状态已擦拭（从存档加载），则直接清空画布
+    if (wipedPercent >= 100) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+      return
+    }
+
     // 填充灰色灰尘
     ctx.fillStyle = '#444'
     ctx.fillRect(0, 0, canvas.width, canvas.height)
@@ -36,7 +44,8 @@ const Room201 = ({ onReturn, onCollect, onShowDetail, inventory, unlockedHiddenI
       ctx.arc(Math.random() * canvas.width, Math.random() * canvas.height, Math.random() * 2, 0, Math.PI * 2)
       ctx.fill()
     }
-  }, [])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []) // 仅在挂载时初始化一次，防止擦拭过程中被重绘重置
 
   // 镜子擦拭逻辑
   const startWiping = () => { isWiping.current = true }
@@ -53,14 +62,22 @@ const Room201 = ({ onReturn, onCollect, onShowDetail, inventory, unlockedHiddenI
 
     ctx.globalCompositeOperation = 'destination-out'
     ctx.beginPath()
-    ctx.arc(x, y, 20, 0, Math.PI * 2)
+    // 增加画笔大小从 20 到 35，并增加模糊边缘效果
+    ctx.filter = 'blur(5px)'
+    ctx.arc(x, y, 35, 0, Math.PI * 2)
     ctx.fill()
+    ctx.filter = 'none'
 
-    // 增加擦拭进度感官（简单计数）
     if (wipedPercent < 100) {
-      setWipedPercent(prev => Math.min(prev + 0.5, 100))
+      setWipedPercent(prev => Math.min(prev + 1, 100))
     }
   }
+
+  useEffect(() => {
+    if (wipedPercent >= 60) {
+      localStorage.setItem('room201MirrorWiped', 'true')
+    }
+  }, [wipedPercent])
 
   // 线索点击逻辑
   const handleClueClick = (e, clueId, isCollectable = true) => {
@@ -148,7 +165,7 @@ const Room201 = ({ onReturn, onCollect, onShowDetail, inventory, unlockedHiddenI
         <div className="room201-zone room201-bathroom">
           <div className="room201-mirror-frame">
             <div className="room201-mirror-surface">
-              <div className={`room201-blood-text ${wipedPercent > 40 ? 'visible' : ''}`}>
+              <div className={`room201-blood-text ${wipedPercent > 20 ? 'visible' : ''}`} style={{ opacity: Math.min(1, (wipedPercent - 20) / 40) }}>
                 对不起
               </div>
               <canvas
@@ -162,7 +179,7 @@ const Room201 = ({ onReturn, onCollect, onShowDetail, inventory, unlockedHiddenI
                 onMouseLeave={stopWiping}
               />
             </div>
-            {wipedPercent > 60 && !isCollected('20101') && (
+            {wipedPercent > 50 && !isCollected('20101') && (
               <div 
                 className="room201-collect-tag mirror-label" 
                 onClick={(e) => handleLabelClick(e, getClue('20101'))}
@@ -249,6 +266,7 @@ const Room201 = ({ onReturn, onCollect, onShowDetail, inventory, unlockedHiddenI
           // 处理 20106 的特殊逻辑（如果需要）
           onCollect(clue)
         }}
+        storageKey="room201PhoneUnlocked"
       />
     </div>
   )

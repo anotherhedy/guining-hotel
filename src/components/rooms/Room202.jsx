@@ -191,6 +191,7 @@ const Room202 = ({ onReturn, onCollect, onShowDetail, inventory, unlockedHiddenI
         onCollect={(clue) => {
           onCollect(clue)
         }}
+        storageKey="room202PhoneUnlocked"
       />
     </div>
   )

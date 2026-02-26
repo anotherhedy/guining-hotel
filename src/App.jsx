@@ -73,6 +73,7 @@ function App() {
   const [visitedRooms, setVisitedRooms] = useState(() => JSON.parse(localStorage.getItem('visitedRooms')) || [])
   const [hasTriggeredFiveCorpses, setHasTriggeredFiveCorpses] = useState(() => JSON.parse(localStorage.getItem('hasTriggeredFiveCorpses')) || false)
   const [hasTriggeredDialogue1_5, setHasTriggeredDialogue1_5] = useState(() => JSON.parse(localStorage.getItem('hasTriggeredDialogue1_5')) || false)
+  const [canTriggerDialogue1_5, setCanTriggerDialogue1_5] = useState(() => JSON.parse(localStorage.getItem('canTriggerDialogue1_5')) || false)
   const [showGameTips, setShowGameTips] = useState(false)
   
   // State for Room Verification
@@ -90,6 +91,28 @@ function App() {
   const [hasTriggeredTruth2All, setHasTriggeredTruth2All] = useState(() => JSON.parse(localStorage.getItem('hasTriggeredTruth2All')) || false)
   const [finalChoice, setFinalChoice] = useState(null)
 
+  // State for Death Dialog Chat
+  const [chatHistory, setChatHistory] = useState(() => JSON.parse(localStorage.getItem('chatHistory')) || [
+    {
+      id: 1,
+      sender: 'death',
+      text: '昨夜归宁旅馆起了一场大火，所有人都死在房间内。',
+      type: 'clue',
+      clueId: '死神 - 大火'
+    },
+    {
+      id: 2,
+      sender: 'death',
+      text: '在探索过程中有问题可以呼唤我，但我不一定会回答你。',
+      type: 'text'
+    }
+  ])
+
+  const [displayedMessages, setDisplayedMessages] = useState([])
+  const [hasUnread, setHasUnread] = useState(true)
+  const [inputValue, setInputValue] = useState('')
+  const messagesEndRef = useRef(null)
+
   // Auto-save useEffect
   useEffect(() => {
     localStorage.setItem('gameStatus', gameStatus === 'ending' ? 'hotel' : gameStatus) // Keep 'hotel' if refresh on ending
@@ -99,12 +122,14 @@ function App() {
     localStorage.setItem('visitedRooms', JSON.stringify(visitedRooms))
     localStorage.setItem('hasTriggeredFiveCorpses', JSON.stringify(hasTriggeredFiveCorpses))
     localStorage.setItem('hasTriggeredDialogue1_5', JSON.stringify(hasTriggeredDialogue1_5))
+    localStorage.setItem('canTriggerDialogue1_5', JSON.stringify(canTriggerDialogue1_5))
+    localStorage.setItem('chatHistory', JSON.stringify(chatHistory))
     localStorage.setItem('unlockedRooms', JSON.stringify(unlockedRooms))
     localStorage.setItem('truth1CompletedNames', JSON.stringify(truth1CompletedNames))
     localStorage.setItem('truth2CompletedNames', JSON.stringify(truth2CompletedNames))
     localStorage.setItem('hasTriggeredTruthAll', JSON.stringify(hasTriggeredTruthAll))
     localStorage.setItem('hasTriggeredTruth2All', JSON.stringify(hasTriggeredTruth2All))
-  }, [gameStatus, inventory, isJiangXiaoliTruth1Unlocked, unlockedHiddenIds, visitedRooms, hasTriggeredFiveCorpses, hasTriggeredDialogue1_5, unlockedRooms, truth1CompletedNames, truth2CompletedNames, hasTriggeredTruthAll, hasTriggeredTruth2All])
+  }, [gameStatus, inventory, isJiangXiaoliTruth1Unlocked, unlockedHiddenIds, visitedRooms, hasTriggeredFiveCorpses, hasTriggeredDialogue1_5, canTriggerDialogue1_5, chatHistory, unlockedRooms, truth1CompletedNames, truth2CompletedNames, hasTriggeredTruthAll, hasTriggeredTruth2All])
 
   const clearSave = () => {
     localStorage.clear()
@@ -156,26 +181,9 @@ function App() {
   const roomUserMap = cluesData.roomUserMap
   
   // State for Death Dialog Chat
-  const [chatHistory, setChatHistory] = useState([
-    {
-      id: 1,
-      sender: 'death',
-      text: '昨夜归宁旅馆起了一场大火，所有人都死在房间内。',
-      type: 'clue',
-      clueId: '死神 - 大火'
-    },
-    {
-      id: 2,
-      sender: 'death',
-      text: '在探索过程中有问题可以呼唤我，但我不一定会回答你。',
-      type: 'text'
-    }
-  ])
   
-  const [displayedMessages, setDisplayedMessages] = useState([])
-  const [hasUnread, setHasUnread] = useState(true)
-  const [inputValue, setInputValue] = useState('')
-  const messagesEndRef = useRef(null)
+  
+  
 
   // Dragging State for Death Icon and Dialog
   const [iconPos, setIconPos] = useState({ x: 20, y: window.innerHeight - 80 })
@@ -228,14 +236,6 @@ function App() {
       setHasUnread(false)
       if (displayedMessages.length >= chatHistory.length) return
       
-      const nextIndex = displayedMessages.length
-      const nextMessage = chatHistory[nextIndex]
-      
-      let delay = 300
-      if (nextMessage.sender === 'death') {
-        delay = 800
-      }
-      
       const timer = setTimeout(() => {
         setDisplayedMessages(prev => {
           if (prev.length < chatHistory.length) {
@@ -243,7 +243,7 @@ function App() {
           }
           return prev
         })
-      }, delay)
+      }, 800)
       
       return () => clearTimeout(timer)
     }
@@ -284,31 +284,13 @@ function App() {
     setInventory(prev => {
       const newInventory = [...prev, newClue];
       
-      // Trigger Dialogue 1.5 after collecting specific clues
+      // Trigger Dialogue 1.5 red dot after collecting specific clues
       const hasDuiBuQi = newInventory.some(item => item.id === '20101');
       const hasCheHuo = newInventory.some(item => item.id === '20105');
       const alreadyInChat = chatHistory.some(msg => msg.clueId === '死神 - 亡者复仇');
       
-      if (!hasTriggeredDialogue1_5 && hasDuiBuQi && hasCheHuo && !alreadyInChat) {
-        setHasTriggeredDialogue1_5(true);
-        localStorage.setItem('hasTriggeredDialogue1_5', JSON.stringify(true)); // 强制立即持久化
-        const dialogLines = [
-          { sender: 'user', text: '还在吗？', type: 'text' },
-          { sender: 'user', text: '这个灵魂……会不会是来复仇的？', type: 'text' },
-          { sender: 'death', text: '亡者复仇的故事确实存在，但那个死去的灵魂仇恨必须很深才能影响到现实。', type: 'clue', clueId: '死神 - 亡者复仇' }
-        ];
-        
-        setChatHistory(prevChat => {
-          let nextId = prevChat.length + 1;
-          const appended = dialogLines.map(line => ({
-            id: nextId++,
-            sender: line.sender,
-            text: line.text,
-            type: line.type,
-            clueId: line.clueId
-          }));
-          return [...prevChat, ...appended];
-        });
+      if (!hasTriggeredDialogue1_5 && !canTriggerDialogue1_5 && hasDuiBuQi && hasCheHuo && !alreadyInChat) {
+        setCanTriggerDialogue1_5(true);
         setHasUnread(true);
       }
       
@@ -349,6 +331,30 @@ function App() {
     setTimeout(() => setNotification(null), 2000)
   }
   
+  const handleTriggerDialogue1_5 = () => {
+    if (hasTriggeredDialogue1_5) return;
+    setHasTriggeredDialogue1_5(true);
+    setCanTriggerDialogue1_5(false);
+    
+    const dialogLines = [
+      { sender: 'user', text: '还在吗？', type: 'text' },
+      { sender: 'user', text: '这个灵魂……会不会是来复仇的？', type: 'text' },
+      { sender: 'death', text: '亡者复仇的故事确实存在，但那个死去的灵魂仇恨必须很深才能影响到现实。', type: 'clue', clueId: '死神 - 亡者复仇' }
+    ];
+    
+    setChatHistory(prevChat => {
+      let nextId = prevChat.length + 1;
+      const appended = dialogLines.map(line => ({
+        id: nextId++,
+        sender: line.sender,
+        text: line.text,
+        type: line.type,
+        clueId: line.clueId
+      }));
+      return [...prevChat, ...appended];
+    });
+  };
+
   const handleSendMessage = () => {
     if (!inputValue.trim()) return
     const newMessage = {
@@ -921,16 +927,16 @@ function App() {
               position: 'fixed'
             }}
           >
-            <div
-              className="death-icon"
-              onClick={() => {
-                // Only toggle if we haven't been dragging
-                if (!hasMoved.current) {
-                  setIsDeathDialogOpen(!isDeathDialogOpen)
-                }
-              }}
-            >
-              {hasUnread && !isDeathDialogOpen && <div className="notification-dot"></div>}
+              <div
+                className="death-icon"
+                onClick={() => {
+                  // Only toggle if we haven't been dragging
+                  if (!hasMoved.current) {
+                    setIsDeathDialogOpen(!isDeathDialogOpen)
+                  }
+                }}
+              >
+                {(hasUnread || canTriggerDialogue1_5) && !isDeathDialogOpen && <div className="notification-dot"></div>}
               
               <div className="skull-shape">
                 <div className="skull-eyes"></div>
@@ -992,6 +998,19 @@ function App() {
                 )}
                 <div ref={messagesEndRef} />
               </div>
+
+              {/* 对话触发选项 */}
+              {canTriggerDialogue1_5 && (displayedMessages.length >= chatHistory.length) && (
+                <div className="dialog-options">
+                  <button 
+                    className="dialog-option-btn" 
+                    onClick={handleTriggerDialogue1_5}
+                  >
+                    一周前的灵魂难道是来复仇的？（点击发送）
+                  </button>
+                </div>
+              )}
+
               <div className="chat-input-area">
                 <input
                   type="text"

@@ -7,7 +7,9 @@ const Room101 = ({ onReturn, onCollect, onShowDetail, inventory, unlockedHiddenI
   const [drawersOpen, setDrawersOpen] = useState({ 1: false, 2: false, 3: false, 4: false });
   const [pillowMoved, setPillowMoved] = useState(false);
   const [computerOn, setComputerOn] = useState(false);
-  const [isCabinetUnlocked, setIsCabinetUnlocked] = useState(false);
+  const [isCabinetUnlocked, setIsCabinetUnlocked] = useState(() => {
+    return localStorage.getItem('room101CabinetUnlocked') === 'true';
+  });
   const [showCabinetLock, setShowCabinetLock] = useState(false);
   const [passwordInput, setPasswordInput] = useState('');
 
@@ -21,6 +23,12 @@ const Room101 = ({ onReturn, onCollect, onShowDetail, inventory, unlockedHiddenI
 
   const isCollected = (id) => inventory.some(item => item.id === id);
   const isVisible = (clue) => !clue.isHidden || unlockedHiddenIds.includes(clue.clueId);
+
+  useEffect(() => {
+    if (isCabinetUnlocked) {
+      localStorage.setItem('room101CabinetUnlocked', 'true');
+    }
+  }, [isCabinetUnlocked]);
 
   // Handlers
   const toggleDrawer = (e, drawerId) => {

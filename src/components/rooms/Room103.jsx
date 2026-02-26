@@ -234,6 +234,7 @@ const Room103 = ({ onReturn, onCollect, onShowDetail, inventory, unlockedHiddenI
         driveData={phone103Config.driveData}
         albumData={phone103Config.albumData}
         showHiddenApps={phone103Config.showHiddenApps}
+        storageKey="room103PhoneUnlocked"
       />
     </div>
   )

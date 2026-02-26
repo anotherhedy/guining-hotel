@@ -15,9 +15,26 @@ const Room102 = ({ onReturn, onCollect, onShowDetail, inventory, unlockedHiddenI
   const [activePuzzleId, setActivePuzzleId] = useState(null)
   const [puzzlePieces, setPuzzlePieces] = useState([0, 1, 2, 3])
   const [selectedPiece, setSelectedPiece] = useState(null)
-  const [puzzleCompleted, setPuzzleCompleted] = useState({
-    '10203': false,
-    '10206': false
+  const [puzzleCompleted, setPuzzleCompleted] = useState(() => {
+    const saved = localStorage.getItem('room102PuzzleCompleted')
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved)
+        return {
+          '10203': !!parsed['10203'],
+          '10206': !!parsed['10206']
+        }
+      } catch (e) {
+        return {
+          '10203': false,
+          '10206': false
+        }
+      }
+    }
+    return {
+      '10203': false,
+      '10206': false
+    }
   })
   
   // ✅ 图片映射
@@ -33,6 +50,10 @@ const Room102 = ({ onReturn, onCollect, onShowDetail, inventory, unlockedHiddenI
   
   // ✅ 拼图正确顺序
   const CORRECT_ORDER = [0, 1, 2, 3]
+
+  useEffect(() => {
+    localStorage.setItem('room102PuzzleCompleted', JSON.stringify(puzzleCompleted))
+  }, [puzzleCompleted])
   
   const handleItemClick = (e, clue, isCollectable) => {
     e.stopPropagation()
