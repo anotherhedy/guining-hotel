@@ -694,7 +694,7 @@ function App() {
             </p>
             <p>
               <TypewriterText 
-                text="他说有一家旅馆在昨天一夜之间起了大火，所有线索都被烧了干净，现在，他必须找到这旅馆中 6 个灵魂的身份和对应的死因才能把灵魂成功送入轮回。" 
+                text="他说有一家旅馆在昨天一夜之间起了大火，所有线索都被烧了干净。更糟糕的是，滞留的6个灵魂全部失去了记忆。" 
                 delay={40}
                 startDelay={5000}
                 forceComplete={showStartBtn}
@@ -702,7 +702,7 @@ function App() {
             </p>
             <p>
               <TypewriterText 
-                text="因为他还有别的业务要忙，所以找你来帮忙解决这件事。" 
+                text="现在，他必须找到这旅馆中 6 个灵魂的身份和对应的死因才能回去交差。因为他还有别的业务要忙，所以找你来帮忙解决这件事。" 
                 delay={40}
                 startDelay={9000}
                 forceComplete={showStartBtn}
@@ -1165,7 +1165,7 @@ function App() {
               ) : (
                 <>
                   <p><TypewriterText text="死神走了，带着那份充满遗憾的档案。" delay={50} startDelay={500} /></p>
-                  <p><TypewriterText text="蒋晓丽是善良的母亲，许鹤是自责的朋友，邹良生是知恩图报的陌生人……" delay={50} startDelay={2500} /></p>
+                  <p><TypewriterText text="赵青没能完成作品，邹良生难以偿还恩情，沈江河无法救下朋友……" delay={50} startDelay={2500} /></p>
                   <p><TypewriterText text="这是一个平淡的悲剧故事，没有反转，只有无奈和意外。" delay={50} startDelay={6500} /></p>
                   <p><TypewriterText text="我知道，这可能也不是真相。" delay={50} startDelay={10000} /></p>
                   <p><TypewriterText text="也许他们真的犯过罪，真的有过恶念，真的互相伤害过。" delay={50} startDelay={12000} /></p>
@@ -1173,7 +1173,7 @@ function App() {
                   <p><TypewriterText text="我最初只是为了找素材才接下这个委托。" delay={50} startDelay={18500} /></p>
                   <p><TypewriterText text="现在，我亲手毁掉了最好的素材。" delay={50} startDelay={21000} /></p>
                   <p><TypewriterText text="但当我写下“意外”二字时，我仿佛看到他们松了一口气。" delay={50} startDelay={23500} /></p>
-                  <p><TypewriterText text="归宁旅馆的火灭了，记忆随风逝去。" delay={50} startDelay={27000} /></p>
+                  <p><TypewriterText text="归宁旅馆的火灭了，记忆随灰烬被风吹去。" delay={50} startDelay={27000} /></p>
                   <p><TypewriterText text="愿你们在另一个世界安好。" delay={50} startDelay={30000} /></p>
                 </>
               )}
