@@ -610,6 +610,7 @@ function App() {
 
   const handleReturnFromEnding = () => {
     setFinalChoice(null)
+    setShowFinalChoiceModal(false)
     setGameStatus('hotel')
   }
 
